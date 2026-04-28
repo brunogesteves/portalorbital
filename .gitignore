@@ -24,3 +24,5 @@ backend/prisma/migrations/
 *.log
 .DS_Store
 .vscode/
+
+test_images/
