@@ -25,4 +25,4 @@ backend/prisma/migrations/
 .DS_Store
 .vscode/
 
-test_images/
+.gitignore
