@@ -18,6 +18,7 @@ export interface PostProps {
   scheduledAt: string;
   createdAt: string;
   updatedAt: string;
+  status: string;
   categoryId: number;
   authorId: number;
   category?: CategoryProps;

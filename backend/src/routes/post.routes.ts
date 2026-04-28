@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
-import { getPosts, getPostById, createPost, updatePost, deletePost, uploadEditorImage, getImages } from '../controllers/post.controller';
+import { getPosts, getPostById, createPost, updatePost, deletePost, uploadEditorImage, getImages, updatePostStatus } from '../controllers/post.controller';
 import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();
@@ -25,6 +25,7 @@ router.get('/:id', authenticate, getPostById);
 router.post('/upload-image', authenticate, upload.single('image'), uploadEditorImage);
 router.post('/', authenticate, upload.single('thumbnail'), createPost);
 router.put('/:id', authenticate, upload.single('thumbnail'), updatePost);
+router.patch('/:id/status', authenticate, updatePostStatus);
 router.delete('/:id', authenticate, deletePost);
 
 export default router;

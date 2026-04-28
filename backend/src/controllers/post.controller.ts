@@ -8,7 +8,7 @@ export const getPosts = async (req: any, res: Response) => {
   try {
     const { q } = req.query;
     const whereClause: any = {};
-    
+
     // Regra: PBR só vê os seus, ADM vê todos
     if (req.user.role === Role.PBR) {
       whereClause.authorId = req.user.id;
@@ -19,6 +19,17 @@ export const getPosts = async (req: any, res: Response) => {
         { title: { contains: String(q) } },
         { content: { contains: String(q) } },
       ];
+    }
+
+    const { categoryId, authorId } = req.query;
+
+    if (categoryId) {
+      whereClause.categoryId = Number(categoryId);
+    }
+
+    // Se for ADM, permite filtrar por authorId passado na query
+    if (req.user.role === Role.ADM && authorId) {
+      whereClause.authorId = Number(authorId);
     }
 
     const posts = await prisma.post.findMany({
@@ -78,6 +89,7 @@ export const createPost = async (req: any, res: Response) => {
         scheduledAt: new Date(scheduledAt),
         categoryId: Number(categoryId),
         authorId: req.user.id,
+        status: 'offAir' // Padrão conforme solicitado: offAir = No ar
       },
     });
     return res.status(201).json(post);
@@ -131,6 +143,31 @@ export const deletePost = async (req: any, res: Response) => {
     return res.json({ message: 'Post excluído' });
   } catch (error) {
     return res.status(500).json({ message: 'Erro ao excluir post' });
+  }
+};
+
+export const updatePostStatus = async (req: any, res: Response) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    // Apenas ADM pode mudar status
+    if (req.user.role !== Role.ADM) {
+      return res.status(403).json({ message: 'Apenas administradores podem mudar o status' });
+    }
+
+    if (!['liveAir', 'offAir'].includes(status)) {
+      return res.status(400).json({ message: 'Status inválido' });
+    }
+
+    const post = await prisma.post.update({
+      where: { id: Number(id) },
+      data: { status: status === 'liveAir' ? 'offAir' : 'liveAir' }
+    });
+
+    return res.json(post);
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao atualizar status' });
   }
 };
 
