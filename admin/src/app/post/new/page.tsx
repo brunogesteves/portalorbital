@@ -4,13 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { api } from '@/Utils/api';
 import { CategoryProps } from '@/Utils/types';
-import dynamic from 'next/dynamic';
-import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS
 
-// Import SunEditor dynamically to avoid SSR issues
-const SunEditor = dynamic(() => import('suneditor-react'), {
-  ssr: false,
-});
+import { LibraryModal } from '@/app/components/posts/Libray';
+import { Thumbnail } from '@/app/components/posts/Thumbnail';
+import { Editor } from '@/app/components/posts/Editor';
+
+
 
 export default function PostForm() {
   const router = useRouter();
@@ -41,7 +40,7 @@ export default function PostForm() {
         setCategoryId(post.categoryId.toString());
         setScheduledAt(new Date(post.scheduledAt).toISOString().slice(0, 16));
         if (post.thumbnail) {
-          setPreview(`${process.env.NEXT_PUBLIC_URL_SERVER || 'http://localhost:3001'}${post.thumbnail}`);
+          setPreview(`${process.env.NEXT_PUBLIC_URL_SERVER}${post.thumbnail}`);
           setThumbnailUrl(post.thumbnail);
         }
       });
@@ -69,31 +68,7 @@ export default function PostForm() {
     }
   };
 
-  const handleImageUploadBefore = (files: any[], info: object, uploadHandler: Function) => {
-    const file = files[0];
-    const formData = new FormData();
-    formData.append('image', file);
 
-    api.post('/posts/upload-image', formData)
-      .then(res => {
-        const response = {
-          result: [
-            {
-              url: `${process.env.NEXT_PUBLIC_URL_SERVER || 'http://localhost:3001'}${res.data.url}`,
-              name: file.name,
-              size: file.size,
-            }
-          ]
-        };
-        uploadHandler(response);
-      })
-      .catch(err => {
-        console.error('Erro ao fazer upload da imagem no editor:', err);
-        uploadHandler(err.message);
-      });
-
-    return undefined;
-  };
 
   return (
     <div className="max-w-5xl mx-auto pb-20">
@@ -145,76 +120,20 @@ export default function PostForm() {
           </div>
 
           {/* Thumbnail */}
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Thumbnail (Capa)</label>
-            <div className="border-2 border-dashed border-gray-200 rounded-2xl p-4 text-center hover:border-red-400 transition-colors bg-gray-50 h-64 flex flex-col items-center justify-center relative overflow-hidden group">
-              {preview ? (
-                <img src={preview} className="w-full h-full object-cover" />
-              ) : (
-                <div className="text-gray-400">
-                  <p>Nenhuma imagem selecionada</p>
-                </div>
-              )}
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity gap-4">
-                <label className="bg-white text-gray-800 px-4 py-2 rounded-lg cursor-pointer font-bold hover:bg-gray-100 transition-colors">
-                  Upload
-                  <input type="file" className="hidden" onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const formData = new FormData();
-                      formData.append('image', file);
-                      api.post('/posts/upload-image', formData).then(res => {
-                        setThumbnailUrl(res.data.url);
-                        setPreview(`${process.env.NEXT_PUBLIC_URL_SERVER || 'http://localhost:3001'}${res.data.url}`);
-                        api.get('/posts/images').then(r => setExistingImages(r.data));
-                      }).catch(err => {
-                        console.error('Erro ao fazer upload da capa:', err);
-                        alert('Erro ao fazer upload da capa');
-                      });
-                    }
-                  }} />
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setShowImageModal(true)}
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-colors"
-                >
-                  Biblioteca
-                </button>
-              </div>
-            </div>
-          </div>
+          <Thumbnail
+            preview={preview}
+            setThumbnailUrl={setThumbnailUrl}
+            setShowImageModal={setShowImageModal}
+            setPreview={setPreview}
+            setExistingImages={setExistingImages}
+          />
         </div>
 
         {/* Editor SunEditor */}
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Conteúdo da Notícia</label>
-          <div className="rounded-xl overflow-hidden border border-gray-200">
-            <SunEditor
-              setContents={content}
-              onChange={setContent}
-              onImageUploadBefore={handleImageUploadBefore}
-              height="300px"
-              setOptions={{
-                buttonList: [
-                  ['undo', 'redo'],
-                  ['font', 'fontSize', 'formatBlock'],
-                  ['paragraphStyle', 'blockquote'],
-                  ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
-                  ['fontColor', 'hiliteColor', 'textStyle'],
-                  ['removeFormat'],
-                  ['outdent', 'indent'],
-                  ['align', 'horizontalRule', 'list', 'lineHeight'],
-                  ['table', 'link', 'image'], // Vídeo removido como solicitado
-                  ['fullScreen', 'showBlocks'],
-                  ['preview']
-                ],
-                height: '600px'
-              }}
-            />
-          </div>
-        </div>
-
+        <Editor
+          content={content}
+          setContent={setContent}
+        />
         <div className="flex justify-end pt-4">
           <button type="submit" className="bg-red-600 text-white px-10 py-4 rounded-xl font-bold text-xl hover:bg-red-700 transition-all shadow-xl shadow-red-200 active:scale-95">
             {isEdit ? 'Salvar Alterações' : 'Publicar Notícia'}
@@ -224,38 +143,14 @@ export default function PostForm() {
 
       {/* Modal de Biblioteca de Imagens */}
       {showImageModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[100] backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[80vh] flex flex-col shadow-2xl">
-            <div className="p-6 border-b flex justify-between items-center">
-              <h3 className="text-2xl font-bold text-gray-800">Biblioteca de Imagens</h3>
-              <button onClick={() => setShowImageModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-            </div>
-            <div className="p-6 overflow-y-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-              {existingImages.map((img, i) => (
-                <div
-                  key={i}
-                  className="relative aspect-video rounded-xl overflow-hidden cursor-pointer group border-4 border-transparent hover:border-red-500 transition-all"
-                  onClick={() => {
-                    setPreview(`${process.env.NEXT_PUBLIC_URL_SERVER || 'http://localhost:3001'}${img}`);
-                    setThumbnailUrl(img);
-                    setShowImageModal(false);
-                  }}
-                >
-                  <img src={`${process.env.NEXT_PUBLIC_URL_SERVER || 'http://localhost:3001'}${img}`} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all">
-                    <span className="text-white font-bold opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-                      SELECIONAR
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="p-6 border-t text-right">
-              <button onClick={() => setShowImageModal(false)} className="bg-gray-100 px-6 py-2 rounded-lg font-bold text-gray-600 hover:bg-gray-200 transition-colors">Fechar</button>
-            </div>
-          </div>
-        </div>
+        <LibraryModal
+          existingImages={existingImages}
+          setPreview={setPreview}
+          setThumbnailUrl={setThumbnailUrl}
+          setShowImageModal={setShowImageModal}
+        />
       )}
+
     </div>
   );
 }
