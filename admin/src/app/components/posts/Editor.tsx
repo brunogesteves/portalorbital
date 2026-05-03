@@ -41,7 +41,7 @@ export const Editor = ({ content, setContent }: EditorProps) => {
     };
     return (
         <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Conteúdo da Notícia</label>
+            <label className="block text-sm font-bold text-gray-700 mb-2 ml-3">Conteúdo da Notícia</label>
             <div className="rounded-xl overflow-hidden border border-gray-200">
                 <SunEditor
                     setContents={content}

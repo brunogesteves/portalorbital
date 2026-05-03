@@ -2,25 +2,39 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { api } from '@/Utils/api';
-import { FiMail, FiLock, FiArrowRight } from 'react-icons/fi';
+import { loginSchema } from '@/Utils/schemas';
+import { LoginFormValues } from '@/Utils/types';
+import { FiMail, FiLock, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    }
+  });
+
+  const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
     setError('');
     try {
-      await api.post('/auth/login', { email, password });
+      await api.post('/auth/login', data);
       router.push('/');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao autenticar. Verifique sua conexão.');
+      setError(err.response?.data?.message || 'Credenciais inválidas ou erro de conexão.');
     } finally {
       setLoading(false);
     }
@@ -66,58 +80,64 @@ export default function Login() {
 
           {error && (
             <div className="bg-red-50 text-red-600 p-5 rounded-2xl text-sm font-bold border border-red-100 flex items-center gap-3 animate-shake">
-              <div className="w-2 h-2 bg-red-600 rounded-full"></div>
+              <FiAlertCircle size={20} className="shrink-0" />
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-red-600 transition-colors">
+                <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${errors.email ? 'text-red-500' : 'text-gray-400 group-focus-within:text-red-600'}`}>
                   <FiMail size={20} />
                 </div>
                 <input 
+                  {...register('email')}
                   type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-gray-50 border-2 border-transparent focus:border-red-600 focus:bg-white rounded-2xl pl-12 pr-4 py-4 outline-none transition-all font-semibold text-gray-800"
+                  className={`w-full bg-gray-50 border-2 rounded-2xl pl-12 pr-4 py-4 outline-none transition-all font-semibold text-gray-800 ${errors.email ? 'border-red-200 focus:border-red-500 bg-red-50/30' : 'border-transparent focus:border-red-600 focus:bg-white'}`}
                   placeholder="admin@portal.com"
-                  required
                 />
               </div>
+              {errors.email && (
+                <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
+                  <FiAlertCircle size={12} /> {errors.email.message}
+                </span>
+              )}
             </div>
 
             <div className="space-y-2">
               <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Senha de Acesso</label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-red-600 transition-colors">
+                <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${errors.password ? 'text-red-500' : 'text-gray-400 group-focus-within:text-red-600'}`}>
                   <FiLock size={20} />
                 </div>
                 <input 
+                  {...register('password')}
                   type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-gray-50 border-2 border-transparent focus:border-red-600 focus:bg-white rounded-2xl pl-12 pr-4 py-4 outline-none transition-all font-semibold text-gray-800"
+                  className={`w-full bg-gray-50 border-2 rounded-2xl pl-12 pr-4 py-4 outline-none transition-all font-semibold text-gray-800 ${errors.password ? 'border-red-200 focus:border-red-500 bg-red-50/30' : 'border-transparent focus:border-red-600 focus:bg-white'}`}
                   placeholder="••••••••"
-                  required
                 />
               </div>
+              {errors.password && (
+                <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
+                  <FiAlertCircle size={12} /> {errors.password.message}
+                </span>
+              )}
             </div>
 
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-2">
-                <input type="checkbox" id="remember" className="w-4 h-4 rounded border-gray-300 text-red-600 focus:ring-red-500" />
-                <label htmlFor="remember" className="text-sm font-bold text-gray-500 cursor-pointer">Lembrar de mim</label>
+                <input type="checkbox" id="remember" className="w-4 h-4 rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer" />
+                <label htmlFor="remember" className="text-sm font-bold text-gray-500 cursor-pointer select-none">Lembrar de mim</label>
               </div>
-              <button type="button" className="text-sm font-bold text-red-600 hover:underline">Esqueceu a senha?</button>
+              <button type="button" className="text-sm font-bold text-red-600 hover:underline transition-all">Esqueceu a senha?</button>
             </div>
 
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-red-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-red-700 transition-all shadow-xl shadow-red-100 flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50"
+              className="w-full bg-red-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-red-700 transition-all shadow-xl shadow-red-100 flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

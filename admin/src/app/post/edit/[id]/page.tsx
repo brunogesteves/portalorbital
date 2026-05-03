@@ -1,206 +1,230 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { api } from '@/Utils/api';
-import { CategoryProps } from '@/Utils/types';
-import dynamic from 'next/dynamic';
-import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS
+import { CategoryProps, PostFormValues } from '@/Utils/types';
+import { postSchema } from '@/Utils/schemas';
+
 import { LibraryModal } from '@/app/components/posts/Libray';
 import { Thumbnail } from '@/app/components/posts/Thumbnail';
+import { Editor } from '@/app/components/posts/Editor';
+import { FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 
-// Import SunEditor dynamically to avoid SSR issues
-const SunEditor = dynamic(() => import('suneditor-react'), {
-    ssr: false,
-});
+export default function EditPost() {
+  const router = useRouter();
+  const params = useParams();
+  const id = params.id;
 
-export default function PostForm() {
-    const router = useRouter();
-    const params = useParams();
-    const isEdit = !!params.id;
+  const [preview, setPreview] = useState('');
+  const [categories, setCategories] = useState<CategoryProps[]>([]);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [categoryId, setCategoryId] = useState('');
-    const [scheduledAt, setScheduledAt] = useState('');
-    const [thumbnailUrl, setThumbnailUrl] = useState('');
-    const [preview, setPreview] = useState('');
-    const [categories, setCategories] = useState<CategoryProps[]>([]);
-    const [showImageModal, setShowImageModal] = useState(false);
-    const [existingImages, setExistingImages] = useState<string[]>([]); // Simulação de fotos existentes
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors }
+  } = useForm<PostFormValues>({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      title: '',
+      content: '',
+      categoryId: '',
+      scheduledAt: '',
+      thumbnailUrl: '',
+    }
+  });
 
-    useEffect(() => {
-        // Carregar categorias
-        api.get('/categories').then(res => setCategories(res.data));
+  const contentValue = watch('content');
 
-        api.get('/posts/images').then(res => setExistingImages(res.data));
+  useEffect(() => {
+    // Carregar categorias e imagens da biblioteca
+    api.get('/categories').then(res => setCategories(res.data));
+    api.get('/posts/images').then(res => setExistingImages(res.data));
 
-        if (isEdit) {
-            api.get(`/posts/${params.id}`).then(res => {
-                const post = res.data;
-                setTitle(post.title);
-                setContent(post.content);
-                setCategoryId(post.categoryId.toString());
-                setScheduledAt(new Date(post.scheduledAt).toISOString().slice(0, 16));
-                if (post.thumbnail) {
-                    setPreview(`${process.env.NEXT_PUBLIC_URL_SERVER}${post.thumbnail}`);
-                    setThumbnailUrl(post.thumbnail);
-                }
-            });
+    // Carregar dados do post para edição
+    if (id) {
+      api.get(`/posts/${id}`).then(res => {
+        const post = res.data;
+        reset({
+          title: post.title,
+          content: post.content,
+          categoryId: post.categoryId.toString(),
+          scheduledAt: new Date(post.scheduledAt).toISOString().slice(0, 16),
+          thumbnailUrl: post.thumbnail || '',
+        });
+        
+        if (post.thumbnail) {
+          setPreview(`${process.env.NEXT_PUBLIC_URL_SERVER}${post.thumbnail}`);
         }
-    }, [isEdit, params.id]);
+      }).catch(err => {
+        console.error('Erro ao carregar post:', err);
+        alert('Erro ao carregar os dados da notícia.');
+      });
+    }
+  }, [id, reset]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('content', content);
-        formData.append('categoryId', categoryId);
-        formData.append('scheduledAt', scheduledAt);
-        if (thumbnailUrl) formData.append('thumbnailUrl', thumbnailUrl);
+  const onSubmit = async (data: PostFormValues) => {
+    setLoading(true);
+    setSuccess(false);
+    
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('content', data.content);
+    formData.append('categoryId', data.categoryId);
+    formData.append('scheduledAt', data.scheduledAt);
+    if (data.thumbnailUrl) formData.append('thumbnailUrl', data.thumbnailUrl);
 
-        try {
-            if (isEdit) {
-                await api.put(`/posts/${params.id}`, formData);
-            } else {
-                await api.post('/posts', formData);
-            }
-            router.push('/');
-        } catch (error) {
-            alert('Erro ao salvar post');
-        }
-    };
+    try {
+      await api.put(`/posts/${id}`, formData);
+      setSuccess(true);
+      setTimeout(() => router.push('/'), 1500);
+    } catch (error) {
+      console.error('Erro ao salvar post:', error);
+      alert('Erro ao salvar as alterações. Verifique os campos.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleImageUploadBefore = (files: any[], info: object, uploadHandler: Function) => {
-        const file = files[0];
-        const formData = new FormData();
-        formData.append('image', file);
-
-        api.post('/posts/upload-image', formData)
-            .then(res => {
-                const response = {
-                    result: [
-                        {
-                            url: `${process.env.NEXT_PUBLIC_URL_SERVER}${res.data.url}`,
-                            name: file.name,
-                            size: file.size,
-                        }
-                    ]
-                };
-                uploadHandler(response);
-            })
-            .catch(err => {
-                console.error('Erro ao fazer upload da imagem no editor:', err);
-                uploadHandler(err.message);
-            });
-
-        return undefined;
-    };
-
-    return (
-        <div className="max-w-5xl mx-auto pb-20">
-            <h1 className="text-3xl font-bold mb-8 text-gray-800">
-                {isEdit ? 'Editar Notícia' : 'Criar Nova Notícia'}
-            </h1>
-
-            <form onSubmit={handleSubmit} className="space-y-8 bg-white p-8 rounded-2xl shadow-xl border border-gray-100 ">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
-                    {/* Título e Categoria */}
-                    <div className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Título da Notícia</label>
-                            <input
-                                type="text"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 outline-none transition-all"
-                                placeholder="Digite o título chamativo..."
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Categoria</label>
-                            <select
-                                value={categoryId}
-                                onChange={(e) => setCategoryId(e.target.value)}
-                                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 outline-none appearance-none bg-white"
-                                required
-                            >
-                                <option value="">Selecione uma categoria</option>
-                                {categories.map(cat => (
-                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Data e Hora de Publicação</label>
-                            <input
-                                type="datetime-local"
-                                value={scheduledAt}
-                                onChange={(e) => setScheduledAt(e.target.value)}
-                                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 outline-none"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    {/* Thumbnail */}
-                    <Thumbnail
-                        preview={preview}
-                        setThumbnailUrl={setThumbnailUrl}
-                        setShowImageModal={setShowImageModal}
-                        setPreview={setPreview}
-                        setExistingImages={setExistingImages}
-                    />
-                </div>
-
-                {/* Editor SunEditor */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Conteúdo da Notícia</label>
-                    <div className="rounded-xl overflow-hidden border border-gray-200">
-                        <SunEditor
-                            setContents={content}
-                            onChange={setContent}
-                            onImageUploadBefore={handleImageUploadBefore}
-                            height="300px"
-                            setOptions={{
-                                buttonList: [
-                                    ['undo', 'redo'],
-                                    ['font', 'fontSize', 'formatBlock'],
-                                    ['paragraphStyle', 'blockquote'],
-                                    ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
-                                    ['fontColor', 'hiliteColor', 'textStyle'],
-                                    ['removeFormat'],
-                                    ['outdent', 'indent'],
-                                    ['align', 'horizontalRule', 'list', 'lineHeight'],
-                                    ['table', 'link', 'image'], // Vídeo removido como solicitado
-                                    ['fullScreen', 'showBlocks'],
-                                    ['preview']
-                                ],
-                                height: '600px'
-                            }}
-                        />
-                    </div>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                    <button type="submit" className="bg-red-600 text-white px-10 py-4 rounded-xl font-bold text-xl hover:bg-red-700 transition-all shadow-xl shadow-red-200 active:scale-95">
-                        {isEdit ? 'Salvar Alterações' : 'Publicar Notícia'}
-                    </button>
-                </div>
-            </form>
-
-            {/* Modal de Biblioteca de Imagens */}
-            {showImageModal && (
-                <LibraryModal
-                    existingImages={existingImages}
-                    setPreview={setPreview}
-                    setThumbnailUrl={setThumbnailUrl}
-                    setShowImageModal={setShowImageModal}
-                />
-            )}
+  return (
+    <div className="max-w-5xl mx-auto pb-10 px-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+            Editar Notícia
+          </h1>
+          <p className="text-gray-500 font-medium">Atualize as informações do post abaixo.</p>
         </div>
-    );
+        
+        {success && (
+          <div className="bg-green-50 text-green-700 px-4 py-2 rounded-lg flex items-center gap-2 font-bold animate-bounce">
+            <FiCheckCircle /> Alterações salvas! Redirecionando...
+          </div>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <div className="bg-white p-6 md:p-8 rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Título e Categoria */}
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-black text-gray-700 ml-1">Título da Notícia</label>
+                <input
+                  {...register('title')}
+                  type="text"
+                  className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${errors.title ? 'border-red-200 focus:border-red-500 bg-red-50/30' : 'border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50'}`}
+                  placeholder="Ex: Nova reforma política é aprovada no congresso"
+                />
+                {errors.title && (
+                  <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
+                    <FiAlertCircle size={12} /> {errors.title.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-black text-gray-700 ml-1">Categoria</label>
+                  <div className="relative">
+                    <select
+                      {...register('categoryId')}
+                      className={`w-full border-2 rounded-2xl px-5 py-4 outline-none appearance-none transition-all font-semibold cursor-pointer ${errors.categoryId ? 'border-red-200 focus:border-red-500 bg-red-50/30' : 'border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50'}`}
+                    >
+                      <option value="">Selecione...</option>
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                      ▼
+                    </div>
+                  </div>
+                  {errors.categoryId && (
+                    <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
+                      <FiAlertCircle size={12} /> {errors.categoryId.message}
+                    </span>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-black text-gray-700 ml-1">Data de Publicação</label>
+                  <input
+                    {...register('scheduledAt')}
+                    type="datetime-local"
+                    className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${errors.scheduledAt ? 'border-red-200 focus:border-red-500 bg-red-50/30' : 'border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50'}`}
+                  />
+                  {errors.scheduledAt && (
+                    <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
+                      <FiAlertCircle size={12} /> {errors.scheduledAt.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Thumbnail */}
+            <div className="space-y-2">
+              <label className="text-sm font-black text-gray-700 ml-1 text-center block md:text-left">Imagem de Capa (Thumbnail)</label>
+              <Thumbnail
+                preview={preview}
+                setThumbnailUrl={(val) => setValue('thumbnailUrl', val)}
+                setShowImageModal={setShowImageModal}
+                setPreview={setPreview}
+                setExistingImages={setExistingImages}
+              />
+            </div>
+          </div>
+
+          <div className="mt-8 space-y-2">
+            <div className={`rounded-3xl overflow-hidden border-2 transition-all ${errors.content ? 'border-red-200' : 'border-gray-100'}`}>
+              <Editor
+                content={contentValue}
+                setContent={(val) => setValue('content', val, { shouldValidate: true })}
+              />
+            </div>
+            {errors.content && (
+              <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
+                <FiAlertCircle size={12} /> {errors.content.message}
+              </span>
+            )}
+          </div>
+
+          <div className="flex justify-end pt-8 border-t border-gray-50 mt-8">
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="bg-red-600 text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-red-700 transition-all shadow-xl shadow-red-200 active:scale-[0.98] disabled:opacity-50 flex items-center gap-3"
+            >
+              {loading ? (
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                'Salvar Alterações'
+              )}
+            </button>
+          </div>
+        </div>
+      </form>
+
+      {/* Modal de Biblioteca de Imagens */}
+      {showImageModal && (
+        <LibraryModal
+          existingImages={existingImages}
+          setPreview={setPreview}
+          setThumbnailUrl={(val) => setValue('thumbnailUrl', val)}
+          setShowImageModal={setShowImageModal}
+        />
+      )}
+    </div>
+  );
 }

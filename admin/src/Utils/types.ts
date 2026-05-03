@@ -1,3 +1,6 @@
+import * as z from 'zod';
+import { loginSchema, postSchema } from './schemas';
+
 export interface UserProps {
   id: number;
   email: string;
@@ -28,6 +31,10 @@ export interface PostProps {
     role: string;
   };
 }
+
+// Tipos inferidos dos schemas do Zod
+export type LoginFormValues = z.infer<typeof loginSchema>;
+export type PostFormValues = z.infer<typeof postSchema>;
 
 // Para retrocompatibilidade com o código anterior se necessário
 export type contentNewsProps = PostProps;
