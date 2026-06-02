@@ -4,8 +4,27 @@ import { Role } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';
 
-export const getPosts = async (req: any, res: Response) => {
+export const allPosts = async (req: any, res: Response) => {
   try {
+    const posts = await prisma.post.findMany({
+      include: {
+        category: true,
+        author: {
+          select: { name: true, email: true, role: true }
+        }
+      },
+      orderBy: { scheduledAt: 'desc' }
+    });
+    return res.json(posts);
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao buscar posts' });
+  }
+};
+  
+export const getPosts = async (req: any, res: Response) => {
+
+  try {
+
     const { q } = req.query;
     const whereClause: any = {};
 

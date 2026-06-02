@@ -5,7 +5,8 @@ import { Role } from '@prisma/client';
 
 const router = Router();
 
-router.get('/', authenticate, getCategories);
+// router.get('/', authenticate, getCategories);
+router.get('/',  getCategories);
 router.post('/', authenticate, authorize([Role.ADM]), createCategory);
 router.delete('/:id', authenticate, authorize([Role.ADM]), deleteCategory);
 

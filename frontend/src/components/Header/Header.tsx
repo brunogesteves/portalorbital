@@ -1,7 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
+"use client"
 import { FiMenu, FiSearch } from "react-icons/fi";
+import { useHeader } from "./useHeader";
+import { CategoryProps } from "@/utils/types";
 
 export default function Header() {
+  const { data, methods } = useHeader();
+
   return (
     <>
       {/* 💻 DESKTOP HEADER (md breakpoint and above) */}
@@ -26,7 +30,8 @@ export default function Header() {
                 alt="Orbital Logo"
                 className="h-10 w-auto object-contain"
                 data-purpose="logo-icon"
-                src="https://lh3.googleusercontent.com/aida/ADBb0uh635aAwT-DVGCdV5q1KeXqYFOLcX2HvG7ox7PAnoPqFCV7r8CBjCMBC8fYN7I9chHuefrjMJA9Cm-oDrrU2zdmc_h3tJwiOT4DHNcO0PO4Ip3BlKqzwAjrTImEXR8ZDkwNU8uZ_MAZu0Dibp_yvlX0bJv-IW5gTzl04G0aaK0TliapXT18OvzcS35Du068BJwq5u7OR5NEERv45vBYkkmoJ1ZsyMKTGkaJoxsCnFzxwniL25LxUgRM4IxhygMFeNUH5MpfUnmu"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgofKmN8O3SnmsRyYpCmNA1I4CUXhmozms5xV1laABwzRu2hdegZ0PvrbvinIUWwYG38HgYS4pJFL3bVDDu32ed6352moBf8KzpUfZT0TUurvJTm9GZxHg9h4zcUt-VqX0wAl_zUAbvWCc_ePpwJ73yhwM1DGVgJt05wow-RRWD9dfo4CplXlozyrXSGGr3k2o-LLPr2Xj5cnXiDWHjO9YLvEUWW--iIs4ioY5RdUKujYdfrVo9p3lT4P-m_0PRv6dux7tJT04zlM"
+
               />
               {/* Text Logo */}
               <div className="flex flex-col leading-none select-none">
@@ -58,21 +63,13 @@ export default function Header() {
         </header>
 
         <nav className="bg-nav-red-strip w-full py-2 flex justify-center items-center" data-purpose="secondary-navigation">
-          <div className="bg-nav-blue-pill rounded-full flex items-center px-4 py-1.5 space-x-0">
-            <a className="nav-link text-white px-4" href="#">Tecnologia</a>
-            <div className="nav-divider"></div>
-            <a className="nav-link text-white px-4" href="#">Notícias do Mundo</a>
-            <div className="nav-divider"></div>
-            <a className="nav-link text-white px-4" href="#">Entretenimento</a>
-            <div className="nav-divider"></div>
-            <a className="nav-link text-white px-4" href="#">Mundo Geek</a>
-            <div className="nav-divider"></div>
-            <a className="nav-link text-white px-4" href="#">História &amp; Artes</a>
-            <div className="nav-divider"></div>
-            <a className="nav-link text-white px-4" href="#">Variedades</a>
-            <div className="nav-divider"></div>
-            <a className="nav-link text-white px-4" href="#">Quem Somos</a>
-          </div>
+          <ul className="bg-nav-blue-pill rounded-full flex items-center px-4 py-1.5 space-x-0">
+            {data.categories.sort().map((cat: CategoryProps) => (
+              <li key={cat.id} className="nav-link text-white px-4">
+                <a href={`/${cat.name}`}>{cat.name}</a>
+              </li>
+            ))}
+          </ul>
         </nav>
         {/* END: MainHeader */}
       </div>
@@ -116,30 +113,18 @@ export default function Header() {
           <nav className="relative z-10 w-full overflow-x-auto no-scrollbar">
             <ul className="flex space-x-2 px-4 items-center w-max pb-1">
               <li>
-                <button className="btn-silver-active tracking-tight font-sans cursor-pointer">
+                <a href="/" className="btn-silver-active tracking-tight font-sans cursor-pointer">
                   Tecnologia
-                </button>
+                </a>
               </li>
-              <li>
-                <button className="btn-blue-glossy tracking-tight font-sans cursor-pointer">
-                  Notícias
-                </button>
-              </li>
-              <li>
-                <button className="btn-blue-glossy tracking-tight font-sans cursor-pointer">
-                  Entretenimento
-                </button>
-              </li>
-              <li>
-                <button className="btn-blue-glossy tracking-tight font-sans whitespace-nowrap cursor-pointer">
-                  Mundo Geek
-                </button>
-              </li>
-              <li>
-                <button className="btn-blue-glossy tracking-tight font-sans cursor-pointer">
-                  Mobi...
-                </button>
-              </li>
+              
+              {data.categories.sort().map((cat: CategoryProps) => (
+                <li key={cat.id}>
+                  <a  href={`/${cat.name}`} className="btn-blue-glossy tracking-tight font-sans cursor-pointer">
+                    {cat.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </nav>
         </header>

@@ -2,9 +2,9 @@
 import type { Metadata } from "next";
 import { FaRobot, FaSatellite, FaInfinity, FaLinux, FaRocket, FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import Header from "@/components/Header";
+import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
-import HeroSlider from "@/components/HeroSlider";
+import Slider from "@/components/Slider/Slider";
 
 export const metadata: Metadata = {
   title: "Orbital Channel - O mundo em suas mãos",
@@ -47,7 +47,7 @@ export default function Home() {
       <div className="hidden md:block text-gray-800 min-h-screen bg-white">
         {/* BEGIN: MainContentPlaceholder */}
         <main className="w-full min-h-screen">
-          <HeroSlider device="desktop" />
+          <Slider device="desktop" />
           <section className="bg-white py-12" data-purpose="main-content-body">
             <div className="max-w-7xl mx-auto px-6">
               {/* Featured Content */}
@@ -227,7 +227,7 @@ export default function Home() {
       <div className="block md:hidden text-gray-800 min-h-screen bg-white flex flex-col w-full">
         {/* Content Area */}
         <main className="p-4 bg-white overflow-y-auto no-scrollbar flex-1" style={{ paddingBottom: "80px" }}>
-          <HeroSlider device="mobile" />
+          <Slider device="mobile" />
 
           {/* New Content Cards */}
           <section className="grid grid-cols-2 gap-4">
