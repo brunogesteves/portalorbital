@@ -13,7 +13,7 @@ export function useSlider() {
   const [Slides, setSlides] = useState<string[]>([]);
 
   useEffect(() => {
-    async function getCategories() {
+    async function getSlides() {
      try {
          await api.get('/posts/all').then((res) => { 
         setSlides(res.data)
@@ -22,7 +22,7 @@ export function useSlider() {
         
      }
     }
-    getCategories();
+    getSlides();
   }, []);
 
     const typedSlides = Slides as unknown as PostProps[];

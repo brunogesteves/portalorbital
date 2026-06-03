@@ -2,9 +2,9 @@
 import type { Metadata } from "next";
 import { FaRobot, FaSatellite, FaInfinity, FaLinux, FaRocket, FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import Header from "@/components/Header/Header";
+import Header from "@/components/Header/Categories/categories";
 import Footer from "@/components/Footer";
-import Slider from "@/components/Slider/Slider";
+import Slider from "@/components/Header/Slider/Slider";
 
 export const metadata: Metadata = {
   title: "Orbital Channel - O mundo em suas mãos",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
-      <Header />
+      <Header slug="Home"/>
       {/* ========================================================================= */}
       {/* 💻 DESKTOP LAYOUT (md breakpoint and above)                              */}
       {/* ========================================================================= */}

@@ -1,21 +1,25 @@
 "use client";
-
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { useCategory } from "./useCategory";
 import { FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiArrowRight } from "react-icons/fi";
-import Header from "@/components/Header/Header";
+import Header from "@/components/Header/Categories/categories";
 import Footer from "@/components/Footer";
-import HeroSlider from "@/components/Slider/Slider";
+import HeroSlider from "@/components/Header/Slider/Slider";
+import { PostProps } from "@/utils/types";
 
-export default function CategoryPage() {
-  const { data, methods } = useCategory();
+export default function CategoryPage(data:PostProps) {
+  // const data:PostProps = {
+  //   id: 1,
+  //   title: "dfdsf",
+  //   thumbnail: "",
+  //   content: ""
+  // }
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
-      <Header />
+      <Header slug={data.title} />
 
       {/* ========================================================================= */}
       {/* 💻 DESKTOP LAYOUT (md breakpoint and above)                              */}
@@ -27,7 +31,7 @@ export default function CategoryPage() {
           <section className="bg-white py-12" data-purpose="main-content-body">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-center mb-4">
-                <h2 className="font-bold text-[#111415] uppercase tracking-wide text-4xl">{data.categoryName}</h2>
+                <h2 className="font-bold text-[#111415] uppercase tracking-wide text-4xl">{data.title}</h2>
               </div>
               
               {/* Destaques Automotivos */}
@@ -235,7 +239,7 @@ export default function CategoryPage() {
           
           <section className="py-6 px-4 bg-white">
             <div className="max-w-7xl mx-auto flex justify-center">
-              <h2 className="text-5xl font-bold text-gray-900 uppercase tracking-tighter text-center">{data.categoryName}</h2>
+              <h2 className="text-5xl font-bold text-gray-900 uppercase tracking-tighter text-center">{data.title}</h2>
             </div>
           </section>
 

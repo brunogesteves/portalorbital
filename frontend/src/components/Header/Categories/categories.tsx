@@ -1,10 +1,16 @@
 "use client"
-import { FiMenu, FiSearch } from "react-icons/fi";
-import { useHeader } from "./useHeader";
-import { CategoryProps } from "@/utils/types";
 
-export default function Header() {
+import { usePathname } from 'next/navigation'
+import { FiMenu, FiSearch } from "react-icons/fi";
+import { CategoryProps, HeaderProps, SlugProps } from "@/utils/types";
+
+import { useHeader } from "./useCategories";
+
+
+
+export default function Header({slug}:HeaderProps) {
   const { data, methods } = useHeader();
+
 
   return (
     <>
@@ -113,14 +119,14 @@ export default function Header() {
           <nav className="relative z-10 w-full overflow-x-auto no-scrollbar">
             <ul className="flex space-x-2 px-4 items-center w-max pb-1">
               <li>
-                <a href="/" className="btn-silver-active tracking-tight font-sans cursor-pointer">
-                  Tecnologia
+                <a href="/" className={`${slug === "/" ? "btn-silver-active" : "btn-blue-glossy"} tracking-tight font-sans cursor-pointer`}>
+                  Home
                 </a>
               </li>
-              
+
               {data.categories.sort().map((cat: CategoryProps) => (
                 <li key={cat.id}>
-                  <a  href={`/${cat.name}`} className="btn-blue-glossy tracking-tight font-sans cursor-pointer">
+                  <a  href={`/${cat.name}`} className={`${slug === `/${cat.name}` ? "btn-silver-active" : "btn-blue-glossy"} tracking-tight font-sans cursor-pointer`}>
                     {cat.name}
                   </a>
                 </li>

@@ -3,20 +3,19 @@ import type { Metadata } from "next";
 import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiShare2 } from "react-icons/fi";
-import Header from "@/components/Header/Header";
+import Header from "@/components/Header/Categories/categories";
 import Footer from "@/components/Footer";
-import HeroSlider from "@/components/Slider/Slider";
+import HeroSlider from "@/components/Header/Slider/Slider";
+import { SlugProps } from "@/utils/types";
 
-type Props = {
-  params: Promise<{ news: string }>;
-};
+
 
 // Gerador dinâmico de metadados para SEO da Notícia
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { news } = await params;
+export async function generateMetadata({ params }: SlugProps): Promise<Metadata> {
+  const { slug } = await params;
 
   // Formata o slug da notícia (ex: nova-lei-aprovada -> Nova Lei Aprovada)
-  const newsTitle = news
+  const newsTitle = slug
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
@@ -25,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${newsTitle}`,
     description: `Leia mais sobre "${newsTitle}" no Portal Político. Análise completa e atualizações ao vivo.`,
     alternates: {
-      canonical: `/${news}`,
+      canonical: `/${slug}`,
     },
     openGraph: {
       title: `${newsTitle} | Portal Político`,
@@ -35,17 +34,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function NewsPage({ params }: Props) {
-  const { news } = await params;
+export default async function NewsPage({ params }: SlugProps) {
+  const { slug } = await params;
 
-  const newsTitle = news
+  const newsTitle = slug
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
-      <Header />
+      <Header slug={slug as string} />
 
       {/* ========================================================================= */}
       {/* 💻 DESKTOP LAYOUT (md breakpoint and above)                              */}
