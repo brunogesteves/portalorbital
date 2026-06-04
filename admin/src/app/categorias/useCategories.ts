@@ -5,6 +5,7 @@ import { CategoryProps } from '@/Utils/types';
 export function useCategorias() {
   const [categories, setCategories] = useState<CategoryProps[]>([]);
   const [newName, setNewName] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<CategoryProps | null>(null);
@@ -27,13 +28,33 @@ export function useCategorias() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     if (!newName.trim()) return;
+
+    // 1. Validar se há caracteres especiais no nome da categoria
+    const regex = /^[a-zA-Z0-9\s-À-ÿ]+$/;
+    if (!regex.test(newName)) {
+      setError('Caracteres especiais (como ?, !, @, etc.) não são permitidos.');
+      return;
+    }
+
+    // Criar a slug sem acentuação e com hífens nos espaços
+    const slug = newName
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-');
+
     try {
-      const response = await api.post('/categories', { name: newName });
+      const response = await api.post('/categories', { name: newName, slug });
       setCategories([...categories, response.data]);
       setNewName('');
-    } catch (error) {
-      alert('Erro ao criar categoria');
+    } catch (err: any) {
+      const message = err.response?.data?.message || 'Erro ao criar categoria';
+      setError(message);
     }
   };
 
@@ -57,14 +78,17 @@ export function useCategorias() {
   return {
     data:{categories,
     newName,
+    error,
     loading,
     showDeleteModal,
-categoryToDelete},
+    categoryToDelete},
     methods:{    
     setNewName,
+    setError,
     setShowDeleteModal,
     handleCreate,
     handleDeleteClick,
     confirmDelete}
   };
 }
+

@@ -4,18 +4,12 @@ import React from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiArrowRight } from "react-icons/fi";
-import Header from "@/components/Header/Categories/categories";
+import Header from "@/components/Header/Categories/HeaderCategories";
 import Footer from "@/components/Footer";
 import HeroSlider from "@/components/Header/Slider/Slider";
 import { PostProps } from "@/utils/types";
 
-export default function CategoryPage(data:PostProps) {
-  // const data:PostProps = {
-  //   id: 1,
-  //   title: "dfdsf",
-  //   thumbnail: "",
-  //   content: ""
-  // }
+export default function CategoryPage(data:PostProps) {  
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">

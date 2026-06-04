@@ -23,8 +23,6 @@ router.get('/', authenticate, getPosts);
 router.get('/all',  allPosts);
 router.get('/images', authenticate, getImages);
 router.get('/:id', authenticate, getPostById);
-// router.get('/:slug', authenticate, getPostById);
-// router.get('/:slug', getPostBySlug);
 router.post('/upload-image', authenticate, upload.single('image'), uploadEditorImage);
 router.post('/', authenticate, upload.single('thumbnail'), createPost);
 router.put('/:id', authenticate, upload.single('thumbnail'), updatePost);

@@ -14,7 +14,8 @@ export const loginSchema = z.object({
 export const postSchema = z.object({
   title: z.string()
     .min(1, 'O título é obrigatório')
-    .min(5, 'O título deve ser mais descritivo (mín. 5 caracteres)'),
+    .min(5, 'O título deve ser mais descritivo (mín. 5 caracteres)')
+    .regex(/^[a-zA-Z0-9\s-À-ÿ]+$/, 'Caracteres especiais (como ?, !, @, etc.) não são permitidos'),
   content: z.string()
     .min(1, 'O conteúdo da notícia é obrigatório')
     .min(20, 'O conteúdo está muito curto'),

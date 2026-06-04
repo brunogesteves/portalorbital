@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useCategorias } from './useCategories';
-import { FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiAlertCircle } from 'react-icons/fi';
 
 export default function Categorias() {
   const {
@@ -15,18 +15,28 @@ export default function Categorias() {
     <div className="max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">Gerenciar Categorias</h1>
 
-      <form onSubmit={methods.handleCreate} className="bg-white p-6 rounded-xl shadow-md mb-8 flex gap-4 border border-gray-100">
-        <input
-          type="text"
-          value={data.newName}
-          onChange={(e) => methods.setNewName(e.target.value)}
-          placeholder="Nome da nova categoria..."
-          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          required
-        />
-        <button type="submit" className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 font-semibold">
-          <FiPlus /> Adicionar
-        </button>
+      <form onSubmit={methods.handleCreate} className="mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-md flex gap-4 border border-gray-100">
+          <input
+            type="text"
+            value={data.newName}
+            onChange={(e) => {
+              methods.setNewName(e.target.value);
+              methods.setError('');
+            }}
+            placeholder="Nome da nova categoria..."
+            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            required
+          />
+          <button type="submit" className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 font-semibold">
+            <FiPlus /> Adicionar
+          </button>
+        </div>
+        {data.error && (
+          <span className="text-xs font-bold text-red-500 mt-2 ml-1 flex items-center gap-1 animate-fade-in">
+            <FiAlertCircle size={14} /> {data.error}
+          </span>
+        )}
       </form>
 
       <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">

@@ -3,6 +3,7 @@ import prisma from '../lib/prisma';
 import { Role } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';
+import { isValidNameOrTitle, slugify } from '../lib/slug';
 
 export const allPosts = async (req: any, res: Response) => {
   try {
@@ -99,10 +100,38 @@ export const createPost = async (req: any, res: Response) => {
   const { title, content, categoryId, scheduledAt, thumbnailUrl } = req.body;
   const thumbnail = req.file ? `/uploads/${req.file.filename}` : thumbnailUrl || null;
 
+  if (!title || typeof title !== 'string' || !title.trim()) {
+    return res.status(400).json({ message: 'O título do post é obrigatório' });
+  }
+
+  // 1. Validar se há caracteres especiais no título
+  if (!isValidNameOrTitle(title)) {
+    return res.status(400).json({ message: 'Caracteres especiais (como ?, !, @, etc.) não são permitidos no título do post' });
+  }
+
+  // Gerar o slug
+  const slug = slugify(title);
+
   try {
+    // 2. Validar se título ou slug já existem no banco
+    const existingTitle = await prisma.post.findFirst({
+      where: { title }
+    });
+    if (existingTitle) {
+      return res.status(400).json({ message: 'Já existe um post com este título' });
+    }
+
+    const existingSlug = await prisma.post.findFirst({
+      where: { slug }
+    });
+    if (existingSlug) {
+      return res.status(400).json({ message: 'Já existe um post com este slug' });
+    }
+
     const post = await prisma.post.create({
       data: {
         title,
+        slug,
         content,
         thumbnail,
         scheduledAt: new Date(scheduledAt),
@@ -132,10 +161,41 @@ export const updatePost = async (req: any, res: Response) => {
       return res.status(403).json({ message: 'Sem permissão para editar este post' });
     }
 
+    let slug = existingPost.slug;
+
+    if (title && title !== existingPost.title) {
+      if (typeof title !== 'string' || !title.trim()) {
+        return res.status(400).json({ message: 'O título do post não pode ser vazio' });
+      }
+
+      // 1. Validar se há caracteres especiais no novo título
+      if (!isValidNameOrTitle(title)) {
+        return res.status(400).json({ message: 'Caracteres especiais (como ?, !, @, etc.) não são permitidos no título do post' });
+      }
+
+      slug = slugify(title);
+
+      // 2. Verificar se o novo título ou slug já existem em outro post
+      const existingTitle = await prisma.post.findFirst({
+        where: { title, NOT: { id: Number(id) } }
+      });
+      if (existingTitle) {
+        return res.status(400).json({ message: 'Já existe um post com este título' });
+      }
+
+      const existingSlug = await prisma.post.findFirst({
+        where: { slug, NOT: { id: Number(id) } }
+      });
+      if (existingSlug) {
+        return res.status(400).json({ message: 'Já existe um post com este slug' });
+      }
+    }
+
     const post = await prisma.post.update({
       where: { id: Number(id) },
       data: {
         title,
+        slug,
         content,
         categoryId: Number(categoryId),
         scheduledAt: new Date(scheduledAt),

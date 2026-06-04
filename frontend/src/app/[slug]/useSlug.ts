@@ -1,23 +1,23 @@
-import { api } from '@/utils/api';
-import { useEffect, useState } from 'react';
+import { api } from "@/utils/api";
+import { useEffect, useState } from "react";
 
+import CategoryPage from "@/components/modelPages/category";
+import { PostProps } from "@/utils/types";
+import NewsPage from "@/components/modelPages/news";
 
-import  CategoryPage from '@/components/category/category';
-import { PostProps } from '@/utils/types';
-import NewsPage from '@/components/category/news';
+export function useSlug(slug: string) {
+  const [infoContent, setInfoContent] = useState<any>();
+  const [type, setType] = useState("");
 
-export function useSlug(slug:string) {
-    const [contentCategory,setContentCategory] = useState(null)
-    const [newsContent,sContentetNews] = useState(null)
-
-   useEffect(() => {
+  useEffect(() => {
     async function getData() {
       try {
-        const res = await api.get(`/posts/all`);
-
-        if (res.data?.length) {
-          setContentCategory(res.data[0]);
-        }
+        await api.get(`/search/${slug}`).then((res) => {
+          if (res.data) {
+            setType(res.data.type);
+            setInfoContent(res.data.content);
+          }
+        });
       } catch (error) {
         console.error(error);
       }
@@ -25,16 +25,13 @@ export function useSlug(slug:string) {
 
     getData();
   }, [slug]);
-    
 
-    if(contentCategory){
-     return CategoryPage(contentCategory)
-    }else if(newsContent){
-        return NewsPage(newsContent)
-    }else{
-        // return <>pagina nao encontrada</>
-    }
-
-
-  
+  if (type == "category") {
+    // return CategoryPage(content);
+  } else if (type == "news") {
+    console.log("news");
+    return NewsPage(infoContent);
+  } else {
+    // return <>pagina nao encontrada</>
+  }
 }

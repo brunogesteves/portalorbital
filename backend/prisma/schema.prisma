@@ -24,12 +24,14 @@ model User {
 model Category {
   id    Int    @id @default(autoincrement())
   name  String @unique
+  slug  String @unique
   posts Post[]
 }
 
 model Post {
   id           Int      @id @default(autoincrement())
-  title        String
+  title        String   @unique
+  slug         String   @unique
   thumbnail    String?
   content      String   @db.LongText
   scheduledAt  DateTime // Horário inicial de publicação

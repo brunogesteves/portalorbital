@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { FaRobot, FaSatellite, FaInfinity, FaLinux, FaRocket, FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import Header from "@/components/Header/Categories/categories";
+import Header from "@/components/Header/Categories/HeaderCategories";
 import Footer from "@/components/Footer";
 import Slider from "@/components/Header/Slider/Slider";
 

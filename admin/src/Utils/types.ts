@@ -11,11 +11,13 @@ export interface UserProps {
 export interface CategoryProps {
   id: number;
   name: string;
+  slug: string;
 }
 
 export interface PostProps {
   id: number;
   title: string;
+  slug: string;
   thumbnail: string | null;
   content: string;
   scheduledAt: string;

@@ -90,9 +90,10 @@ export default function PostForm() {
       }
       setSuccess(true);
       setTimeout(() => router.push('/'), 1500);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao salvar post:', error);
-      alert('Erro ao salvar post. Verifique os campos e tente novamente.');
+      const message = error.response?.data?.message || 'Erro ao salvar post. Verifique os campos e tente novamente.';
+      alert(message);
     } finally {
       setLoading(false);
     }

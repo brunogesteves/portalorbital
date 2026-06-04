@@ -2,7 +2,7 @@ import { api } from '@/utils/api';
 import { CategoryProps } from '@/utils/types';
 import { useEffect, useState } from 'react';
 
-export function useHeader() {
+export function useHeaderCategories() {
   const [categories, setCategories] = useState<CategoryProps[]>([]);
 
 

@@ -88,9 +88,10 @@ export default function EditPost() {
       await api.put(`/posts/${id}`, formData);
       setSuccess(true);
       setTimeout(() => router.push('/'), 1500);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao salvar post:', error);
-      alert('Erro ao salvar as alterações. Verifique os campos.');
+      const message = error.response?.data?.message || 'Erro ao salvar as alterações. Verifique os campos.';
+      alert(message);
     } finally {
       setLoading(false);
     }
