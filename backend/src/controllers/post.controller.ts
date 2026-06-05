@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
-import prisma from '../lib/prisma';
-import { Role } from '@prisma/client';
-import fs from 'fs';
-import path from 'path';
-import { isValidNameOrTitle, slugify } from '../lib/slug';
+import { Request, Response } from "express";
+import prisma from "../lib/prisma";
+import { Role } from "@prisma/client";
+import fs from "fs";
+import path from "path";
+import { isValidNameOrTitle, slugify } from "../lib/slug";
 
 export const allPosts = async (req: any, res: Response) => {
   try {
@@ -11,21 +11,19 @@ export const allPosts = async (req: any, res: Response) => {
       include: {
         category: true,
         author: {
-          select: { name: true, email: true, role: true }
-        }
+          select: { name: true, email: true, role: true },
+        },
       },
-      orderBy: { scheduledAt: 'desc' }
+      orderBy: { scheduledAt: "desc" },
     });
     return res.json(posts);
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao buscar posts' });
+    return res.status(500).json({ message: "Erro ao buscar posts" });
   }
 };
-  
+
 export const getPosts = async (req: any, res: Response) => {
-
   try {
-
     const { q } = req.query;
     const whereClause: any = {};
 
@@ -57,14 +55,14 @@ export const getPosts = async (req: any, res: Response) => {
       include: {
         category: true,
         author: {
-          select: { name: true, email: true, role: true }
-        }
+          select: { name: true, email: true, role: true },
+        },
       },
-      orderBy: { scheduledAt: 'desc' }
+      orderBy: { scheduledAt: "desc" },
     });
     return res.json(posts);
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao buscar posts' });
+    return res.status(500).json({ message: "Erro ao buscar posts" });
   }
 };
 
@@ -76,56 +74,65 @@ export const getPostById = async (req: any, res: Response) => {
       include: {
         category: true,
         author: {
-          select: { name: true, email: true, role: true }
-        }
-      }
+          select: { name: true, email: true, role: true },
+        },
+      },
     });
 
     if (!post) {
-      return res.status(404).json({ message: 'Post não encontrado' });
+      return res.status(404).json({ message: "Post não encontrado" });
     }
 
     // Regra: PBR só vê os seus, ADM vê todos
     if (req.user.role !== Role.ADM && post.authorId !== req.user.id) {
-      return res.status(403).json({ message: 'Sem permissão para visualizar este post' });
+      return res
+        .status(403)
+        .json({ message: "Sem permissão para visualizar este post" });
     }
 
     return res.json(post);
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao buscar post' });
+    return res.status(500).json({ message: "Erro ao buscar post" });
   }
 };
 
 export const createPost = async (req: any, res: Response) => {
+  console.log("createpost");
   const { title, content, categoryId, scheduledAt, thumbnailUrl } = req.body;
-  const thumbnail = req.file ? `/uploads/${req.file.filename}` : thumbnailUrl || null;
+  const thumbnail = req.file
+    ? `/uploads/${req.file.filename}`
+    : thumbnailUrl || null;
 
-  if (!title || typeof title !== 'string' || !title.trim()) {
-    return res.status(400).json({ message: 'O título do post é obrigatório' });
+  if (!title || typeof title !== "string" || !title.trim()) {
+    return res.status(400).json({ message: "O título do post é obrigatório" });
   }
 
-  // 1. Validar se há caracteres especiais no título
   if (!isValidNameOrTitle(title)) {
-    return res.status(400).json({ message: 'Caracteres especiais (como ?, !, @, etc.) não são permitidos no título do post' });
+    return res.status(400).json({
+      message:
+        "Caracteres especiais (como ?, !, @, etc.) não são permitidos no título do post",
+    });
   }
 
-  // Gerar o slug
   const slug = slugify(title);
 
   try {
-    // 2. Validar se título ou slug já existem no banco
     const existingTitle = await prisma.post.findFirst({
-      where: { title }
+      where: { title },
     });
     if (existingTitle) {
-      return res.status(400).json({ message: 'Já existe um post com este título' });
+      return res
+        .status(400)
+        .json({ message: "Já existe um post com este título" });
     }
 
     const existingSlug = await prisma.post.findFirst({
-      where: { slug }
+      where: { slug },
     });
     if (existingSlug) {
-      return res.status(400).json({ message: 'Já existe um post com este slug' });
+      return res
+        .status(400)
+        .json({ message: "Já existe um post com este slug" });
     }
 
     const post = await prisma.post.create({
@@ -137,57 +144,73 @@ export const createPost = async (req: any, res: Response) => {
         scheduledAt: new Date(scheduledAt),
         categoryId: Number(categoryId),
         authorId: req.user.id,
-        status: 'offAir' // Padrão conforme solicitado: offAir = No ar
+        status: "offAir",
       },
     });
     return res.status(201).json(post);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Erro ao criar post' });
+    return res.status(500).json({ message: "Erro ao criar post" });
   }
 };
 
 export const updatePost = async (req: any, res: Response) => {
   const { id } = req.params;
   const { title, content, categoryId, scheduledAt, thumbnailUrl } = req.body;
-  const thumbnail = req.file ? `/uploads/${req.file.filename}` : thumbnailUrl || undefined;
+  const thumbnail = req.file
+    ? `/uploads/${req.file.filename}`
+    : thumbnailUrl || undefined;
 
   try {
     // Verificar se o usuário pode editar (é dono ou ADM)
-    const existingPost = await prisma.post.findUnique({ where: { id: Number(id) } });
-    if (!existingPost) return res.status(404).json({ message: 'Post não encontrado' });
+    const existingPost = await prisma.post.findUnique({
+      where: { id: Number(id) },
+    });
+    if (!existingPost)
+      return res.status(404).json({ message: "Post não encontrado" });
 
     if (req.user.role !== Role.ADM && existingPost.authorId !== req.user.id) {
-      return res.status(403).json({ message: 'Sem permissão para editar este post' });
+      return res
+        .status(403)
+        .json({ message: "Sem permissão para editar este post" });
     }
 
     let slug = existingPost.slug;
 
     if (title && title !== existingPost.title) {
-      if (typeof title !== 'string' || !title.trim()) {
-        return res.status(400).json({ message: 'O título do post não pode ser vazio' });
+      if (typeof title !== "string" || !title.trim()) {
+        return res
+          .status(400)
+          .json({ message: "O título do post não pode ser vazio" });
       }
 
       // 1. Validar se há caracteres especiais no novo título
       if (!isValidNameOrTitle(title)) {
-        return res.status(400).json({ message: 'Caracteres especiais (como ?, !, @, etc.) não são permitidos no título do post' });
+        return res.status(400).json({
+          message:
+            "Caracteres especiais (como ?, !, @, etc.) não são permitidos no título do post",
+        });
       }
 
       slug = slugify(title);
 
       // 2. Verificar se o novo título ou slug já existem em outro post
       const existingTitle = await prisma.post.findFirst({
-        where: { title, NOT: { id: Number(id) } }
+        where: { title, NOT: { id: Number(id) } },
       });
       if (existingTitle) {
-        return res.status(400).json({ message: 'Já existe um post com este título' });
+        return res
+          .status(400)
+          .json({ message: "Já existe um post com este título" });
       }
 
       const existingSlug = await prisma.post.findFirst({
-        where: { slug, NOT: { id: Number(id) } }
+        where: { slug, NOT: { id: Number(id) } },
       });
       if (existingSlug) {
-        return res.status(400).json({ message: 'Já existe um post com este slug' });
+        return res
+          .status(400)
+          .json({ message: "Já existe um post com este slug" });
       }
     }
 
@@ -204,24 +227,29 @@ export const updatePost = async (req: any, res: Response) => {
     });
     return res.json(post);
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao atualizar post' });
+    return res.status(500).json({ message: "Erro ao atualizar post" });
   }
 };
 
 export const deletePost = async (req: any, res: Response) => {
   const { id } = req.params;
   try {
-    const existingPost = await prisma.post.findUnique({ where: { id: Number(id) } });
-    if (!existingPost) return res.status(404).json({ message: 'Post não encontrado' });
+    const existingPost = await prisma.post.findUnique({
+      where: { id: Number(id) },
+    });
+    if (!existingPost)
+      return res.status(404).json({ message: "Post não encontrado" });
 
     if (req.user.role !== Role.ADM && existingPost.authorId !== req.user.id) {
-      return res.status(403).json({ message: 'Sem permissão para excluir este post' });
+      return res
+        .status(403)
+        .json({ message: "Sem permissão para excluir este post" });
     }
 
     await prisma.post.delete({ where: { id: Number(id) } });
-    return res.json({ message: 'Post excluído' });
+    return res.json({ message: "Post excluído" });
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao excluir post' });
+    return res.status(500).json({ message: "Erro ao excluir post" });
   }
 };
 
@@ -232,27 +260,29 @@ export const updatePostStatus = async (req: any, res: Response) => {
   try {
     // Apenas ADM pode mudar status
     if (req.user.role !== Role.ADM) {
-      return res.status(403).json({ message: 'Apenas administradores podem mudar o status' });
+      return res
+        .status(403)
+        .json({ message: "Apenas administradores podem mudar o status" });
     }
 
-    if (!['liveAir', 'offAir'].includes(status)) {
-      return res.status(400).json({ message: 'Status inválido' });
+    if (!["liveAir", "offAir"].includes(status)) {
+      return res.status(400).json({ message: "Status inválido" });
     }
 
     const post = await prisma.post.update({
       where: { id: Number(id) },
-      data: { status: status === 'liveAir' ? 'offAir' : 'liveAir' }
+      data: { status: status === "liveAir" ? "offAir" : "liveAir" },
     });
 
     return res.json(post);
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao atualizar status' });
+    return res.status(500).json({ message: "Erro ao atualizar status" });
   }
 };
 
 export const uploadEditorImage = async (req: any, res: Response) => {
   if (!req.file) {
-    return res.status(400).json({ message: 'Nenhuma imagem enviada' });
+    return res.status(400).json({ message: "Nenhuma imagem enviada" });
   }
   const url = `/uploads/${req.file.filename}`;
   return res.json({ url });
@@ -260,17 +290,17 @@ export const uploadEditorImage = async (req: any, res: Response) => {
 
 export const getImages = async (req: Request, res: Response) => {
   try {
-    const uploadsDir = path.join(__dirname, '../../public/uploads');
+    const uploadsDir = path.join(__dirname, "../../public/uploads");
     if (!fs.existsSync(uploadsDir)) {
       return res.json([]);
     }
     const files = fs.readdirSync(uploadsDir);
     const images = files
-      .filter(file => /\.(jpg|jpeg|png|gif|webp)$/i.test(file))
-      .map(file => `/uploads/${file}`);
+      .filter((file) => /\.(jpg|jpeg|png|gif|webp)$/i.test(file))
+      .map((file) => `/uploads/${file}`);
     return res.json(images);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Erro ao listar imagens' });
+    return res.status(500).json({ message: "Erro ao listar imagens" });
   }
 };

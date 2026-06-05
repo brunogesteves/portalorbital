@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-"use client"
+"use client";
 import SliderSlick from "react-slick";
 import { SliderProps } from "@/utils/types";
 import { useSlider } from "./useSlider";
@@ -7,10 +7,8 @@ import { useSlider } from "./useSlider";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-
 export default function Slider({ device }: SliderProps) {
   const { data } = useSlider();
-  
 
   if (!data.Slides || data.Slides.length === 0) {
     return (
@@ -20,11 +18,12 @@ export default function Slider({ device }: SliderProps) {
     );
   }
 
-
-
   if (device === "desktop") {
     return (
-      <section className="relative w-full h-[400px] aspect-[16/9] bg-black overflow-hidden group" data-purpose="hero-slider">
+      <section
+        className="relative w-full h-[400px] aspect-[16/9] bg-black overflow-hidden group"
+        data-purpose="hero-slider"
+      >
         <style>{`
           .slick-slider, .slick-list, .slick-track, .slick-slide > div {
             height: 100%;
@@ -74,11 +73,14 @@ export default function Slider({ device }: SliderProps) {
 
         <SliderSlick {...data.settings} className="desktop-slider-slick h-full">
           {data.typedSlides.map((slide) => (
-            <div key={slide.id} className="relative w-full h-full aspect-[16/9]  outline-none">
+            <div
+              key={slide.id}
+              className="relative w-full h-full aspect-[16/9]  outline-none"
+            >
               <img
                 alt={slide.title}
                 className="absolute inset-0 w-full h-full object-cover"
-                src={`${process.env.NEXT_PUBLIC_API_URL}${slide.thumbnail}`}
+                src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
               {/* <div className="absolute top-4 left-4">
@@ -142,9 +144,15 @@ export default function Slider({ device }: SliderProps) {
         }
       `}</style>
       <div className="w-full aspect-[16/9] bg-gray-100 rounded-2xl overflow-hidden shadow-md relative">
-        <SliderSlick {...data.mobileSettings} className="mobile-slider-slick h-full">
+        <SliderSlick
+          {...data.mobileSettings}
+          className="mobile-slider-slick h-full"
+        >
           {data.typedSlides.map((slide) => (
-            <div key={slide.id} className="relative w-full h-full aspect-[16/9] outline-none">
+            <div
+              key={slide.id}
+              className="relative w-full h-full aspect-[16/9] outline-none"
+            >
               <img
                 alt={slide.title}
                 className="absolute inset-0 w-full h-full object-cover"
@@ -152,7 +160,9 @@ export default function Slider({ device }: SliderProps) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-4 pb-8">
-                <span className="bg-[#b91c1c] text-white text-[12px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider mb-2 inline-block">Destaque</span>
+                <span className="bg-[#b91c1c] text-white text-[12px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider mb-2 inline-block">
+                  Destaque
+                </span>
                 <h3 className="text-white font-bold text-base leading-tight">
                   {slide.title}
                 </h3>

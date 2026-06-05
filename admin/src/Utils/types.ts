@@ -1,17 +1,30 @@
-import * as z from 'zod';
-import { loginSchema, postSchema } from './schemas';
+import * as z from "zod";
+import { loginSchema, postSchema } from "./schemas";
 
 export interface UserProps {
   id: number;
   email: string;
   name: string;
-  role: 'ADM' | 'PBR';
+  role: "ADM" | "PBR";
 }
 
 export interface CategoryProps {
   id: number;
   name: string;
   slug: string;
+}
+
+export interface PostTableProps {
+  posts: PostProps[];
+  currentUser: UserProps | null;
+  handleToggleStatus: (id: number, currentStatus: string) => void;
+  setPostToDelete: (id: number) => void;
+  setShowModal: (show: boolean) => void;
+}
+
+export interface WarningModalProps {
+  message: string | undefined;
+  setShowWarningModal: (show: boolean) => void;
 }
 
 export interface PostProps {

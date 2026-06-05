@@ -1,9 +1,9 @@
 import { api } from "@/utils/api";
 import { useEffect, useState } from "react";
 
-import CategoryPage from "@/components/modelPages/category";
+import CategoryPage from "@/components/ModelPages/category";
 import { PostProps } from "@/utils/types";
-import NewsPage from "@/components/modelPages/news";
+import NewsPage from "@/components/ModelPages/news";
 
 export function useSlug(slug: string) {
   const [infoContent, setInfoContent] = useState<any>();
