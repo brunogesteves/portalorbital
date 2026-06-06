@@ -1,16 +1,13 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { api } from "@/Utils/api";
-import { PostProps } from "@/Utils/types";
+import React, { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+
 import Link from "next/link";
 import {
   FiEdit2,
-  FiTrash2,
   FiFileText,
   FiSearch,
-  FiFilter,
   FiCalendar,
   FiUser,
 } from "react-icons/fi";

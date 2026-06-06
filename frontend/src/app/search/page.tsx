@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
-import Header from "@/components/Header/Categories/HeaderCategories";
+import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Busca - Orbital Channel",
@@ -57,7 +58,7 @@ const results = [
   },
 ];
 
-export default function SearchPage() {
+function SearchResults() {
   const query = "Tecnologia"; // TODO: replace with real search param via searchParams prop
 
   return (
@@ -80,7 +81,7 @@ export default function SearchPage() {
                 <div className="h-[1px] bg-blue-900/40 w-full" />
               </div>
               <p className="text-black/60 text-sm italic">
-                Resultados para:{" "}
+                Resultados para:{query}
                 <span className="text-white font-semibold">{query}</span>
               </p>
             </div>
@@ -170,5 +171,13 @@ export default function SearchPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Carregando busca...</div>}>
+      <SearchResults />
+    </Suspense>
   );
 }

@@ -1,29 +1,29 @@
-import { api } from '@/utils/api';
-import { CategoryProps } from '@/utils/types';
-import { useEffect, useState } from 'react';
+import { api } from "@/utils/api";
+import { CategoryProps } from "@/utils/types";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export function useHeaderCategories() {
+export function useHeaderTop() {
   const [categories, setCategories] = useState<CategoryProps[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(e.target.value);
+  }
 
-  useEffect(() => {
-    async function getCategories() {
-     try {
-         await api.get('/categories').then((res) => { 
-        setCategories(res.data);
-      });
-     } catch (error) {
-        
-     }
-    }
-    getCategories();
-  }, []);
+  function handleSearchSubmit() {
+    router.push(`/search?q=${searchTerm}`);
+  }
+
   return {
     data: {
-      categories,
+      searchTerm,
     },
     methods: {
       setCategories,
+      handleSearch,
+      handleSearchSubmit,
     },
   };
 }

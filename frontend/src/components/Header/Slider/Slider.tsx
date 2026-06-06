@@ -6,6 +6,8 @@ import { useSlider } from "./useSlider";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Slider({ device }: SliderProps) {
   const { data } = useSlider();
@@ -73,25 +75,28 @@ export default function Slider({ device }: SliderProps) {
 
         <SliderSlick {...data.settings} className="desktop-slider-slick h-full">
           {data.typedSlides.map((slide) => (
-            <div
-              key={slide.id}
-              className="relative w-full h-full aspect-[16/9]  outline-none"
-            >
-              <img
-                alt={slide.title}
-                className="absolute inset-0 w-full h-full object-cover"
-                src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-              {/* <div className="absolute top-4 left-4">
-                <span className="bg-[#b91c1c] text-white text-[20px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider ml-[150px]">Destaque</span>
-              </div> */}
-              <div className="absolute bottom-4 flex justify-center w-full">
-                <h1 className="text-white font-sans font-bold text-xl md:text-2xl lg:text-3xl leading-tight max-w-4xl text-center px-8">
-                  {slide.title}
-                </h1>
+            <Link href={`/${slide.slug}`} key={slide.id}>
+              <div className="relative w-full h-full aspect-[16/9]  outline-none cursor-pointer">
+                <Image
+                  alt={slide.title}
+                  width={1280}
+                  height={720}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                {/* <div className="absolute top-4 left-4">
+                  <span className="bg-[#b91c1c] text-white text-[20px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider ml-[150px]">
+                    Destaque
+                  </span>
+                </div> */}
+                <div className="absolute bottom-4 flex justify-center w-full">
+                  <h1 className="text-white font-sans font-bold text-xl md:text-2xl lg:text-3xl leading-tight max-w-4xl text-center px-8">
+                    {slide.title}
+                  </h1>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </SliderSlick>
       </section>

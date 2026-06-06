@@ -3,10 +3,11 @@ import type { Metadata } from "next";
 import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiShare2 } from "react-icons/fi";
-import Header from "@/components/Header/Categories/HeaderCategories";
+import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
 import Slider from "@/components/Header/Slider/Slider";
 import { PostProps } from "@/utils/types";
+import Image from "next/image";
 
 // Gerador dinâmico de metadados para SEO da Notícia
 export async function generateMetadata(data: PostProps): Promise<Metadata> {
@@ -31,7 +32,6 @@ export async function generateMetadata(data: PostProps): Promise<Metadata> {
 }
 
 export default function NewsPage(data: PostProps) {
-  console.log(data);
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
       <Header slug={data.title as string} />
@@ -41,8 +41,7 @@ export default function NewsPage(data: PostProps) {
       {/* ========================================================================= */}
       <div className="hidden md:block text-gray-800 min-h-screen bg-white">
         <main className="w-full min-h-screen">
-          {/* Hero Slider */}
-          <Slider device="desktop" />
+          {/* <Slider device="desktop" /> */}
 
           {/* ================================================================ */}
           {/* 📢 ADSENSE ZONE — Desktop Top Leaderboard (728x90)              */}
@@ -104,11 +103,13 @@ export default function NewsPage(data: PostProps) {
                 </div>
 
                 {/* Photo */}
-                <div className="mb-8 rounded-lg overflow-hidden shadow-xl border border-gray-100">
-                  <img
+                <div className="mb-8 bg-red-500 rounded-lg overflow-hidden shadow-xl border border-gray-100 ">
+                  <Image
                     alt="Capa da Notícia"
-                    className="w-full h-auto object-cover"
-                    src={process.env.NEXT_PUBLIC_API_URL + data.thumbnail}
+                    width={640}
+                    height={360}
+                    className="object-cover aspect-video w-full"
+                    src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
                   />
                 </div>
 
@@ -142,7 +143,7 @@ export default function NewsPage(data: PostProps) {
       {/* ========================================================================= */}
       {/* 📱 MOBILE LAYOUT (below md breakpoint)                                   */}
       {/* ========================================================================= */}
-      <div className="block md:hidden text-gray-800 min-h-screen bg-white flex flex-col w-full">
+      <div className="block md:hidden text-gray-800 min-h-screen bg-white flex flex-col ">
         <main
           className="p-4 bg-white overflow-y-auto no-scrollbar flex-1"
           style={{ paddingBottom: "80px" }}
