@@ -1,13 +1,10 @@
-import { Router } from 'express';
-import { authenticate } from '../middlewares/auth.middleware';
-import { searchContent } from '../controllers/search.controller';
+import { Router } from "express";
+import { authenticate } from "../middlewares/auth.middleware";
+import { openContent, searchContent } from "../controllers/search.controller";
 
 const router = Router();
 
-
-
-
-router.get('/:slug', searchContent);
-// router.delete('/:term', authenticate, searchContent);
+router.get("/", searchContent);
+router.get("/:slug", openContent);
 
 export default router;

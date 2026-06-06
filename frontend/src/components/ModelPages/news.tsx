@@ -105,7 +105,7 @@ export default function NewsPage(data: PostProps) {
                 {/* Photo */}
                 <div className="mb-8 bg-red-500 rounded-lg overflow-hidden shadow-xl border border-gray-100 ">
                   <Image
-                    alt="Capa da Notícia"
+                    alt={data.title}
                     width={640}
                     height={360}
                     className="object-cover aspect-video w-full"
@@ -148,7 +148,7 @@ export default function NewsPage(data: PostProps) {
           className="p-4 bg-white overflow-y-auto no-scrollbar flex-1"
           style={{ paddingBottom: "80px" }}
         >
-          <Slider device="mobile" />
+          {/* <Slider device="mobile" /> */}
 
           {/* ================================================================ */}
           {/* 📢 ADSENSE ZONE — Mobile Top Banner (320x50)                   */}
@@ -213,10 +213,12 @@ export default function NewsPage(data: PostProps) {
 
           {/* Main News Image */}
           <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-sm">
-            <img
-              alt="Capa da Notícia Mobile"
+            <Image
+              alt={data.title}
               className="w-full h-auto aspect-video object-cover"
-              src={process.env.NEXT_PUBLIC_API_URL + data.thumbnail}
+              src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
+              width={640}
+              height={360}
             />
             {/* <div className="bg-black/50 absolute bottom-0 left-0 right-0 p-2">
               <p className="text-[10px] text-white/80">

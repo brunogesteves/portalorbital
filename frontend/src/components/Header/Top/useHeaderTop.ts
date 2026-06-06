@@ -13,7 +13,7 @@ export function useHeaderTop() {
   }
 
   function handleSearchSubmit() {
-    router.push(`/search?q=${searchTerm}`);
+    router.push(`/search?term=${searchTerm}`);
   }
 
   return {

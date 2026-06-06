@@ -2,8 +2,9 @@ import { Response } from "express";
 
 import prisma from "../lib/prisma";
 
-export const searchContent = async (req: any, res: Response) => {
-  console.log("controller");
+export const openContent = async (req: any, res: Response) => {
+  console.log("controller open: ");
+
   const { slug } = req.params;
   const categoryContent = await prisma.category.findFirst({
     where: {
@@ -39,4 +40,41 @@ export const searchContent = async (req: any, res: Response) => {
   if (newsContent) return res.json({ type: "news", content: newsContent });
   if (!categoryContent && !newsContent)
     return res.status(404).json({ message: "Página não encontrada" });
+};
+
+export const searchContent = async (req: any, res: Response) => {
+  const { term } = req.query;
+  console.log("controller search: ", term);
+  const postsResults = await prisma.post.findMany({
+    where: {
+      OR: [
+        {
+          content: {
+            contains: term,
+          },
+        },
+        {
+          title: {
+            contains: term,
+          },
+        },
+        {
+          slug: {
+            contains: term,
+          },
+        },
+      ],
+    },
+    include: {
+      category: true,
+    },
+  });
+
+  return res.json({
+    postsResults,
+    message:
+      postsResults.length === 0
+        ? "Nenhum resultado encontrado para: " + term
+        : null,
+  });
 };

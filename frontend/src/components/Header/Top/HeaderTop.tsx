@@ -50,6 +50,11 @@ export const HeaderTopDesktop = () => {
               type="text"
               onChange={methods.handleSearch}
               value={data.searchTerm}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  methods.handleSearchSubmit();
+                }
+              }}
             />
             <FiSearch
               onClick={methods.handleSearchSubmit}

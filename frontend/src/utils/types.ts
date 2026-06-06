@@ -26,4 +26,5 @@ export interface PostProps {
     name: string;
   };
   createdAt: Date;
+  category?: { id: number; name: string; slug: string };
 }

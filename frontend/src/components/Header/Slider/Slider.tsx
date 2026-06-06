@@ -154,25 +154,26 @@ export default function Slider({ device }: SliderProps) {
           className="mobile-slider-slick h-full"
         >
           {data.typedSlides.map((slide) => (
-            <div
-              key={slide.id}
-              className="relative w-full h-full aspect-[16/9] outline-none"
-            >
-              <img
-                alt={slide.title}
-                className="absolute inset-0 w-full h-full object-cover"
-                src={`${process.env.NEXT_PUBLIC_API_URL}${slide.thumbnail}`}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-              <div className="absolute bottom-0 left-0 right-0 p-4 pb-8">
-                <span className="bg-[#b91c1c] text-white text-[12px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider mb-2 inline-block">
+            <Link href={`/${slide.slug}`} key={slide.id}>
+              <div className="relative w-full h-full aspect-[16/9] outline-none">
+                <Image
+                  alt={slide.title}
+                  width={1280}
+                  height={720}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 pb-8">
+                  {/* <span className="bg-[#b91c1c] text-white text-[12px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider mb-2 inline-block">
                   Destaque
-                </span>
-                <h3 className="text-white font-bold text-base leading-tight">
-                  {slide.title}
-                </h3>
+                </span> */}
+                  <h3 className="text-white font-bold text-base leading-tight">
+                    {slide.title}
+                  </h3>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </SliderSlick>
       </div>
