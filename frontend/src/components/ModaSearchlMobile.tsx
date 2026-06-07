@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import { IoIosClose } from "react-icons/io";
 
 import { MobileSearchProps } from "@/utils/types";
+import { ButtonBlue } from "./buttons";
 
 export const ModalSearchlMobile = ({
   searchTerm,
@@ -39,6 +40,13 @@ export const ModalSearchlMobile = ({
         </div>
         <span className="text-black">Digite pelo menos 2 caracteres</span>
         <button
+          disabled={searchTerm.length <= 1}
+          className="btn-blue-glossy w-full py-3 uppercase tracking-widest font-bold"
+        >
+          Buscar
+        </button>
+        <ButtonBlue
+          text="Buscar"
           onClick={() => {
             if (searchTerm.length > 1) {
               router.push(`/search?term=${searchTerm}`);
@@ -46,10 +54,7 @@ export const ModalSearchlMobile = ({
             }
           }}
           disabled={searchTerm.length <= 1}
-          className="btn-blue-glossy w-full py-3 uppercase tracking-widest font-bold"
-        >
-          Buscar
-        </button>
+        />
       </div>
     </div>
   );

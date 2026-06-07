@@ -1,7 +1,7 @@
 "use client";
 import { FiMenu, FiSearch } from "react-icons/fi";
 import { useHeaderTop } from "./useHeaderTop";
-import { ModalSearchlMobile } from "@/components/Search/ModaSearchlMobile";
+import { ModalSearchlMobile } from "@/components/ModaSearchlMobile";
 
 export const HeaderTopDesktop = () => {
   const { data, methods } = useHeaderTop();
@@ -90,7 +90,7 @@ export const HeaderTopMobile = () => {
               <img
                 alt="Orbital Channel Logo"
                 className="w-full h-auto max-h-full object-contain"
-                src="https:lh3.googleusercontent.com/aida-public/AB6AXuDgofKmN8O3SnmsRyYpCmNA1I4CUXhmozms5xV1laABwzRu2hdegZ0PvrbvinIUWwYG38HgYS4pJFL3bVDDu32ed6352moBf8KzpUfZT0TUurvJTm9GZxHg9h4zcUt-VqX0wAl_zUAbvWCc_ePpwJ73yhwM1DGVgJt05wow-RRWD9dfo4CplXlozyrXSGGr3k2o-LLPr2Xj5cnXiDWHjO9YLvEUWW--iIs4ioY5RdUKujYdfrVo9p3lT4P-m_0PRv6dux7tJT04zlM"
+                src="/logo.png"
               />
             </div>
             {/* Logo Text */}
@@ -118,7 +118,6 @@ export const HeaderTopMobile = () => {
         <ModalSearchlMobile
           searchTerm={data.searchTerm}
           setSearchTerm={(e) => methods.setSearchTerm(e)}
-          // openMobileSearch={data.openMobileSearch}
           setOpenMobileSearch={methods.setOpenMobileSearch}
         />
       )}

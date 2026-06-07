@@ -1,37 +1,39 @@
-import { api } from "@/utils/api";
 import { useEffect, useState } from "react";
 
-import CategoryPage from "@/components/ModelPages/category";
+import { api } from "@/utils/api";
 import { PostProps } from "@/utils/types";
-import NewsPage from "@/components/ModelPages/news";
 
 export function useSlug(slug: string) {
-  const [infoContent, setInfoContent] = useState<any>();
-  const [type, setType] = useState("");
+  const [infoContent, setInfoContent] = useState<
+    PostProps | PostProps[] | null
+  >(null);
+  const [type, setType] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true); // Bom para evitar telas em branco
 
   useEffect(() => {
     async function getData() {
+      setLoading(true);
       try {
-        await api.get(`/search/${slug}`).then((res) => {
-          if (res.data) {
-            setType(res.data.type);
-            setInfoContent(res.data.content);
-          }
-        });
+        const res = await api.get(`/search/${slug}`);
+        if (res.data.status) {
+          setType(res.data.type);
+          setInfoContent(res.data.content);
+        } else {
+          setType("notfound");
+          setInfoContent(null);
+        }
       } catch (error) {
         console.error(error);
+        setType("notfound");
+      } finally {
+        setLoading(false);
       }
     }
 
-    getData();
+    if (slug) {
+      getData();
+    }
   }, [slug]);
 
-  if (type == "category") {
-    // return CategoryPage(content);
-  } else if (type == "news") {
-    console.log("news");
-    return NewsPage(infoContent);
-  } else {
-    // return <>pagina nao encontrada</>
-  }
+  return { type, infoContent, loading };
 }

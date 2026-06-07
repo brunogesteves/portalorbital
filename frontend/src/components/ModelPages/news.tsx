@@ -6,11 +6,13 @@ import { FiShare2 } from "react-icons/fi";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
 import Slider from "@/components/Header/Slider/Slider";
-import { PostProps } from "@/utils/types";
+import { NewsDataProps } from "@/utils/types";
 import Image from "next/image";
 
 // Gerador dinâmico de metadados para SEO da Notícia
-export async function generateMetadata(data: PostProps): Promise<Metadata> {
+export async function generateMetadata({
+  data,
+}: NewsDataProps): Promise<Metadata> {
   // Formata o slug da notícia (ex: nova-lei-aprovada -> Nova Lei Aprovada)
   const newsTitle = data.title
     .split("-")
@@ -31,7 +33,7 @@ export async function generateMetadata(data: PostProps): Promise<Metadata> {
   };
 }
 
-export default function NewsPage(data: PostProps) {
+export default function NewsPage({ data }: NewsDataProps) {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
       <Header slug={data.title as string} />

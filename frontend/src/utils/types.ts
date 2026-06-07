@@ -29,6 +29,13 @@ export interface PostProps {
   category?: { id: number; name: string; slug: string };
 }
 
+export interface NewsDataProps {
+  data: PostProps;
+}
+export interface CategoryDataProps {
+  data: PostProps[];
+}
+
 export interface MobileSearchProps {
   searchTerm: string;
   setSearchTerm: (openMobileSearch: string) => void;

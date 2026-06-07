@@ -13,47 +13,9 @@ import { FaXTwitter } from "react-icons/fa6";
 import Footer from "@/components/Footer";
 import Slider from "@/components/Header/Slider/Slider";
 import Header from "@/components/Header/Header";
+import { metadataHome } from "@/utils/metadatas";
 
-export const metadata: Metadata = {
-  title: "Orbital Channel - O mundo em suas mãos",
-  description:
-    "Uma plataforma de conteúdo tecnológico inovadora trazendo o melhor em tecnologia mundial, sempre buscando as notícias mais atualizadas para você.",
-  keywords: [
-    "tecnologia",
-    "notícias",
-    "inovação",
-    "inteligência artificial",
-    "mundo geek",
-    "orbital channel",
-  ],
-  authors: [{ name: "Orbital Channel" }],
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: "Orbital Channel - O mundo em suas mãos",
-    description:
-      "Uma plataforma de conteúdo tecnológico inovadora trazendo o melhor em tecnologia mundial.",
-    url: "https://orbitalchannel.com",
-    siteName: "Orbital Channel",
-    images: [
-      {
-        url: "https://lh3.googleusercontent.com/aida/ADBb0uh635aAwT-DVGCdV5q1KeXqYFOLcX2HvG7ox7PAnoPqFCV7r8CBjCMBC8fYN7I9chHuefrjMJA9Cm-oDrrU2zdmc_h3tJwiOT4DHNcO0PO4Ip3BlKqzwAjrTImEXR8ZDkwNU8uZ_MAZu0Dibp_yvlX0bJv-IW5gTzl04G0aaK0TliapXT18OvzcS35Du068BJwq5u7OR5NEERv45vBYkkmoJ1ZsyMKTGkaJoxsCnFzxwniL25LxUgRM4IxhygMFeNUH5MpfUnmu",
-        width: 800,
-        height: 600,
-        alt: "Orbital Channel Logo",
-      },
-    ],
-    locale: "pt_BR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Orbital Channel - O mundo em suas mãos",
-    description:
-      "Uma plataforma de conteúdo tecnológico inovadora trazendo o melhor em tecnologia mundial.",
-  },
-};
+export const metadata = metadataHome;
 
 export default function Home() {
   return (

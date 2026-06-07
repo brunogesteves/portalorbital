@@ -1,6 +1,5 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
-import type { Metadata } from "next";
+
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -9,16 +8,9 @@ import Footer from "@/components/Footer";
 import { useSearch } from "./useSearch";
 import Image from "next/image";
 import Link from "next/link";
+import { metadataSearch } from "@/utils/metadatas";
 
-const metadata: Metadata = {
-  title: "Busca - Orbital Channel",
-  description:
-    "Encontre as melhores notícias de tecnologia, inovação, entretenimento e muito mais no Orbital Channel.",
-  keywords: ["busca", "pesquisa", "tecnologia", "notícias", "orbital channel"],
-  alternates: {
-    canonical: "/search",
-  },
-};
+export const metadata = metadataSearch;
 
 function SearchResults() {
   const query = "Tecnologia"; // TODO: replace with real search param via searchParams prop

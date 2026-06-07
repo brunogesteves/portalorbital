@@ -7,9 +7,10 @@ import { FiArrowRight } from "react-icons/fi";
 import HeaderCategories from "@/components/Header/Categories/HeaderCategories";
 import Footer from "@/components/Footer";
 import HeroSlider from "@/components/Header/Slider/Slider";
-import { PostProps } from "@/utils/types";
+import { CategoryDataProps } from "@/utils/types";
 
-export default function CategoryPage(data: PostProps) {
+export default function CategoryPage({ data }: CategoryDataProps) {
+  console.log(data);
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
       <HeaderCategories slug={data.title} />

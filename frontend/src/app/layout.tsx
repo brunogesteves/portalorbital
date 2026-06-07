@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,10 +19,20 @@ export const metadata: Metadata = {
     default: "Portal Político",
     template: "%s | Portal Político",
   },
-  description: "As principais notícias sobre política e atualidades do Brasil e do mundo.",
-  keywords: ["política", "notícias", "eleições", "governo", "congresso", "brasil"],
+  description:
+    "As principais notícias sobre política e atualidades do Brasil e do mundo.",
+  keywords: [
+    "política",
+    "notícias",
+    "eleições",
+    "governo",
+    "congresso",
+    "brasil",
+  ],
   authors: [{ name: "Portal Político Team" }],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  ),
   openGraph: {
     title: "Portal Político",
     description: "As principais notícias sobre política e atualidades.",
@@ -49,4 +61,3 @@ export default function RootLayout({
     </html>
   );
 }
-
