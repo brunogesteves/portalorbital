@@ -28,3 +28,9 @@ export interface PostProps {
   createdAt: Date;
   category?: { id: number; name: string; slug: string };
 }
+
+export interface MobileSearchProps {
+  searchTerm: string;
+  setSearchTerm: (openMobileSearch: string) => void;
+  setOpenMobileSearch: (openMobileSearch: boolean) => void;
+}

@@ -1,6 +1,7 @@
 "use client";
 import { FiMenu, FiSearch } from "react-icons/fi";
 import { useHeaderTop } from "./useHeaderTop";
+import { ModalSearchlMobile } from "@/components/Search/ModaSearchlMobile";
 
 export const HeaderTopDesktop = () => {
   const { data, methods } = useHeaderTop();
@@ -45,13 +46,13 @@ export const HeaderTopDesktop = () => {
         <div className="relative group" data-purpose="search-bar">
           <div className="flex items-center bg-gray-200/40 border border-gray-400 rounded-md px-3 py-1 w-48 transition-all focus-within:w-64 focus-within:bg-white/80">
             <input
-              className="bg-transparent border-none text-sm w-full p-0 focus:ring-0 text-gray-700 placeholder-gray-500"
+              className="bg-transparent border-none text-sm w-full p-0 focus:ring-0 text-gray-700 placeholder-gray-500 focus:outline-none"
               placeholder="Buscar..."
               type="text"
-              onChange={methods.handleSearch}
+              onChange={(e) => methods.handleSearch(e)}
               value={data.searchTerm}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && data.searchTerm.length > 0) {
                   methods.handleSearchSubmit();
                 }
               }}
@@ -73,10 +74,10 @@ export const HeaderTopDesktop = () => {
 };
 
 export const HeaderTopMobile = () => {
+  const { data, methods } = useHeaderTop();
   return (
     <>
       <div className="flex items-center justify-between relative z-10 px-4 pb-2">
-        {/* Menu Icon */}
         <button
           className="text-gray-700 hover:text-black flex items-center justify-center"
           aria-label="Abrir Menu"
@@ -105,11 +106,22 @@ export const HeaderTopMobile = () => {
           className="text-gray-700 hover:text-black flex items-center justify-center"
           aria-label="Buscar"
         >
-          <FiSearch className="w-5 h-5" />
+          <FiSearch
+            className="w-5 h-5"
+            onClick={() => methods.setOpenMobileSearch(true)}
+          />
         </button>
       </div>
 
       <div className="w-full h-[1px] bg-[#999] relative z-10 mb-2"></div>
+      {data.openMobileSearch && (
+        <ModalSearchlMobile
+          searchTerm={data.searchTerm}
+          setSearchTerm={(e) => methods.setSearchTerm(e)}
+          // openMobileSearch={data.openMobileSearch}
+          setOpenMobileSearch={methods.setOpenMobileSearch}
+        />
+      )}
     </>
   );
 };

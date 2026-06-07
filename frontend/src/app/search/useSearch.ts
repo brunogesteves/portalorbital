@@ -3,37 +3,41 @@ import { PostProps } from "@/utils/types";
 import { useEffect, useState } from "react";
 
 export function useSearch(term: string) {
+  const [searchTerm, setSearchTerm] = useState(term);
   const [searchResults, setSearchResults] = useState<PostProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [warning, setWarning] = useState("uuuuuuuu");
-  useEffect(() => {
-    async function getPosts() {
-      if (!term) return;
+  const [warning, setWarning] = useState("");
 
-      setIsLoading(true);
-      setIsError(false);
+  async function searchPosts() {
+    if (!term) return;
 
-      try {
-        const res = await api.get(`/search?term=${term.toLowerCase()}`);
-        const { postsResults, message } = res.data;
-        if (postsResults.length > 0) {
-          setSearchResults(postsResults);
-        } else {
-          setWarning(message);
-        }
-      } catch (error: any) {
-        setIsError(true);
-        setWarning("Erro interno");
-      } finally {
-        setIsLoading(false);
+    setIsLoading(true);
+    setIsError(false);
+
+    try {
+      const res = await api.get(`/search?term=${term.toLowerCase()}`);
+      const { postsResults, message } = res.data;
+      if (postsResults.length > 0) {
+        setSearchResults(postsResults);
+      } else {
+        setWarning(message);
       }
+    } catch (error: any) {
+      setIsError(true);
+      setWarning("Erro interno");
+    } finally {
+      setIsLoading(false);
     }
+  }
 
-    getPosts();
+  useEffect(() => {
+    searchPosts();
   }, [term]);
+
   return {
     data: {
+      searchTerm,
       searchResults,
       term,
       isLoading,
@@ -42,6 +46,8 @@ export function useSearch(term: string) {
     },
     methods: {
       setSearchResults,
+      setSearchTerm,
+      searchPosts,
     },
   };
 }

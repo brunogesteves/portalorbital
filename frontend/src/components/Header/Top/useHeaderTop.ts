@@ -1,10 +1,8 @@
-import { api } from "@/utils/api";
-import { CategoryProps } from "@/utils/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function useHeaderTop() {
-  const [categories, setCategories] = useState<CategoryProps[]>([]);
+  const [openMobileSearch, setOpenMobileSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
 
@@ -19,11 +17,13 @@ export function useHeaderTop() {
   return {
     data: {
       searchTerm,
+      openMobileSearch,
     },
     methods: {
-      setCategories,
+      setOpenMobileSearch,
       handleSearch,
       handleSearchSubmit,
+      setSearchTerm,
     },
   };
 }
