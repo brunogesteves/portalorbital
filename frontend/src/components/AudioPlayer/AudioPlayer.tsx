@@ -2,7 +2,6 @@
 
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import useAudioPlayer from "./useAudioPlayer";
-import { RxResume } from "react-icons/rx";
 
 export const AudioPlayerDesktop = ({ content }: { content: string }) => {
   const { data, methods } = useAudioPlayer({ content });

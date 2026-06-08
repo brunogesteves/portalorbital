@@ -10,10 +10,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { metadataSearch } from "@/utils/metadatas";
 
-export const metadata = metadataSearch;
+const metadata = metadataSearch;
 
 function SearchResults() {
-  const query = "Tecnologia"; // TODO: replace with real search param via searchParams prop
   const searchParams = useSearchParams();
   const term = searchParams.get("term") || "";
 

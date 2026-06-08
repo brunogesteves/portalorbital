@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-import type { Metadata } from "next";
+"use client";
+
 import {
   FaRobot,
   FaSatellite,
@@ -9,15 +9,20 @@ import {
   FaFacebookF,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-// import Header from "@/components/Header/Categories/HeaderCategories";
+
 import Footer from "@/components/Footer";
 import Slider from "@/components/Header/Slider/Slider";
 import Header from "@/components/Header/Header";
 import { metadataHome } from "@/utils/metadatas";
+import { useHome } from "./useHome";
+import { useSearch } from "./search/useSearch";
+import Image from "next/image";
+import Link from "next/link";
 
-export const metadata = metadataHome;
+const metadata = metadataHome;
 
 export default function Home() {
+  const { data, methods } = useHome();
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       {/* <Header slug="Home"/> */}
@@ -35,52 +40,32 @@ export default function Home() {
               <div className="mb-12">
                 <div className="flex items-center space-x-4 mb-6">
                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    Featured Content
+                    Destaques do Portal
                   </h2>
                   <div className="h-[1px] bg-gray-200 w-full"></div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
-                    <img
-                      alt="Geopolitica"
-                      className="absolute inset-0 w-full h-full object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_t7a8pEx_X6C9pHTMZLp8wj_l75eEmKJR7PWtfJLxgtBcTZEsI1FDIXFq4x7VpswC6fq-SAn9fe2ND5gvEW5VzwYMDB-qX3zzYMPeMSyFXc3x4b2E_fjPVMU_-y6RtpCvf0pJdY9O7fyGQtDiv7OI_IVBfWvD-a7XtEw8KI8mSX5ZFpTaIU7kuV6oL584Alnj0cOX_oWu9OL1-RMrp0fd7hRhr_l0z0OjyR2odB-WBLC5_WUVS3uTvUqVyfIf4wUbYoJoyG1xJFM"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                      <h3 className="text-white font-bold text-sm">
-                        Geopolítica:
-                        <br />
-                        Brasileiros no Exterior
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
-                    <img
-                      alt="Historia"
-                      className="absolute inset-0 w-full h-full object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_t7a8pEx_X6C9pHTMZLp8wj_l75eEmKJR7PWtfJLxgtBcTZEsI1FDIXFq4x7VpswC6fq-SAn9fe2ND5gvEW5VzwYMDB-qX3zzYMPeMSyFXc3x4b2E_fjPVMU_-y6RtpCvf0pJdY9O7fyGQtDiv7OI_IVBfWvD-a7XtEw8KI8mSX5ZFpTaIU7kuV6oL584Alnj0cOX_oWu9OL1-RMrp0fd7hRhr_l0z0OjyR2odB-WBLC5_WUVS3uTvUqVyfIf4wUbYoJoyG1xJFM"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                      <h3 className="text-white font-bold text-sm">
-                        História &amp; Arte:
-                        <br />
-                        Descobertas em Arqueologia e Antropologia
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
-                    <img
-                      alt="Medicina"
-                      className="absolute inset-0 w-full h-full object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_t7a8pEx_X6C9pHTMZLp8wj_l75eEmKJR7PWtfJLxgtBcTZEsI1FDIXFq4x7VpswC6fq-SAn9fe2ND5gvEW5VzwYMDB-qX3zzYMPeMSyFXc3x4b2E_fjPVMU_-y6RtpCvf0pJdY9O7fyGQtDiv7OI_IVBfWvD-a7XtEw8KI8mSX5ZFpTaIU7kuV6oL584Alnj0cOX_oWu9OL1-RMrp0fd7hRhr_l0z0OjyR2odB-WBLC5_WUVS3uTvUqVyfIf4wUbYoJoyG1xJFM"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                      <h3 className="text-white font-bold text-sm">
-                        Avanços da Medicina:
-                        <br />O que esperar para os próximos anos
-                      </h3>
-                    </div>
-                  </div>
+                  {data.posts.slice(0, 3).map((post) => (
+                    <Link key={post.id} href={post.slug}>
+                      <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
+                        <Image
+                          alt={post.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
+                          width={500}
+                          height={500}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
+                            {post.category?.name}
+                          </h3>
+                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
+                            {post.title}
+                          </h3>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
 
@@ -190,51 +175,27 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                   {/* Main Geek Cards */}
                   <div className="md:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-[#111415] rounded-xl overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow">
-                      <img
-                        alt="Mundo Geek"
-                        className="w-full aspect-video object-cover"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_t7a8pEx_X6C9pHTMZLp8wj_l75eEmKJR7PWtfJLxgtBcTZEsI1FDIXFq4x7VpswC6fq-SAn9fe2ND5gvEW5VzwYMDB-qX3zzYMPeMSyFXc3x4b2E_fjPVMU_-y6RtpCvf0pJdY9O7fyGQtDiv7OI_IVBfWvD-a7XtEw8KI8mSX5ZFpTaIU7kuV6oL584Alnj0cOX_oWu9OL1-RMrp0fd7hRhr_l0z0OjyR2odB-WBLC5_WUVS3uTvUqVyfIf4wUbYoJoyG1xJFM"
-                      />
-                      <div className="p-4">
-                        <h4 className="text-white font-bold text-xs uppercase">
-                          Mundo Geek
-                        </h4>
-                        <p className="text-gray-400 text-[10px] mt-1">
-                          Acompanhe as últimas novidades do universo geek aqui.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="bg-[#111415] rounded-xl overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow">
-                      <img
-                        alt="Mars"
-                        className="w-full aspect-video object-cover"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_t7a8pEx_X6C9pHTMZLp8wj_l75eEmKJR7PWtfJLxgtBcTZEsI1FDIXFq4x7VpswC6fq-SAn9fe2ND5gvEW5VzwYMDB-qX3zzYMPeMSyFXc3x4b2E_fjPVMU_-y6RtpCvf0pJdY9O7fyGQtDiv7OI_IVBfWvD-a7XtEw8KI8mSX5ZFpTaIU7kuV6oL584Alnj0cOX_oWu9OL1-RMrp0fd7hRhr_l0z0OjyR2odB-WBLC5_WUVS3uTvUqVyfIf4wUbYoJoyG1xJFM"
-                      />
-                      <div className="p-4">
-                        <h4 className="text-white font-bold text-xs uppercase">
-                          Missão Marte
-                        </h4>
-                        <p className="text-gray-400 text-[10px] mt-1">
-                          O que a NASA está planejando para o planeta vermelho.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="bg-[#111415] rounded-xl overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow">
-                      <img
-                        alt="Robots"
-                        className="w-full aspect-video object-cover"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_t7a8pEx_X6C9pHTMZLp8wj_l75eEmKJR7PWtfJLxgtBcTZEsI1FDIXFq4x7VpswC6fq-SAn9fe2ND5gvEW5VzwYMDB-qX3zzYMPeMSyFXc3x4b2E_fjPVMU_-y6RtpCvf0pJdY9O7fyGQtDiv7OI_IVBfWvD-a7XtEw8KI8mSX5ZFpTaIU7kuV6oL584Alnj0cOX_oWu9OL1-RMrp0fd7hRhr_l0z0OjyR2odB-WBLC5_WUVS3uTvUqVyfIf4wUbYoJoyG1xJFM"
-                      />
-                      <div className="p-4">
-                        <h4 className="text-white font-bold text-xs uppercase">
-                          Robôs Úteis
-                        </h4>
-                        <p className="text-gray-400 text-[10px] mt-1">
-                          Como a automação está ajudando no dia a dia.
-                        </p>
-                      </div>
-                    </div>
+                    {data.posts.slice(0, 3).map((post) => (
+                      <Link key={post.id} href={post.slug}>
+                        <div className="bg-[#111415] rounded-xl overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow">
+                          <Image
+                            alt={post.title}
+                            className="w-full aspect-video object-cover"
+                            src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
+                            width={500}
+                            height={500}
+                          />
+                          <div className="p-4">
+                            <h4 className="text-white font-bold text-xs uppercase">
+                              {post.category?.name}
+                            </h4>
+                            <p className="text-gray-400 text-xl mt-1 first-letter:uppercase">
+                              {post.title}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
 
                   {/* Embedded Redes Sociais Component */}
@@ -279,84 +240,49 @@ export default function Home() {
         >
           <Slider device="mobile" />
 
-          {/* New Content Cards */}
           <section className="grid grid-cols-2 gap-4">
-            {/* Card 1 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <img
-                alt="Future Cities"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida/ADBb0ujDAijTpseTsCJT6ChcGYdDbIFGifrHzjqifj7I4JE2j00q8P06_HmDa9T4IOL59WycBQqtC2KkCLuB6EU1g2kx7o5EOSG56JanQ5g12DbFnjTDvpgoakjvavYDT72POFCTcawVpNIUoA6TanZQUlkIo8leFWkYsaIykENqG749-VBA1w2-0nyCTEZT9tY7fYeS2116ZEhHx-vEiHYF4uxZUNenCEUo79wReNoxhQhbweNbjg0URgfSfQ"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  TECNOLOGIA
-                </p>
-              </div>
-            </div>
-            {/* Card 2 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <img
-                alt="Fusion Reactor"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida/ADBb0uhkrED4O3ohZBVImqVgqdrggKiTwl_oDvl6gEBbNVsHNc5Tf6AXfv9vCdGAtOHqN4ANhSr_y8OCn30HV2ZEnDu_XBarjl0w5MQy7oth450B0Jq2HsZYKUpKYruMd0kaj9fNr5AJYZKIRv8_S72qoxyH84GO7TtpbriuhGBC8ALrJP3-20tqeryu7xuxgo70lnnwUsBVy7wVASs3uHj2NxG4xniUZn_w47OuKU5u28DuewJDz4tpfLiFWv0"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  CIÊNCIA
-                </p>
-              </div>
-            </div>
-            {/* Card 3 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <img
-                alt="New Gen Satellites"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida/ADBb0uj3z3V0dl380uA5udEE4Ey93-BQn8_kCdBWkzy6FNaPis6o3siwRxFIqqjxBgGa7ylYYviDNuTPvQE66XB8Xxkaug4Av8Yi87OhJe_fQ-Ys5xpPMtgSlEmx5gyYD6dZUjhAmeQTm4aBtwQrQxmq3Moa1iMThdU2sfK2CEQlrKLPp3ywH0g4BRv7nGy729ht29DS7Ahev6Fbex5f4Dg5wpAKhKJf9B-gQf8HizggseAmmn-FYZU1UUW7hwE"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  ESPAÇO
-                </p>
-              </div>
-            </div>
-            {/* Card 4 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <img
-                alt="AI Neural Processing"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0oIuxSSSxgIs2DuiMoeasjZ-mOs0hlFxDXYOE5UkcSUYwl8kC57er13OOzZ3JGFQQ-0hHFL92BlvPkeLiW7BN27l1O4MuhD2aO0iXdoqeViEEwxgXntpMhUd0cb14qW5XukbT2pC1cI7yXdNcWP2EjUeC6-RD8MR4ZCstDTU_RZQNBniWXhvtLylXPQxxK77BrwIMQGpBZ7uEL_kjanTMQat-j2mJh5XgYODD9Z-qDpipy75zS21c5aUyR3Q8d9Pngod_n46TUjM"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">IA</p>
-              </div>
-            </div>
-            {/* Card 5 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <img
-                alt="Future Robotics Lab"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5sBrSxluP8aXu3cfX8ljXXBb4snEBWUQ72a1oZ_fq8suVSg2Z1GjmLzDfr9sIsB0J1M3dRHlLubJSrfhzh3AX6eh03_FD_yrHL3PM6ASvX9Pv485MBK7Fdn__XwHYqh6dGLM46ciyEubTfdn5ncSNbZpyD2ISgGsdbMl5NYtFmRNuL5BlPzEEDJkuwmNxDevYeHwDu_QRDPv145eybXdeV9ewnYm1bqgD5kd8kBPkSLNrKYnFqTmjIih6rj7oQyWNa_VuXaZDKeE"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  ROBÓTICA
-                </p>
-              </div>
-            </div>
-            {/* Card 6 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <img
-                alt="Deep Sea Exploration"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSw9uWjip3YWKjCZOEPbAIGZYmY6QTSxojjkeRZ6brsFf-K9K9lAPJYUBy8GPjVvUKSoV8nV5lLcpS_9nO9fSf0mmi3oXcG0xIgHL1jStb7AU5Q1BNADyJBMIRl8DZvVCuH2XSP-vxXoUkVvkhBeiETXiGPpO-BsulXKOOh_HcSVBK6UVsANbgYfEIZG1v4fc3NsptVkTq8KBQDWkBkHF4_XrpEz0-Enkcg2qfAii6cpKRwF205CySlnEDXGlXPwWsheQ9XwEhFqI"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  OCEANO
-                </p>
-              </div>
-            </div>
+            {data.posts.slice(0, 8).map((post) => (
+              <Link key={post.id} href={post.slug}>
+                <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
+                  <Image
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                    src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
+                    width={500}
+                    height={500}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end items-start gap-y-2 p-3">
+                    <h3 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
+                      {post.category?.name}
+                    </h3>
+                    <h1 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
+                      {post.title}
+                    </h1>
+                  </div>
+                </div>
+              </Link>
+            ))}
+            {data.posts.slice(0, 8).map((post) => (
+              <Link key={post.id} href={post.slug}>
+                <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
+                  <Image
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                    src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
+                    width={500}
+                    height={500}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end items-start gap-y-2 p-3">
+                    <h3 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
+                      {post.category?.name}
+                    </h3>
+                    <h1 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
+                      {post.title}
+                    </h1>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </section>
 
           <section className="mt-8 mb-4">

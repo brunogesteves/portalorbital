@@ -90,7 +90,6 @@ export default function NewsPage({ data }: NewsDataProps) {
                     </button>
                   </div>
                 </div>
-                <AudioPlayerDesktop content={data.content} />
 
                 {/* Photo */}
                 <div className="mb-8 bg-red-500 rounded-lg overflow-hidden shadow-xl border border-gray-100 ">
@@ -102,6 +101,7 @@ export default function NewsPage({ data }: NewsDataProps) {
                     src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
                   />
                 </div>
+                <AudioPlayerDesktop content={data.content} />
 
                 <div className="space-y-6">
                   <div className="text-gray-700 text-lg leading-relaxed space-y-4">
@@ -200,8 +200,9 @@ export default function NewsPage({ data }: NewsDataProps) {
             </button>
           </div>
 
-          {/* Audio Player */}
-          <AudioPlayerMobile content={data.content} />
+          <h1 className="text-4xl font-extrabold text-gray-900 leading-tight mb-3 first-letter:capitalize">
+            {data.title}
+          </h1>
 
           {/* Main News Image */}
           <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-sm">
@@ -212,6 +213,7 @@ export default function NewsPage({ data }: NewsDataProps) {
               width={640}
               height={360}
             />
+
             {/* <div className="bg-black/50 absolute bottom-0 left-0 right-0 p-2">
               <p className="text-[10px] text-white/80">
                 Representação holográfica da malha neural quântica do Orbital
@@ -219,6 +221,9 @@ export default function NewsPage({ data }: NewsDataProps) {
               </p>
             </div> */}
           </div>
+
+          {/* Audio Player */}
+          <AudioPlayerMobile content={data.content} />
 
           {/* ================================================================ */}
           {/* 📢 ADSENSE ZONE — Mobile Mid Rectangle (300x250)               */}
@@ -235,9 +240,6 @@ export default function NewsPage({ data }: NewsDataProps) {
 
           {/* News Text Content */}
           <article className="prose prose-slate max-w-none">
-            <h1 className="text-2xl font-extrabold text-gray-900 leading-tight mb-3">
-              {data.title}
-            </h1>
             <div dangerouslySetInnerHTML={{ __html: data.content }} />
           </article>
         </main>

@@ -10,7 +10,11 @@ export function useSearch(term: string) {
   const [warning, setWarning] = useState("");
 
   async function searchPosts() {
-    if (!term) return;
+    if (!term) {
+      setWarning("Digite um termo para buscar");
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
     setIsError(false);
