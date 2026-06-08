@@ -4,7 +4,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import useAudioPlayer from "./useAudioPlayer";
 import { RxResume } from "react-icons/rx";
 
-export default function AudioPlayer({ content }: { content: string }) {
+export const AudioPlayerDesktop = ({ content }: { content: string }) => {
   const { data, methods } = useAudioPlayer({ content });
 
   return (
@@ -50,4 +50,46 @@ export default function AudioPlayer({ content }: { content: string }) {
       </div>
     </div>
   );
-}
+};
+
+export const AudioPlayerMobile = ({ content }: { content: string }) => {
+  const { data, methods } = useAudioPlayer({ content });
+
+  return (
+    <div className="audio-player flex items-center gap-3 p-3 mb-6 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
+      <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#0f3d70] text-white shadow-md">
+        {!data.isSpeaking || data.isPaused ? (
+          <button
+            onClick={methods.startSpeaking}
+            className="w-10 h-10 rounded-full bg-red-600 pl-1  flex items-center justify-center hover:opacity-90 transition-opacity flex-none cursor-pointer"
+          >
+            <FaPlay size={20} color="white" />
+          </button>
+        ) : (
+          <button
+            onClick={methods.pausarFala}
+            className="w-10 h-10 rounded-full bg-red-600  flex items-center justify-center hover:opacity-90 transition-opacity flex-none cursor-pointer"
+          >
+            <FaPause size={20} color="white" />
+          </button>
+        )}
+      </button>
+      <button
+        onClick={methods.pararFala}
+        className="w-10 h-10 rounded-full bg-red-600  flex items-center justify-center hover:opacity-90 transition-opacity flex-none cursor-pointer"
+      >
+        <FaStop size={20} color="white" />
+      </button>
+      <div className="flex-1 flex flex-col gap-1">
+        <div className="flex justify-between items-center">
+          <span className="text-LG font-bold uppercase tracking-widest text-[#0f3d70]">
+            Ouvir Notícia
+          </span>
+        </div>
+        {/* <div className="progress-bar w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <div className="progress-fill h-full bg-[#c1121f] w-[35%]"></div>
+        </div> */}
+      </div>
+    </div>
+  );
+};

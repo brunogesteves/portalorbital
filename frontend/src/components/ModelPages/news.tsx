@@ -6,7 +6,10 @@ import Footer from "@/components/Footer";
 import Slider from "@/components/Header/Slider/Slider";
 import { NewsDataProps } from "@/utils/types";
 import Image from "next/image";
-import AudioPlayer from "../AudioPlayer/AudioPlayer";
+import {
+  AudioPlayerDesktop,
+  AudioPlayerMobile,
+} from "../AudioPlayer/AudioPlayer";
 import { Metadata } from "next";
 import { getSlugMetadata } from "@/utils/metadatas";
 
@@ -87,7 +90,7 @@ export default function NewsPage({ data }: NewsDataProps) {
                     </button>
                   </div>
                 </div>
-                <AudioPlayer content={data.content} />
+                <AudioPlayerDesktop content={data.content} />
 
                 {/* Photo */}
                 <div className="mb-8 bg-red-500 rounded-lg overflow-hidden shadow-xl border border-gray-100 ">
@@ -198,7 +201,7 @@ export default function NewsPage({ data }: NewsDataProps) {
           </div>
 
           {/* Audio Player */}
-          <AudioPlayer content={data.content} />
+          <AudioPlayerMobile content={data.content} />
 
           {/* Main News Image */}
           <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-sm">
