@@ -1,5 +1,4 @@
 "use client";
-
 import Header from "@/components/Header/Header";
 import { useSlug } from "./useSlug";
 import CategoryPage from "@/components/ModelPages/category";
@@ -9,17 +8,6 @@ import NotFoundPage from "@/components/ModelPages/notfound";
 import { PostProps } from "@/utils/types";
 import { useParams } from "next/navigation";
 import Footer from "@/components/Footer";
-
-import { getSlugMetadata } from "@/utils/metadatas";
-import { Metadata } from "next";
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  return getSlugMetadata({ params });
-}
 
 export default function SlugPage() {
   const params = useParams();

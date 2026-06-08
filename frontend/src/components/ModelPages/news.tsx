@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-import type { Metadata } from "next";
 import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiShare2 } from "react-icons/fi";
@@ -8,31 +6,17 @@ import Footer from "@/components/Footer";
 import Slider from "@/components/Header/Slider/Slider";
 import { NewsDataProps } from "@/utils/types";
 import Image from "next/image";
+import AudioPlayer from "../AudioPlayer/AudioPlayer";
+import { Metadata } from "next";
+import { getSlugMetadata } from "@/utils/metadatas";
 
-// Gerador dinâmico de metadados para SEO da Notícia
 export async function generateMetadata({
-  data,
-}: NewsDataProps): Promise<Metadata> {
-  // Formata o slug da notícia (ex: nova-lei-aprovada -> Nova Lei Aprovada)
-  const newsTitle = data.title
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
-  return {
-    title: `${newsTitle}`,
-    description: `Leia mais sobre "${newsTitle}" no Portal Político. Análise completa e atualizações ao vivo.`,
-    alternates: {
-      canonical: `/${data.slug}`,
-    },
-    openGraph: {
-      title: `${newsTitle} | Portal Político`,
-      description: `Leia mais sobre "${newsTitle}" no Portal Político.`,
-      type: "article",
-    },
-  };
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  return getSlugMetadata({ params });
 }
-
 export default function NewsPage({ data }: NewsDataProps) {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
@@ -66,7 +50,7 @@ export default function NewsPage({ data }: NewsDataProps) {
             <div className="max-w-4xl mx-auto space-y-12">
               <article className="flex flex-col">
                 {/* Headline */}
-                <h1 className="text-gray-900 font-bold text-3xl md:text-5xl leading-tight mb-8">
+                <h1 className="text-gray-900 font-bold text-3xl md:text-5xl leading-tight mb-8 first-letter:capitalize">
                   {data.title}
                 </h1>
 
@@ -103,6 +87,7 @@ export default function NewsPage({ data }: NewsDataProps) {
                     </button>
                   </div>
                 </div>
+                <AudioPlayer content={data.content} />
 
                 {/* Photo */}
                 <div className="mb-8 bg-red-500 rounded-lg overflow-hidden shadow-xl border border-gray-100 ">
@@ -115,7 +100,6 @@ export default function NewsPage({ data }: NewsDataProps) {
                   />
                 </div>
 
-                {/* Text Content */}
                 <div className="space-y-6">
                   <div className="text-gray-700 text-lg leading-relaxed space-y-4">
                     <div dangerouslySetInnerHTML={{ __html: data.content }} />
@@ -212,6 +196,9 @@ export default function NewsPage({ data }: NewsDataProps) {
               <FiShare2 className="text-sm" />
             </button>
           </div>
+
+          {/* Audio Player */}
+          <AudioPlayer content={data.content} />
 
           {/* Main News Image */}
           <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-sm">
