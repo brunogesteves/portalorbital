@@ -106,7 +106,7 @@ export default function useAudioPlayer({ content }: { content: string }) {
     }, 200);
   };
 
-  const pausarFala = () => {
+  const pauseSpeaking = () => {
     if (isSpeaking && !isPaused) {
       window.speechSynthesis.pause();
       setIsPaused(true);
@@ -114,7 +114,7 @@ export default function useAudioPlayer({ content }: { content: string }) {
     }
   };
 
-  const pararFala = () => {
+  const stopSpeaking = () => {
     cancelledRef.current = true;
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
@@ -123,6 +123,6 @@ export default function useAudioPlayer({ content }: { content: string }) {
 
   return {
     data: { isSpeaking, isPaused, contentText },
-    methods: { startSpeaking, pausarFala, pararFala, setContentText },
+    methods: { startSpeaking, pauseSpeaking, stopSpeaking, setContentText },
   };
 }

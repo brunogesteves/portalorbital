@@ -9,9 +9,9 @@ export const AudioPlayerDesktop = ({ content }: { content: string }) => {
 
   return (
     <div className="space-y-6">
-      <div className="text-gray-700 font-body-md text-lg leading-relaxed space-y-4 rounded-md w-1/3">
+      <div className="audio-player flex items-center gap-3  mb-6 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
         <div
-          className="bg-surface-container-low bg-black rounded-lg p-4 mb-8 flex items-center gap-4 border border-outline-variant shadow-sm"
+          className=" p-4  flex items-center gap-4"
           data-purpose="audio-player"
         >
           {!data.isSpeaking || data.isPaused ? (
@@ -23,7 +23,7 @@ export const AudioPlayerDesktop = ({ content }: { content: string }) => {
             </button>
           ) : (
             <button
-              onClick={methods.pausarFala}
+              onClick={methods.pauseSpeaking}
               className="w-14 h-14 rounded-full bg-red-600  flex items-center justify-center hover:opacity-90 transition-opacity flex-none cursor-pointer"
             >
               <FaPause size={24} color="white" />
@@ -31,11 +31,14 @@ export const AudioPlayerDesktop = ({ content }: { content: string }) => {
           )}
 
           <button
-            onClick={methods.pararFala}
+            onClick={methods.stopSpeaking}
             className="w-14 h-14 rounded-full bg-red-600  flex items-center justify-center hover:opacity-90 transition-opacity flex-none cursor-pointer"
           >
             <FaStop size={24} color="white" />
           </button>
+          <span className="text-LG font-bold uppercase tracking-widest text-[#0f3d70]">
+            Ouvir Notícia
+          </span>
           <div className="flex-grow flex flex-col gap-1">
             <div className="flex justify-between items-center">
               <span className="text-on-surface font-headline-md text-md text-white">
@@ -67,7 +70,7 @@ export const AudioPlayerMobile = ({ content }: { content: string }) => {
           </button>
         ) : (
           <button
-            onClick={methods.pausarFala}
+            onClick={methods.pauseSpeaking}
             className="w-10 h-10 rounded-full bg-red-600  flex items-center justify-center hover:opacity-90 transition-opacity flex-none cursor-pointer"
           >
             <FaPause size={20} color="white" />
@@ -75,7 +78,7 @@ export const AudioPlayerMobile = ({ content }: { content: string }) => {
         )}
       </button>
       <button
-        onClick={methods.pararFala}
+        onClick={methods.stopSpeaking}
         className="w-10 h-10 rounded-full bg-red-600  flex items-center justify-center hover:opacity-90 transition-opacity flex-none cursor-pointer"
       >
         <FaStop size={20} color="white" />
