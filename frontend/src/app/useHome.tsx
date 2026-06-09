@@ -24,8 +24,9 @@ export function useHome() {
             alt={post.title}
             className="absolute inset-0 w-full h-full object-cover"
             src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-            width={500}
-            height={500}
+            width={100}
+            height={100}
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
             <h3 className="text-white font-bold text-sm first-letter:capitalize">
@@ -46,10 +47,11 @@ export function useHome() {
         <div className="bg-[#111415] rounded-xl overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow">
           <Image
             alt={post.title}
-            className="w-full aspect-video object-cover"
+            className="w-full  aspect-video object-cover"
             src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-            width={500}
-            height={500}
+            width={100}
+            height={100}
+            loading="eager"
           />
           <div className="p-4">
             <h4 className="text-white font-bold text-xs uppercase">
@@ -72,8 +74,8 @@ export function useHome() {
             alt={post.title}
             className="w-full h-full object-cover"
             src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-            width={500}
-            height={500}
+            width={100}
+            height={100}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end items-start gap-y-2 p-3">
             <h3 className="text-white font-bold text-xs leading-tight first-letter:uppercase">

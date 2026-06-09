@@ -164,8 +164,7 @@ export default function Footer() {
             <Image
               alt="Orbital Logo Small"
               className="h-8 w-auto object-contain mt-4 md:mt-0"
-              width={200}
-              height={200}
+              fill
               src="/logo.png"
             />
           </div>

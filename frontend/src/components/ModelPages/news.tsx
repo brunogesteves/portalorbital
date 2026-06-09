@@ -30,8 +30,6 @@ export default function NewsPage({ data }: NewsDataProps) {
       {/* ========================================================================= */}
       <div className="hidden md:block text-gray-800 min-h-screen bg-white">
         <main className="w-full min-h-screen">
-          {/* <Slider device="desktop" /> */}
-
           {/* ================================================================ */}
           {/* 📢 ADSENSE ZONE — Desktop Top Leaderboard (728x90)              */}
           {/* Coloque aqui o código do bloco de anúncio do Google AdSense     */}
@@ -52,11 +50,10 @@ export default function NewsPage({ data }: NewsDataProps) {
           >
             <div className="max-w-4xl mx-auto space-y-12">
               <article className="flex flex-col">
-                {/* Headline */}
+                Headline
                 <h1 className="text-gray-900 font-bold text-3xl md:text-5xl leading-tight mb-8 first-letter:capitalize">
                   {data.title}
                 </h1>
-
                 {/* Header Info and Social Icons Row */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                   <div className="flex flex-col">
@@ -90,19 +87,18 @@ export default function NewsPage({ data }: NewsDataProps) {
                     </button>
                   </div>
                 </div>
-
                 {/* Photo */}
                 <div className="mb-8 bg-red-500 rounded-lg overflow-hidden shadow-xl border border-gray-100 ">
                   <Image
                     alt={data.title}
                     width={640}
                     height={360}
+                    loading="eager"
                     className="object-cover aspect-video w-full"
                     src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
                   />
                 </div>
                 <AudioPlayerDesktop content={data.content} />
-
                 <div className="space-y-6">
                   <div className="text-gray-700 text-lg leading-relaxed space-y-4">
                     <div dangerouslySetInnerHTML={{ __html: data.content }} />
@@ -204,7 +200,6 @@ export default function NewsPage({ data }: NewsDataProps) {
             {data.title}
           </h1>
 
-          {/* Main News Image */}
           <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-sm">
             <Image
               alt={data.title}
@@ -212,6 +207,7 @@ export default function NewsPage({ data }: NewsDataProps) {
               src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
               width={640}
               height={360}
+              loading="eager"
             />
 
             {/* <div className="bg-black/50 absolute bottom-0 left-0 right-0 p-2">
@@ -222,7 +218,6 @@ export default function NewsPage({ data }: NewsDataProps) {
             </div> */}
           </div>
 
-          {/* Audio Player */}
           <AudioPlayerMobile content={data.content} />
 
           {/* ================================================================ */}

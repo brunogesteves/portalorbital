@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       {/* <Header slug="Home"/> */}
-      <Header slug="Home" />
+      {/* <Header slug="Home" /> */}
       {/* ========================================================================= */}
       {/* 💻 DESKTOP LAYOUT (md breakpoint and above)                              */}
       {/* ========================================================================= */}
@@ -202,8 +202,8 @@ export default function Home() {
                           alt={post.title}
                           className="absolute inset-0 w-full h-full object-cover"
                           src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-                          width={500}
-                          height={500}
+                          fill
+                          loading="eager"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
                           <h3 className="text-white font-bold text-sm first-letter:capitalize">
@@ -233,8 +233,8 @@ export default function Home() {
                           alt={post.title}
                           className="absolute inset-0 w-full h-full object-cover"
                           src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-                          width={500}
-                          height={500}
+                          fill
+                          loading="eager"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
                           <h3 className="text-white font-bold text-sm first-letter:capitalize">
@@ -264,8 +264,8 @@ export default function Home() {
                           alt={post.title}
                           className="absolute inset-0 w-full h-full object-cover"
                           src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-                          width={500}
-                          height={500}
+                          fill
+                          loading="eager"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
                           <h3 className="text-white font-bold text-sm first-letter:capitalize">
@@ -305,8 +305,8 @@ export default function Home() {
                     alt={post.title}
                     className="w-full h-full object-cover"
                     src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-                    width={500}
-                    height={500}
+                    fill
+                    loading="eager"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end items-start gap-y-2 p-3">
                     <h3 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
@@ -340,8 +340,8 @@ export default function Home() {
                 alt="Future Luxury Travel"
                 className="w-full h-full object-cover"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb4YjwIlSMZwwdlhvIzyrxCF1MW4mcVvQZwwyZkM2YuvclqMYreDeYlbaOVKoFhm-XkVwO8J5rIllXEDcOyvPTb3rn2g3WBvprtpulnrdG4UYcx-6rWCg2f-QrZc5NIbeIiLhMvVz-Sq40qf0CzHa0HjVYSWhUfL7XEu1A9VUhSW4W6r6lHlHVyV3ce8l4i8qI9IOJ7XZFA_8AzfkWZ-QVcQPeEuGs9F9httfuUQsLlANYOtKYZsw-iMdct27vLXpPSyaFQcPrDb8"
-                width={500}
-                height={500}
+                fill
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
@@ -355,8 +355,8 @@ export default function Home() {
                 alt="VR Gaming Revolution"
                 className="w-full h-full object-cover"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4VmLVTot1796_D0yo3vwF-kUDlBReKOi6Y5eHLvUoQuIlr1zWEugtX8uw4_l8FVPbGREwdriEXlFbccXA0TmEGCcRWxHTtPMHPQy4xtr10yYgy9JyTSDkgDv0riniiK7BC-gMO8ysHjwtaQmKyVezzxbVpQiT3GXe7ftJRwE1IHYKKgeea7_RsQQvUCkxrCtB2WDUTN9ddbwM-xysaQenV8yo20pTm6pwtbzuRnLO4jMZ1oj_1x0EXlVd_0TrWZwPUcwTUx6tEh0"
-                width={500}
-                height={500}
+                fill
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
@@ -384,8 +384,8 @@ export default function Home() {
                 alt="Future Luxury Travel"
                 className="w-full h-full object-cover"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb4YjwIlSMZwwdlhvIzyrxCF1MW4mcVvQZwwyZkM2YuvclqMYreDeYlbaOVKoFhm-XkVwO8J5rIllXEDcOyvPTb3rn2g3WBvprtpulnrdG4UYcx-6rWCg2f-QrZc5NIbeIiLhMvVz-Sq40qf0CzHa0HjVYSWhUfL7XEu1A9VUhSW4W6r6lHlHVyV3ce8l4i8qI9IOJ7XZFA_8AzfkWZ-QVcQPeEuGs9F9httfuUQsLlANYOtKYZsw-iMdct27vLXpPSyaFQcPrDb8"
-                width={500}
-                height={500}
+                fill
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
@@ -399,8 +399,8 @@ export default function Home() {
                 alt="VR Gaming Revolution"
                 className="w-full h-full object-cover"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4VmLVTot1796_D0yo3vwF-kUDlBReKOi6Y5eHLvUoQuIlr1zWEugtX8uw4_l8FVPbGREwdriEXlFbccXA0TmEGCcRWxHTtPMHPQy4xtr10yYgy9JyTSDkgDv0riniiK7BC-gMO8ysHjwtaQmKyVezzxbVpQiT3GXe7ftJRwE1IHYKKgeea7_RsQQvUCkxrCtB2WDUTN9ddbwM-xysaQenV8yo20pTm6pwtbzuRnLO4jMZ1oj_1x0EXlVd_0TrWZwPUcwTUx6tEh0"
-                width={500}
-                height={500}
+                fill
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
@@ -428,8 +428,8 @@ export default function Home() {
                 alt="Future Luxury Travel"
                 className="w-full h-full object-cover"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb4YjwIlSMZwwdlhvIzyrxCF1MW4mcVvQZwwyZkM2YuvclqMYreDeYlbaOVKoFhm-XkVwO8J5rIllXEDcOyvPTb3rn2g3WBvprtpulnrdG4UYcx-6rWCg2f-QrZc5NIbeIiLhMvVz-Sq40qf0CzHa0HjVYSWhUfL7XEu1A9VUhSW4W6r6lHlHVyV3ce8l4i8qI9IOJ7XZFA_8AzfkWZ-QVcQPeEuGs9F9httfuUQsLlANYOtKYZsw-iMdct27vLXpPSyaFQcPrDb8"
-                width={500}
-                height={500}
+                fill
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
@@ -443,8 +443,8 @@ export default function Home() {
                 alt="VR Gaming Revolution"
                 className="w-full h-full object-cover"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4VmLVTot1796_D0yo3vwF-kUDlBReKOi6Y5eHLvUoQuIlr1zWEugtX8uw4_l8FVPbGREwdriEXlFbccXA0TmEGCcRWxHTtPMHPQy4xtr10yYgy9JyTSDkgDv0riniiK7BC-gMO8ysHjwtaQmKyVezzxbVpQiT3GXe7ftJRwE1IHYKKgeea7_RsQQvUCkxrCtB2WDUTN9ddbwM-xysaQenV8yo20pTm6pwtbzuRnLO4jMZ1oj_1x0EXlVd_0TrWZwPUcwTUx6tEh0"
-                width={500}
-                height={500}
+                fill
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">

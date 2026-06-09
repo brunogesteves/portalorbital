@@ -59,7 +59,7 @@ export const AudioPlayerMobile = ({ content }: { content: string }) => {
 
   return (
     <div className="audio-player flex items-center gap-3 p-3 mb-6 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
-      <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#0f3d70] text-white shadow-md">
+      <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#0f3d70] text-white shadow-md">
         {!data.isSpeaking || data.isPaused ? (
           <button
             onClick={methods.startSpeaking}
@@ -75,7 +75,7 @@ export const AudioPlayerMobile = ({ content }: { content: string }) => {
             <FaPause size={20} color="white" />
           </button>
         )}
-      </button>
+      </div>
       <button
         onClick={methods.stopSpeaking}
         className="w-10 h-10 rounded-full bg-red-600  flex items-center justify-center hover:opacity-90 transition-opacity flex-none cursor-pointer"

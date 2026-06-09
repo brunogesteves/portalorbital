@@ -29,9 +29,11 @@ export const HeaderTopDesktop = () => {
           >
             <Image
               alt="Orbital Logo"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgofKmN8O3SnmsRyYpCmNA1I4CUXhmozms5xV1laABwzRu2hdegZ0PvrbvinIUWwYG38HgYS4pJFL3bVDDu32ed6352moBf8KzpUfZT0TUurvJTm9GZxHg9h4zcUt-VqX0wAl_zUAbvWCc_ePpwJ73yhwM1DGVgJt05wow-RRWD9dfo4CplXlozyrXSGGr3k2o-LLPr2Xj5cnXiDWHjO9YLvEUWW--iIs4ioY5RdUKujYdfrVo9p3lT4P-m_0PRv6dux7tJT04zlM"
+              src="/logo.png"
               width={40}
               height={40}
+              loading="eager"
+              className="w-auto h-auto"
             />
           </Link>
 
@@ -99,8 +101,8 @@ export const HeaderTopMobile = () => {
                 alt="Orbital Channel Logo"
                 className="w-full h-auto max-h-full object-contain"
                 src="/logo.png"
-                width={40}
-                height={40}
+                fill
+                loading="eager"
               />
             </div>
             {/* Logo Text */}

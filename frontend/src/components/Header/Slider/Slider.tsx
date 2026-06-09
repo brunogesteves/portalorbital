@@ -72,25 +72,29 @@ export default function Slider({ device }: SliderProps) {
           }
         `}</style>
 
-        <SliderSlick {...data.settings} className="desktop-slider-slick h-full">
+        <SliderSlick
+          {...data.settings}
+          className="desktop-slider-slick h-[400px]"
+        >
           {data.typedSlides.map((slide) => (
-            <Link href={`/${slide.slug}`} key={slide.id}>
-              <div className="relative w-full h-full aspect-[16/9]  outline-none cursor-pointer">
+            <Link
+              href={`/${slide.slug}`}
+              key={slide.id}
+              className="block w-full"
+            >
+              <div className="relative w-full aspect-[16/9] overflow-hidden rounded-lg">
                 <Image
                   alt={slide.title}
-                  width={1280}
-                  height={720}
-                  className="absolute inset-0 w-full h-full object-cover"
                   src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                {/* <div className="absolute top-4 left-4">
-                  <span className="bg-[#b91c1c] text-white text-[20px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider ml-[150px]">
-                    Destaque
-                  </span>
-                </div> */}
-                <div className="absolute bottom-4 flex justify-center w-full">
-                  <h1 className="text-white font-sans font-bold text-xl md:text-2xl lg:text-3xl leading-tight max-w-4xl text-center px-8">
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-0" />
+
+                <div className="absolute top-80 left-1/2 w-full  text-center  translate-x-[-50%] p-3 sm:p-4 pb-5 sm:pb-8">
+                  <h1 className="text-white  font-bold text-[2rem]! sm:text-base leading-tight line-clamp-2 first-letter:capitalize">
                     {slide.title}
                   </h1>
                 </div>
@@ -157,8 +161,8 @@ export default function Slider({ device }: SliderProps) {
               <div className="relative w-full h-full aspect-[16/9] outline-none">
                 <Image
                   alt={slide.title}
-                  width={1280}
-                  height={720}
+                  width={640}
+                  height={360}
                   className="absolute inset-0 w-full h-full object-cover"
                   src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
                 />
