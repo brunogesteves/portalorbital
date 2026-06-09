@@ -4,16 +4,15 @@ import React from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiArrowRight } from "react-icons/fi";
-import HeaderCategories from "@/components/Header/Categories/HeaderCategories";
+import { HeaderCategoriesDesktop } from "@/components/Header/Categories/HeaderCategories";
 import Footer from "@/components/Footer";
 import HeroSlider from "@/components/Header/Slider/Slider";
-import { CategoryDataProps } from "@/utils/types";
+// import { CategoryDataProps } from "@/utils/types";
 
-export default function CategoryPage({ data }: CategoryDataProps) {
-  console.log(data);
+export default function CategoryPage() {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
-      <HeaderCategories slug={data.title} />
+      <HeaderCategoriesDesktop slug={"data.title"} />
 
       {/* ========================================================================= */}
       {/* 💻 DESKTOP LAYOUT (md breakpoint and above)                              */}
@@ -26,7 +25,7 @@ export default function CategoryPage({ data }: CategoryDataProps) {
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-center mb-4">
                 <h2 className="font-bold text-[#111415] uppercase tracking-wide text-4xl">
-                  {data.title}
+                  {"titulo da categoria"}
                 </h2>
               </div>
 
@@ -320,7 +319,7 @@ export default function CategoryPage({ data }: CategoryDataProps) {
           <section className="py-6 px-4 bg-white">
             <div className="max-w-7xl mx-auto flex justify-center">
               <h2 className="text-5xl font-bold text-gray-900 uppercase tracking-tighter text-center">
-                {data.title}
+                {"titulo"}
               </h2>
             </div>
           </section>

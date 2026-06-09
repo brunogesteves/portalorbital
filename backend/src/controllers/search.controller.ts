@@ -5,6 +5,7 @@ import prisma from "../lib/prisma";
 export const searchOneContent = async (req: any, res: Response) => {
   const { slug } = req.params;
   console.log("controller searchOneContent: ", slug);
+
   const categoryContent = await prisma.category.findFirst({
     where: {
       slug,
@@ -13,9 +14,6 @@ export const searchOneContent = async (req: any, res: Response) => {
       posts: true,
     },
   });
-
-  if (categoryContent)
-    return res.json({ type: "category", content: categoryContent });
 
   const newsContent = await prisma.post.findFirst({
     where: {
@@ -36,9 +34,17 @@ export const searchOneContent = async (req: any, res: Response) => {
     },
   });
 
-  if (newsContent)
+  if (categoryContent) {
+    return res.json({
+      status: true,
+      type: "category",
+      content: categoryContent,
+    });
+  } else if (newsContent) {
     return res.json({ status: true, type: "news", content: newsContent });
-  if (!categoryContent && !newsContent) return res.json({ status: false });
+  } else {
+    return res.json({ status: false });
+  }
 };
 
 export const searchContent = async (req: any, res: Response) => {

@@ -30,6 +30,7 @@ export default function SlugPage() {
   if (infoContent) {
     if (type === "category") {
       // return <CategoryPage data={infoContent as PostProps} />;
+      return <CategoryPage />;
     }
 
     if (type === "news") {

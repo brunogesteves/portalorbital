@@ -2,6 +2,8 @@
 import { FiMenu, FiSearch } from "react-icons/fi";
 import { useHeaderTop } from "./useHeaderTop";
 import { ModalSearchlMobile } from "@/components/ModaSearchlMobile";
+import Link from "next/link";
+import Image from "next/image";
 
 export const HeaderTopDesktop = () => {
   const { data, methods } = useHeaderTop();
@@ -20,12 +22,18 @@ export const HeaderTopDesktop = () => {
         data-purpose="logo-container"
       >
         <div className="flex items-center space-x-2">
-          <img
-            alt="Orbital Logo"
+          <Link
+            href="/"
             className="h-10 w-auto object-contain"
             data-purpose="logo-icon"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgofKmN8O3SnmsRyYpCmNA1I4CUXhmozms5xV1laABwzRu2hdegZ0PvrbvinIUWwYG38HgYS4pJFL3bVDDu32ed6352moBf8KzpUfZT0TUurvJTm9GZxHg9h4zcUt-VqX0wAl_zUAbvWCc_ePpwJ73yhwM1DGVgJt05wow-RRWD9dfo4CplXlozyrXSGGr3k2o-LLPr2Xj5cnXiDWHjO9YLvEUWW--iIs4ioY5RdUKujYdfrVo9p3lT4P-m_0PRv6dux7tJT04zlM"
-          />
+          >
+            <Image
+              alt="Orbital Logo"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgofKmN8O3SnmsRyYpCmNA1I4CUXhmozms5xV1laABwzRu2hdegZ0PvrbvinIUWwYG38HgYS4pJFL3bVDDu32ed6352moBf8KzpUfZT0TUurvJTm9GZxHg9h4zcUt-VqX0wAl_zUAbvWCc_ePpwJ73yhwM1DGVgJt05wow-RRWD9dfo4CplXlozyrXSGGr3k2o-LLPr2Xj5cnXiDWHjO9YLvEUWW--iIs4ioY5RdUKujYdfrVo9p3lT4P-m_0PRv6dux7tJT04zlM"
+              width={40}
+              height={40}
+            />
+          </Link>
 
           <div className="flex flex-col leading-none select-none">
             <span
@@ -87,10 +95,12 @@ export const HeaderTopMobile = () => {
         <div className="flex flex-col items-center justify-center flex-1">
           <div className="flex items-center">
             <div className="relative w-10 h-10 mr-2 flex items-center justify-center">
-              <img
+              <Image
                 alt="Orbital Channel Logo"
                 className="w-full h-auto max-h-full object-contain"
                 src="/logo.png"
+                width={40}
+                height={40}
               />
             </div>
             {/* Logo Text */}

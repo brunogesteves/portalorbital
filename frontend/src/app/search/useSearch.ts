@@ -27,7 +27,7 @@ export function useSearch(term: string) {
       } else {
         setWarning(message);
       }
-    } catch (error: any) {
+    } catch {
       setIsError(true);
       setWarning("Erro interno");
     } finally {

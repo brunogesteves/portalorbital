@@ -1,6 +1,7 @@
 "use client";
 import { CategoryProps, HeaderProps } from "@/utils/types";
 import { useHeaderCategories } from "./useHeaderCategories";
+import Link from "next/link";
 
 export const HeaderCategoriesDesktop = ({ slug }: HeaderProps) => {
   const { data } = useHeaderCategories();
@@ -16,7 +17,7 @@ export const HeaderCategoriesDesktop = ({ slug }: HeaderProps) => {
             Home
           </a>
         </li>
-        {data.categories.sort().map((cat: CategoryProps) => (
+        {data?.categories?.map((cat: CategoryProps) => (
           <li key={cat.id} className="nav-link text-white px-4">
             <a
               href={`/${cat.slug.toLowerCase()}`}
@@ -38,12 +39,12 @@ export const HeaderCategoriesMobile = ({ slug }: HeaderProps) => {
     <nav className="relative z-10 w-full overflow-x-auto no-scrollbar">
       <ul className="flex space-x-2 px-4 items-center w-max pb-1">
         <li>
-          <a
+          <Link
             href="/"
             className={`${slug === "Home" ? "btn-silver-active" : "btn-blue-glossy"} tracking-tight font-sans`}
           >
             Home
-          </a>
+          </Link>
         </li>
 
         {data.categories.sort().map((cat: CategoryProps) => (

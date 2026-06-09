@@ -94,7 +94,7 @@ export default function useAudioPlayer({ content }: { content: string }) {
       return;
     }
 
-    const voices = window.speechSynthesis.getVoices();
+    // const voices = window.speechSynthesis.getVoices();
 
     cancelledRef.current = false;
     chunksRef.current = splitIntoChunks(contentText);

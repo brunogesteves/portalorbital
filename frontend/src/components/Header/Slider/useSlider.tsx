@@ -1,34 +1,31 @@
-import { api } from '@/utils/api';
-import { PostProps } from '@/utils/types';
-import { useEffect, useState } from 'react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-
+import { api } from "@/utils/api";
+import { PostProps } from "@/utils/types";
+import { useEffect, useState } from "react";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 interface ArrowProps {
   onClick?: () => void;
 }
-
 
 export function useSlider() {
   const [Slides, setSlides] = useState<string[]>([]);
 
   useEffect(() => {
     async function getSlides() {
-     try {
-         await api.get('/posts/all').then((res) => { 
-        setSlides(res.data)
-      });
-     } catch (error) {
-        
-     }
+      try {
+        await api.get("/posts/all").then((res) => {
+          setSlides(res.data);
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
     getSlides();
   }, []);
 
-    const typedSlides = Slides as unknown as PostProps[];
+  const typedSlides = Slides as unknown as PostProps[];
 
-
-  const NextArrow = (props: ArrowProps)=> {
+  const NextArrow = (props: ArrowProps) => {
     const { onClick } = props;
     return (
       <button
@@ -40,7 +37,7 @@ export function useSlider() {
       </button>
     );
   };
-  
+
   const PrevArrow = (props: ArrowProps) => {
     const { onClick } = props;
     return (
@@ -53,7 +50,7 @@ export function useSlider() {
       </button>
     );
   };
-  
+
   const MobileNextArrow = (props: ArrowProps) => {
     const { onClick } = props;
     return (
@@ -66,7 +63,7 @@ export function useSlider() {
       </button>
     );
   };
-  
+
   const MobilePrevArrow = (props: ArrowProps) => {
     const { onClick } = props;
     return (
@@ -79,7 +76,6 @@ export function useSlider() {
       </button>
     );
   };
-
 
   const settings = {
     dots: true,
@@ -112,7 +108,7 @@ export function useSlider() {
       Slides,
       settings,
       mobileSettings,
-      typedSlides
+      typedSlides,
     },
   };
 }

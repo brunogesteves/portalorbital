@@ -15,12 +15,10 @@ export function useSlug(slug: string) {
       setLoading(true);
       try {
         const res = await api.get(`/search/${slug}`);
+        console.log(res.data.type);
         if (res.data.status) {
           setType(res.data.type);
           setInfoContent(res.data.content);
-        } else {
-          setType("notfound");
-          setInfoContent(null);
         }
       } catch (error) {
         console.error(error);
@@ -34,6 +32,8 @@ export function useSlug(slug: string) {
       getData();
     }
   }, [slug]);
+
+  console.log("useSlug: ", type);
 
   return { type, infoContent, loading };
 }
