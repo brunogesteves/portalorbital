@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
         hostname: "lh3.googleusercontent.com",
         pathname: "/aida-public/**",
       },
+      {
+        protocol: "https",
+        hostname: "proofread-overstep-unvented.ngrok-free.dev",
+        pathname: "/uploads/**",
+      },
     ],
   },
 };
