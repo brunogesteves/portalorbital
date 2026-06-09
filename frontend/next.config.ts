@@ -23,7 +23,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "proofread-overstep-unvented.ngrok-free.dev",
-        pathname: "/uploads/**",
       },
     ],
   },
