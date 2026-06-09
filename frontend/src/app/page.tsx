@@ -9,16 +9,16 @@ import {
   FaFacebookF,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import Image from "next/image";
+import Link from "next/link";
 
 import Footer from "@/components/Footer";
 import Slider from "@/components/Header/Slider/Slider";
 import Header from "@/components/Header/Header";
-import { metadataHome } from "@/utils/metadatas";
+// import { metadataHome } from "@/utils/metadatas";
 import { useHome } from "./useHome";
-import Image from "next/image";
-import Link from "next/link";
 
-const metadata = metadataHome;
+// export  const metadata = metadataHome;
 
 export default function Home() {
   const { data, methods } = useHome();

@@ -1,8 +1,9 @@
-import { api } from "@/utils/api";
-import { PostProps } from "@/utils/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+import { PostProps } from "@/utils/types";
+import { api } from "@/utils/api";
 
 export function useHome() {
   const [posts, setPosts] = useState<PostProps[]>([]);

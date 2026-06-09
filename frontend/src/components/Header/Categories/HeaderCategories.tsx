@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export const HeaderCategoriesDesktop = ({ slug }: HeaderProps) => {
   const { data } = useHeaderCategories();
-
+  console.log(slug);
   return (
     <nav
       className="bg-nav-red-strip w-full py-2 flex justify-center items-center"

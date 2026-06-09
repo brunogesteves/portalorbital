@@ -8,9 +8,9 @@ import Footer from "@/components/Footer";
 import { useSearch } from "./useSearch";
 import Image from "next/image";
 import Link from "next/link";
-import { metadataSearch } from "@/utils/metadatas";
+// import { metadataSearch } from "@/utils/metadatas";
 
-const metadata = metadataSearch;
+// export const metadata = metadataSearch;
 
 function SearchResults() {
   const searchParams = useSearchParams();
