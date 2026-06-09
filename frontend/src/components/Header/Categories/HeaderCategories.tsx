@@ -33,7 +33,7 @@ export const HeaderCategoriesDesktop = ({ slug }: HeaderProps) => {
 };
 
 export const HeaderCategoriesMobile = ({ slug }: HeaderProps) => {
-  const { data, methods } = useHeaderCategories();
+  const { data } = useHeaderCategories();
 
   return (
     <nav className="relative z-10 w-full overflow-x-auto no-scrollbar">

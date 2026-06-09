@@ -11,7 +11,7 @@ export function useHeaderCategories() {
         await api.get("/categories").then((res) => {
           setCategories(res.data);
         });
-      } catch (error) {}
+      } catch {}
     }
     getCategories();
   }, []);
