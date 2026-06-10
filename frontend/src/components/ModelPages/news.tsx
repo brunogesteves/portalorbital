@@ -10,16 +10,7 @@ import {
   AudioPlayerDesktop,
   AudioPlayerMobile,
 } from "../AudioPlayer/AudioPlayer";
-import { Metadata } from "next";
-import { getSlugMetadata } from "@/utils/metadatas";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  return getSlugMetadata({ params });
-}
 export default function NewsPage({ data }: NewsDataProps) {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
@@ -88,12 +79,13 @@ export default function NewsPage({ data }: NewsDataProps) {
                   </div>
                 </div>
                 {/* Photo */}
-                <div className="mb-8 bg-red-500 rounded-lg overflow-hidden shadow-xl border border-gray-100 ">
+                <div className="mb-8  rounded-lg overflow-hidden shadow-xl border border-gray-100 ">
                   <Image
                     alt={data.title}
                     width={640}
                     height={360}
                     loading="eager"
+                    unoptimized
                     className="object-cover aspect-video w-full"
                     src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
                   />
@@ -207,6 +199,7 @@ export default function NewsPage({ data }: NewsDataProps) {
               src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
               width={640}
               height={360}
+              unoptimized
               loading="eager"
             />
 

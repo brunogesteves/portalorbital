@@ -39,12 +39,7 @@ export const ModalSearchlMobile = ({
           </div>
         </div>
         <span className="text-black">Digite pelo menos 2 caracteres</span>
-        <button
-          disabled={searchTerm.length <= 1}
-          className="btn-blue-glossy w-full py-3 uppercase tracking-widest font-bold"
-        >
-          Buscar
-        </button>
+
         <ButtonBlue
           text="Buscar"
           onClick={() => {

@@ -87,6 +87,7 @@ export default function Slider({ device }: SliderProps) {
                   alt={slide.title}
                   src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
                   fill
+                  unoptimized
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover"
                 />
@@ -163,6 +164,7 @@ export default function Slider({ device }: SliderProps) {
                   alt={slide.title}
                   width={640}
                   height={360}
+                  unoptimized
                   className="absolute inset-0 w-full h-full object-cover"
                   src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
                 />

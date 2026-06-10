@@ -16,9 +16,7 @@ export function useSlider() {
         await api.get("/posts/all").then((res) => {
           setSlides(res.data);
         });
-      } catch (error) {
-        console.error(error);
-      }
+      } catch {}
     }
     getSlides();
   }, []);

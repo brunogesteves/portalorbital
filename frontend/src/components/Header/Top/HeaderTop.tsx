@@ -101,7 +101,8 @@ export const HeaderTopMobile = () => {
                 alt="Orbital Channel Logo"
                 className="w-full h-auto max-h-full object-contain"
                 src="/logo.png"
-                fill
+                width={40}
+                height={40}
                 loading="eager"
               />
             </div>

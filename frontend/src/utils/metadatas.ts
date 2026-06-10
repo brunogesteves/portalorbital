@@ -52,13 +52,7 @@ export const metadataSearch: Metadata = {
   },
 };
 
-export async function getSlugMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const slug = params.slug;
-
+export async function getSlugMetadata(slug: string): Promise<Metadata> {
   try {
     // Faz a chamada na mesma API que o seu hook usa
     const res = await api.get(`/search/${slug}`);
