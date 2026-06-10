@@ -1,11 +1,15 @@
 "use client";
 import { FiMenu, FiSearch } from "react-icons/fi";
-import { useHeaderTop } from "./useHeaderTop";
-import { ModalSearchlMobile } from "@/components/ModaSearchlMobile";
 import Link from "next/link";
 import Image from "next/image";
 
+import { useUIStore } from "@/store/useStore";
+import { useHeaderTop } from "./useHeaderTop";
+import { ModalSearchlMobile } from "@/components/ModaSearchlMobile";
+
 export const HeaderTopDesktop = () => {
+  const { isSidebarOpen, setIsSidebarOpen } = useUIStore();
+
   const { data, methods } = useHeaderTop();
   return (
     <div className="flex w-full px-5 py-2">
@@ -14,7 +18,7 @@ export const HeaderTopDesktop = () => {
           aria-label="Menu"
           className="text-gray-700 hover:text-black transition-colors flex items-center justify-center"
         >
-          <FiMenu className="h-8 w-8" />
+          <FiMenu className="h-8 w-8 cursor-pointer" />
         </button>
       </div>
       <div
@@ -84,6 +88,7 @@ export const HeaderTopDesktop = () => {
 };
 
 export const HeaderTopMobile = () => {
+  const { isSidebarOpen, setIsSidebarOpen } = useUIStore();
   const { data, methods } = useHeaderTop();
   return (
     <>
@@ -92,7 +97,10 @@ export const HeaderTopMobile = () => {
           className="text-gray-700 hover:text-black flex items-center justify-center"
           aria-label="Abrir Menu"
         >
-          <FiMenu className="w-6 h-6" />
+          <FiMenu
+            className="w-6 h-6"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
         </button>
         <div className="flex flex-col items-center justify-center flex-1">
           <div className="flex items-center">

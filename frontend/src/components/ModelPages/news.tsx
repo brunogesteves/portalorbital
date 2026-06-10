@@ -232,8 +232,6 @@ export default function NewsPage({ data }: NewsDataProps) {
           </article>
         </main>
       </div>
-
-      <Footer />
     </div>
   );
 }

@@ -7,13 +7,13 @@ import { FiArrowRight } from "react-icons/fi";
 import { HeaderCategoriesDesktop } from "@/components/Header/Categories/HeaderCategories";
 import Footer from "@/components/Footer";
 import HeroSlider from "@/components/Header/Slider/Slider";
+import Header from "../Header/Header";
 // import { CategoryDataProps } from "@/utils/types";
 
 export default function CategoryPage() {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
-      <HeaderCategoriesDesktop slug={"data.title"} />
-
+      <Header slug="" />
       {/* ========================================================================= */}
       {/* 💻 DESKTOP LAYOUT (md breakpoint and above)                              */}
       {/* ========================================================================= */}
@@ -444,8 +444,6 @@ export default function CategoryPage() {
           </div>
         </main>
       </div>
-
-      <Footer />
     </div>
   );
 }

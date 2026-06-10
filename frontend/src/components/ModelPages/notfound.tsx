@@ -66,8 +66,6 @@ export default function NotFoundPage() {
           </div>
         </main>
       </div>
-
-      <Footer />
     </div>
   );
 }
