@@ -193,12 +193,6 @@ export default function NewsPage({ data }: NewsDataProps) {
           </h1>
 
           <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-sm">
-            
-                      <span>{`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}</span>
-
-            
-            
-
             <Image
               alt={data.title}
               className="w-full h-auto aspect-video object-cover"
