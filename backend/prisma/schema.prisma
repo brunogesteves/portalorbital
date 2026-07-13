@@ -29,19 +29,19 @@ model Category {
 }
 
 model Post {
-  id           Int      @id @default(autoincrement())
-  title        String   @unique
-  slug         String   @unique
-  thumbnail    String?
-  content      String   @db.LongText
-  scheduledAt  DateTime // Horário inicial de publicação
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  status       String   @default("offAir")
-  
-  category     Category @relation(fields: [categoryId], references: [id])
-  categoryId   Int
-  
-  author       User     @relation(fields: [authorId], references: [id])
-  authorId     Int
+  id          Int      @id @default(autoincrement())
+  title       String   @unique
+  slug        String   @unique
+  thumbnail   String?
+  content     String   @db.LongText
+  scheduledAt DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  status      String   @default("offAir")
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
 }

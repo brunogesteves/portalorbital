@@ -5,7 +5,7 @@ node_modules/
 # Next.js / Build
 .next/
 dist/
-
+.agent/
 # Sensitive Data / Secrets (MANDATORY)
 .env
 .env.*
@@ -26,3 +26,17 @@ backend/prisma/migrations/
 .vscode/
 
 .gitignore
+
+# Temporary test scripts
+backend/test*
+backend/test_aiven.js
+backend/test_db.ts
+backend/test_create_post.mjs
+backend/test_upload.mjs
+backend/test_upload.ts
+
+# Prisma seed script
+backend/prisma/seed.ts
+
+# User creation script
+backend/create_users.ts
