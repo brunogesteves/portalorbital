@@ -18,6 +18,9 @@ const prismaClientSingleton = () => {
     database: url.pathname.substring(1),
     ssl: isSsl ? { rejectUnauthorized: false } : undefined,
     connectTimeout: 10000,
+    acquireTimeout: 30000,
+    connectionLimit: 20,
+    keepAliveDelay: 60000,
   });
   
   return new PrismaClient({ adapter });

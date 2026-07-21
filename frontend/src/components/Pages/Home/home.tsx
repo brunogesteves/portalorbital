@@ -12,10 +12,11 @@ import { FaXTwitter } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
 
-import Footer from "@/components/Footer";
+
 import Slider from "@/components/Header/Slider/Slider";
-import Header from "@/components/Header/Header";
+
 import { useHome } from "./useHome";
+import Header from "@/components/Header/Header";
 
 export default function Home() {
   const { data, methods } = useHome();
@@ -183,7 +184,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <section className="mb-12">
+              {/* <section className="mb-12">
                 <div className="flex items-center space-x-4 mb-6 mt-10">
                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
                     Categoria
@@ -214,7 +215,8 @@ export default function Home() {
                     </Link>
                   ))}
                 </div>
-              </section>
+              </section> */}
+              {methods.categoryModelDesktop("esportes", data.posts[0]?.posts)}
               <section className="mb-12">
                 <div className="flex items-center space-x-4 mb-6 mt-10">
                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">

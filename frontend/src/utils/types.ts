@@ -16,7 +16,7 @@ export interface CategoryProps {
   slug: string;
 }
 
-export interface PostProps {
+export interface PostProps2 {
   id: number;
   title: string;
   slug: string;
@@ -24,9 +24,27 @@ export interface PostProps {
   content: string;
   author: {
     name: string;
+    email: string, role: string
   };
   createdAt: Date;
   category?: { id: number; name: string; slug: string };
+}
+
+export interface AllContentProps{
+   id: number; name: string; slug: string;
+  posts:PostProps[]
+}
+
+export interface PostProps{  
+id:number;
+authorId: number;  
+categoryId: number;
+content:string;
+slug: string
+thumbnail:string
+title:string
+author: {name: string, email: string, role: string};
+
 }
 
 export interface NewsDataProps {

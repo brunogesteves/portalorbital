@@ -8,8 +8,9 @@ interface ArrowProps {
 }
 
 export function useSlider() {
-  const [Slides, setSlides] = useState<string[]>([]);
+  const [slides, setSlides] = useState<string[]>([]);
 
+  console.log(slides)
   useEffect(() => {
     async function getSlides() {
       try {
@@ -21,7 +22,7 @@ export function useSlider() {
     getSlides();
   }, []);
 
-  const typedSlides = Slides as unknown as PostProps[];
+  const typedSlides = slides as unknown as PostProps[];
 
   const NextArrow = (props: ArrowProps) => {
     const { onClick } = props;
@@ -103,7 +104,7 @@ export function useSlider() {
 
   return {
     data: {
-      Slides,
+      slides,
       settings,
       mobileSettings,
       typedSlides,

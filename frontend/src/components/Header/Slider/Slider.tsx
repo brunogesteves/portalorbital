@@ -11,7 +11,7 @@ import Image from "next/image";
 export default function Slider({ device }: SliderProps) {
   const { data } = useSlider();
 
-  if (!data.Slides || data.Slides.length === 0) {
+  if (!data.slides || data.slides.length === 0) {
     return (
       <div className="w-full aspect-[16/9] bg-gray-100 flex items-center justify-center rounded-2xl">
         <span className="text-gray-400">Carregando destaques...</span>
@@ -160,14 +160,14 @@ export default function Slider({ device }: SliderProps) {
           {data.typedSlides.map((slide) => (
             <Link href={`/${slide.slug}`} key={slide.id}>
               <div className="relative w-full h-full aspect-[16/9] outline-none">
-                <Image
+                {/* <Image
                   alt={slide.title}
                   width={640}
                   height={360}
                   unoptimized
                   className="absolute inset-0 w-full h-full object-cover"
                   src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
-                />
+                /> */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 pb-8">
                   {/* <span className="bg-[#b91c1c] text-white text-[12px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider mb-2 inline-block">

@@ -5,17 +5,47 @@ import fs from "fs";
 import path from "path";
 import { isValidNameOrTitle, slugify } from "../lib/slug";
 
-export const allPosts = async (req: any, res: Response) => {
+export const slidersImages = async (req: any, res: Response) => {
   try {
     const posts = await prisma.post.findMany({
+ where:{
+  slides:true
+ }
+    })
+    // console.log(posts)
+    
+    return res.json(posts);
+  } catch (error) {
+    return res.status(500).json({ message: "Erro ao buscar posts" });
+  }
+};
+
+export const allPosts = async (req: any, res: Response) => {
+  try {
+    const posts = await prisma.category.findMany({
+ include: {
+    posts: {
+      omit: {
+        createdAt: true,
+        updatedAt: true,
+        status: true,
+        scheduledAt: true,
+        slide:true
+      },
       include: {
-        category: true,
         author: {
-          select: { name: true, email: true, role: true },
+          select: {
+            name: true,
+            email: true,
+            role: true,
+          },
         },
       },
-      orderBy: { scheduledAt: "desc" },
-    });
+    },
+  },      
+    })
+    // console.log(posts)
+    
     return res.json(posts);
   } catch (error) {
     return res.status(500).json({ message: "Erro ao buscar posts" });
@@ -271,7 +301,7 @@ export const updatePostStatus = async (req: any, res: Response) => {
 
     const post = await prisma.post.update({
       where: { id: Number(id) },
-      data: { status: status === "liveAir" ? "offAir" : "liveAir" },
+      data: { status },
     });
 
     return res.json(post);

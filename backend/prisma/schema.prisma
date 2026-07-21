@@ -38,6 +38,7 @@ model Post {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   status      String   @default("offAir")
+  slide Boolean
 
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int

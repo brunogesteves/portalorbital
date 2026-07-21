@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { PostProps } from "@/utils/types";
+import {  AllContentProps, CategoryDataProps, PostProps } from "@/utils/types";
 import { api } from "@/utils/api";
 
 export function useHome() {
-  const [posts, setPosts] = useState<PostProps[]>([]);
+  const [posts, setPosts] = useState<AllContentProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(false);
 
@@ -17,12 +17,12 @@ export function useHome() {
       setLoading(false);
     });
   }, []);
-  console.log("useHome 2");
+  console.log("useHome: ", posts);
 
   const postCardDesktop = (post: PostProps) => {
     return (
       <Link key={post.id} href={post.slug}>
-        <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
+        <div className="relative group rounded-xl overflow-hidden aspect-4/3 bg-gray-100 cursor-pointer">
           <Image
             alt={post.title}
             className="absolute inset-0 w-full h-full object-cover"
@@ -32,7 +32,7 @@ export function useHome() {
             loading="eager"
             unoptimized
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
             <h3 className="text-white font-bold text-sm first-letter:capitalize">
               {post.category?.name}
             </h3>
@@ -72,7 +72,7 @@ export function useHome() {
     );
   };
 
-  const postCardMobile = (post: PostProps) => {
+  const postCardMobile = (post: CategoryDataProps) => {
     return (
       <Link key={post.id} href={post.slug}>
         <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
@@ -99,8 +99,45 @@ export function useHome() {
     );
   };
 
+  const categoryModelDesktop = (category: string, posts:PostProps[])=>{
+    
+    return(
+      <section className="mb-12">
+                <div className="flex items-center space-x-4 mb-6 mt-10">
+                  <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
+                    {category}
+                  </h2>
+                  <div className="h-[1px] bg-gray-200 w-full"></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {posts?.slice(0, 3).map((post) => (
+                    <Link key={post.id} href={post.slug}>
+                      <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
+                        <Image
+                          alt={post.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
+                          fill
+                          loading="eager"
+                          unoptimized                          
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                          {/* <h3 className="text-white font-bold text-sm first-letter:capitalize">
+                            {post.category?.name}
+                          </h3> */}
+                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
+                            {post.title}
+                          </h3>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+    )
+  }
   return {
     data: { posts, loading, loading2 },
-    methods: { postCardDesktop, postCardMobile, geekCardsDesktop },
+    methods: { postCardDesktop, postCardMobile, geekCardsDesktop,  categoryModelDesktop},
   };
 }
