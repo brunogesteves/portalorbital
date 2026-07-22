@@ -10,11 +10,12 @@ interface ArrowProps {
 export function useSlider() {
   const [slides, setSlides] = useState<string[]>([]);
 
-  console.log(slides)
+  // console.log(slides)
+  // console.log(`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}`)
   useEffect(() => {
     async function getSlides() {
       try {
-        await api.get("/posts/all").then((res) => {
+        await api.get("/posts/allSlides").then((res) => {
           setSlides(res.data);
         });
       } catch {}

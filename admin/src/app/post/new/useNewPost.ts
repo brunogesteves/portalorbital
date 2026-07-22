@@ -35,6 +35,7 @@ export const useNewPost = () => {
       categoryId: "",
       scheduledAt: "",
       thumbnailUrl: "",
+      slide: false,
     },
   });
 
@@ -56,6 +57,7 @@ export const useNewPost = () => {
     formData.append("categoryId", data.categoryId);
     formData.append("scheduledAt", data.scheduledAt);
     if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);
+    formData.append("slide", String(data.slide));
 
     try {
       await api.post("/posts/createpost", formData);

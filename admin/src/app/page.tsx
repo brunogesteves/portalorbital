@@ -71,6 +71,18 @@ export default function Home() {
     }
   };
 
+  const handleToggleSlide = async (id: number, currentSlide: boolean) => {
+    if (currentUser?.role !== "ADM") return;
+    try {
+      await api.patch(`/posts/${id}/slide`, { slide: !currentSlide });
+      setPosts(
+        posts.map((p) => (p.id === id ? { ...p, slide: !currentSlide } : p)),
+      );
+    } catch (error) {
+      alert("Erro ao atualizar slide");
+    }
+  };
+
   const filteredPosts = posts.filter((post) => {
     const matchesSearch = post.title
       .toLowerCase()
@@ -129,6 +141,7 @@ export default function Home() {
           posts={filteredPosts}
           currentUser={currentUser}
           handleToggleStatus={handleToggleStatus}
+          handleToggleSlide={handleToggleSlide}
           setPostToDelete={(id) => setPostToDelete(id)}
           setShowModal={setShowModal}
         />

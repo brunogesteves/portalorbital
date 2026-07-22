@@ -6,44 +6,43 @@ import {  AllContentProps, CategoryDataProps, PostProps } from "@/utils/types";
 import { api } from "@/utils/api";
 
 export function useHome() {
-  const [posts, setPosts] = useState<AllContentProps[]>([]);
+  const [content, setContent] = useState<AllContentProps[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loading2, setLoading2] = useState(false);
 
   useEffect(() => {
-    setLoading2(true);
-    api.get("/posts/all").then((res) => {
-      setPosts(res.data);
+    
+    api.get("/posts/allPosts").then((res) => {
+      setContent(res.data);
       setLoading(false);
     });
   }, []);
-  console.log("useHome: ", posts);
+  console.log("useHome: ", content);
 
-  const postCardDesktop = (post: PostProps) => {
-    return (
-      <Link key={post.id} href={post.slug}>
-        <div className="relative group rounded-xl overflow-hidden aspect-4/3 bg-gray-100 cursor-pointer">
-          <Image
-            alt={post.title}
-            className="absolute inset-0 w-full h-full object-cover"
-            src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-            width={100}
-            height={100}
-            loading="eager"
-            unoptimized
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-            <h3 className="text-white font-bold text-sm first-letter:capitalize">
-              {post.category?.name}
-            </h3>
-            <h3 className="text-white font-bold text-sm first-letter:capitalize">
-              {post.title}
-            </h3>
-          </div>
-        </div>
-      </Link>
-    );
-  };
+  // const postCardDesktop = (post: PostProps) => {
+  //   return (
+  //     <Link key={post.id} href={post.slug}>
+  //       <div className="relative group rounded-xl overflow-hidden aspect-4/3 bg-gray-100 cursor-pointer">
+  //         <Image
+  //           alt={post.title}
+  //           className="absolute inset-0 w-full h-full object-cover"
+  //           src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
+  //           width={100}
+  //           height={100}
+  //           loading="eager"
+  //           unoptimized
+  //         />
+  //         <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+  //           <h3 className="text-white font-bold text-sm first-letter:capitalize">
+  //             {post.category?.name}
+  //           </h3>
+  //           <h3 className="text-white font-bold text-sm first-letter:capitalize">
+  //             {post.title}
+  //           </h3>
+  //         </div>
+  //       </div>
+  //     </Link>
+  //   );
+  // };
 
   const geekCardsDesktop = (post: PostProps) => {
     return (
@@ -72,72 +71,72 @@ export function useHome() {
     );
   };
 
-  const postCardMobile = (post: CategoryDataProps) => {
-    return (
-      <Link key={post.id} href={post.slug}>
-        <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-          <Image
-            alt={post.title}
-            className="w-full h-full object-cover"
-            src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-            width={100}
-            height={100}
-            loading="eager"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            unoptimized
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end items-start gap-y-2 p-3">
-            <h3 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
-              {post.category?.name}
-            </h3>
-            <h1 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
-              {post.title}
-            </h1>
-          </div>
-        </div>
-      </Link>
-    );
-  };
+  // const postCardMobile = (post: CategoryDataProps) => {
+  //   return (
+  //     <Link key={post.id} href={post.slug}>
+  //       <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
+  //         <Image
+  //           alt={post.title}
+  //           className="w-full h-full object-cover"
+  //           src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
+  //           width={100}
+  //           height={100}
+  //           loading="eager"
+  //           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  //           unoptimized
+  //         />
+  //         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end items-start gap-y-2 p-3">
+  //           <h3 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
+  //             {post.category?.name}
+  //           </h3>
+  //           <h1 className="text-white font-bold text-xs leading-tight first-letter:uppercase">
+  //             {post.title}
+  //           </h1>
+  //         </div>
+  //       </div>
+  //     </Link>
+  //   );
+  // };
 
-  const categoryModelDesktop = (category: string, posts:PostProps[])=>{
+  const categoryModelDesktop = ( info:AllContentProps, i:number )=>{
     
-    return(
-      <section className="mb-12">
-                <div className="flex items-center space-x-4 mb-6 mt-10">
-                  <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    {category}
-                  </h2>
-                  <div className="h-[1px] bg-gray-200 w-full"></div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {posts?.slice(0, 3).map((post) => (
-                    <Link key={post.id} href={post.slug}>
-                      <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
-                        <Image
-                          alt={post.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-                          fill
-                          loading="eager"
-                          unoptimized                          
-                        />
-                        <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                          {/* <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                            {post.category?.name}
-                          </h3> */}
-                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                            {post.title}
-                          </h3>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-    )
-  }
+     return(
+       <section className="mb-12" key={i}>
+                 <div className="flex items-center space-x-4 mb-6 mt-10">
+                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
+                     {info.name}
+                   </h2>
+                   <div className="h-[1px] bg-gray-200 w-full"></div>
+                 </div>
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                   {info?.posts.map((post) => (
+                     <Link key={post.id} href={post.slug}>
+                       <div className="relative group rounded-xl overflow-hidden aspect-4/3 bg-gray-100 cursor-pointer">
+                         <Image
+                           alt={post.title}
+                           className="absolute inset-0 w-full h-full object-cover"
+                           src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
+                           fill
+                           loading="eager"
+                           unoptimized                          
+                         />
+                         <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                           {/* <h3 className="text-white font-bold text-sm first-letter:capitalize">
+                             {post.category?.name}
+                           </h3> */}
+                           <h3 className="text-white font-bold text-sm first-letter:capitalize">
+                             {post.title}
+                           </h3>
+                         </div>
+                       </div>
+                     </Link>
+                   ))}
+                 </div>
+               </section>
+     )
+   }
   return {
-    data: { posts, loading, loading2 },
-    methods: { postCardDesktop, postCardMobile, geekCardsDesktop,  categoryModelDesktop},
+    data: { content, loading },
+    methods: {   geekCardsDesktop, categoryModelDesktop},
   };
 }

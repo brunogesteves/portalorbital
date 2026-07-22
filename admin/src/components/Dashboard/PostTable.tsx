@@ -19,6 +19,7 @@ const PostTable = ({
   posts,
   currentUser,
   handleToggleStatus,
+  handleToggleSlide,
   setPostToDelete,
   setShowModal,
 }: PostTableProps) => {
@@ -36,6 +37,7 @@ const PostTable = ({
             <th className="px-6 md:px-10 py-8">Notícia / Autor</th>
             <th className="px-10 py-8 hidden md:table-cell">Categoria</th>
             <th className="px-10 py-8 hidden md:table-cell">Status</th>
+            <th className="px-10 py-8 hidden md:table-cell">Slide</th>
             <th className="px-10 py-8 hidden md:table-cell">Data</th>
             <th className="px-10 py-8 text-center hidden md:table-cell">
               Ações
@@ -113,6 +115,28 @@ const PostTable = ({
                         Alternar Status
                       </button>
                     )}
+                  </div>
+                </td>
+                <td className="px-10 py-8 hidden md:table-cell">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() =>
+                        currentUser?.role === "ADM" &&
+                        handleToggleSlide(post.id, post.slide)
+                      }
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        post.slide ? "bg-red-600" : "bg-gray-300"
+                      } ${currentUser?.role !== "ADM" ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
+                          post.slide ? "translate-x-6" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                      {post.slide ? "Sim" : "Não"}
+                    </span>
                   </div>
                 </td>
                 <td className="px-10 py-8 text-sm font-bold text-slate-500 hidden md:table-cell">
@@ -245,6 +269,43 @@ const PostTable = ({
                       className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
                     >
                       {mobilePostDetail.status === "liveAir" ? (
+                        <FiToggleRight size={18} />
+                      ) : (
+                        <FiToggleLeft size={18} />
+                      )}
+                      Alterar
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                  Slide
+                </p>
+                <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <span className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${
+                    mobilePostDetail.slide
+                      ? "text-red-600 bg-red-50 border-red-100"
+                      : "text-slate-400 bg-slate-50 border-slate-100"
+                  }`}>
+                    {mobilePostDetail.slide ? "No slide" : "Fora do slide"}
+                  </span>
+                  {currentUser?.role === "ADM" && (
+                    <button
+                      onClick={() => {
+                        handleToggleSlide(
+                          mobilePostDetail.id,
+                          mobilePostDetail.slide,
+                        );
+                        setMobilePostDetail({
+                          ...mobilePostDetail,
+                          slide: !mobilePostDetail.slide,
+                        });
+                      }}
+                      className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
+                    >
+                      {mobilePostDetail.slide ? (
                         <FiToggleRight size={18} />
                       ) : (
                         <FiToggleLeft size={18} />

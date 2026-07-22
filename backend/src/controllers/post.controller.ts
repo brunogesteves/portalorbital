@@ -8,12 +8,17 @@ import { isValidNameOrTitle, slugify } from "../lib/slug";
 export const slidersImages = async (req: any, res: Response) => {
   try {
     const posts = await prisma.post.findMany({
- where:{
-  slides:true
- }
+      where: {
+        slide: true,
+
+      }, select: {
+        thumbnail: true,
+        slug: true,
+        title: true
+      }
     })
     // console.log(posts)
-    
+
     return res.json(posts);
   } catch (error) {
     return res.status(500).json({ message: "Erro ao buscar posts" });
@@ -23,29 +28,43 @@ export const slidersImages = async (req: any, res: Response) => {
 export const allPosts = async (req: any, res: Response) => {
   try {
     const posts = await prisma.category.findMany({
- include: {
-    posts: {
-      omit: {
-        createdAt: true,
-        updatedAt: true,
-        status: true,
-        scheduledAt: true,
-        slide:true
-      },
-      include: {
-        author: {
-          select: {
-            name: true,
-            email: true,
-            role: true,
+      where: {
+        posts: {
+          some: {
+            slide: false
           },
         },
       },
-    },
-  },      
+      include: {
+        posts: {
+          where: {
+            slide: false
+          },
+          take: 3,
+          orderBy: {
+            createdAt: "desc"
+          },
+          omit: {
+            createdAt: true,
+            updatedAt: true,
+            status: true,
+            scheduledAt: true,
+            slide: true
+          },
+          include: {
+            author: {
+              select: {
+                name: true,
+                email: true,
+                role: true,
+              },
+            },
+          },
+        },
+      },
     })
-    // console.log(posts)
-    
+    console.log(posts)
+
     return res.json(posts);
   } catch (error) {
     return res.status(500).json({ message: "Erro ao buscar posts" });
@@ -128,7 +147,7 @@ export const getPostById = async (req: any, res: Response) => {
 
 export const createPost = async (req: any, res: Response) => {
   console.log("createpost");
-  const { title, content, categoryId, scheduledAt, thumbnailUrl } = req.body;
+  const { title, content, categoryId, scheduledAt, thumbnailUrl, slide } = req.body;
   const thumbnail = req.file
     ? `/uploads/${req.file.filename}`
     : thumbnailUrl || null;
@@ -175,6 +194,7 @@ export const createPost = async (req: any, res: Response) => {
         categoryId: Number(categoryId),
         authorId: req.user.id,
         status: "offAir",
+        slide: slide === "true",
       },
     });
     return res.status(201).json(post);
@@ -186,7 +206,7 @@ export const createPost = async (req: any, res: Response) => {
 
 export const updatePost = async (req: any, res: Response) => {
   const { id } = req.params;
-  const { title, content, categoryId, scheduledAt, thumbnailUrl } = req.body;
+  const { title, content, categoryId, scheduledAt, thumbnailUrl, slide } = req.body;
   const thumbnail = req.file
     ? `/uploads/${req.file.filename}`
     : thumbnailUrl || undefined;
@@ -253,11 +273,38 @@ export const updatePost = async (req: any, res: Response) => {
         categoryId: Number(categoryId),
         scheduledAt: new Date(scheduledAt),
         ...(thumbnail && { thumbnail }),
+        ...(slide !== undefined && { slide: slide === "true" }),
       },
     });
     return res.json(post);
   } catch (error) {
     return res.status(500).json({ message: "Erro ao atualizar post" });
+  }
+};
+
+export const updatePostSlide = async (req: any, res: Response) => {
+  const { id } = req.params;
+  const { slide } = req.body;
+
+  try {
+    if (req.user.role !== Role.ADM) {
+      return res
+        .status(403)
+        .json({ message: "Apenas administradores podem alterar o slide" });
+    }
+
+    if (typeof slide !== "boolean") {
+      return res.status(400).json({ message: "Valor inválido para slide" });
+    }
+
+    const post = await prisma.post.update({
+      where: { id: Number(id) },
+      data: { slide },
+    });
+
+    return res.json(post);
+  } catch (error) {
+    return res.status(500).json({ message: "Erro ao atualizar slide" });
   }
 };
 

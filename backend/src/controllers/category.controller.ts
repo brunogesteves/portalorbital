@@ -2,6 +2,24 @@ import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
 import { isValidNameOrTitle, slugify } from '../lib/slug';
 
+export const frontCategories = async (req: Request, res: Response) => {
+  try {
+    const categories = await prisma.category.findMany({
+      where: {
+        posts: {
+          some: {
+            slide: false
+          },
+        },
+      },
+      orderBy: { name: 'asc' },
+    });
+    return res.json(categories);
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao buscar categorias' });
+  }
+};
+
 export const getCategories = async (req: Request, res: Response) => {
   try {
     const categories = await prisma.category.findMany({
@@ -15,7 +33,7 @@ export const getCategories = async (req: Request, res: Response) => {
 
 export const createCategory = async (req: Request, res: Response) => {
   const { name } = req.body;
-  
+
   if (!name || typeof name !== 'string' || !name.trim()) {
     return res.status(400).json({ message: 'O nome da categoria é obrigatório' });
   }

@@ -18,6 +18,7 @@ export interface PostTableProps {
   posts: PostProps[];
   currentUser: UserProps | null;
   handleToggleStatus: (id: number, currentStatus: string) => void;
+  handleToggleSlide: (id: number, currentSlide: boolean) => void;
   setPostToDelete: (id: number) => void;
   setShowModal: (show: boolean) => void;
 }
@@ -37,6 +38,7 @@ export interface PostProps {
   createdAt: string;
   updatedAt: string;
   status: string;
+  slide: boolean;
   categoryId: number;
   authorId: number;
   category?: CategoryProps;

@@ -8,10 +8,10 @@ export function useHeaderCategories() {
   useEffect(() => {
     async function getCategories() {
       try {
-        await api.get("/categories").then((res) => {
+        await api.get("/categories/front").then((res) => {
           setCategories(res.data);
         });
-      } catch {}
+      } catch { }
     }
     getCategories();
   }, []);

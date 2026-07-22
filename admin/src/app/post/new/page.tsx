@@ -118,6 +118,25 @@ export default function PostForm() {
             </div>
           </div>
 
+          <div className="mt-6 flex items-center gap-3">
+            <label className="text-sm font-black text-gray-700 ml-1">
+              Exibir no Slide
+            </label>
+            <button
+              type="button"
+              onClick={() => methods.setValue("slide", !methods.watch("slide"))}
+              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
+                methods.watch("slide") ? "bg-red-600" : "bg-gray-300"
+              }`}
+            >
+              <span
+                className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${
+                  methods.watch("slide") ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
+
           <div className="mt-8 space-y-2">
             <label className="text-sm font-black text-gray-700 ml-1">
               Conteúdo da Notícia

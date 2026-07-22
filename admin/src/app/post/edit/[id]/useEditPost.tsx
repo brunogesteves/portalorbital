@@ -41,6 +41,7 @@ export default function useEditPost() {
       categoryId: "",
       scheduledAt: "",
       thumbnailUrl: "",
+      slide: false,
     },
   });
 
@@ -63,6 +64,7 @@ export default function useEditPost() {
             categoryId: post.categoryId.toString(),
             scheduledAt: new Date(post.scheduledAt).toISOString().slice(0, 16),
             thumbnailUrl: post.thumbnail || "",
+            slide: post.slide ?? false,
           });
 
           if (post.thumbnail) {
@@ -88,6 +90,7 @@ export default function useEditPost() {
     formData.append("categoryId", data.categoryId);
     formData.append("scheduledAt", data.scheduledAt);
     if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);
+    formData.append("slide", String(data.slide));
 
     try {
       await api.put(`/posts/${id}`, formData);

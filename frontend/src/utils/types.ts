@@ -16,34 +16,26 @@ export interface CategoryProps {
   slug: string;
 }
 
-export interface PostProps2 {
-  id: number;
-  title: string;
+export interface AuthorProps {
+  name: string, email: string, role: string
+}
+
+export interface AllContentProps {
+  id: string;
+  name: string;
   slug: string;
-  thumbnail: string;
+  posts: PostProps[]
+}
+
+export interface PostProps {
+  id: number;
+  authorId: number;
+  categoryId: number;
   content: string;
-  author: {
-    name: string;
-    email: string, role: string
-  };
-  createdAt: Date;
-  category?: { id: number; name: string; slug: string };
-}
-
-export interface AllContentProps{
-   id: number; name: string; slug: string;
-  posts:PostProps[]
-}
-
-export interface PostProps{  
-id:number;
-authorId: number;  
-categoryId: number;
-content:string;
-slug: string
-thumbnail:string
-title:string
-author: {name: string, email: string, role: string};
+  slug: string
+  thumbnail: string
+  title: string
+  author: AuthorProps
 
 }
 

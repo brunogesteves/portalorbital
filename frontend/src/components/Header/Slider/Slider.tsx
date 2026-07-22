@@ -13,7 +13,7 @@ export default function Slider({ device }: SliderProps) {
 
   if (!data.slides || data.slides.length === 0) {
     return (
-      <div className="w-full aspect-[16/9] bg-gray-100 flex items-center justify-center rounded-2xl">
+      <div className="w-full aspect-video bg-gray-100 flex items-center justify-center rounded-2xl">
         <span className="text-gray-400">Carregando destaques...</span>
       </div>
     );
@@ -22,7 +22,7 @@ export default function Slider({ device }: SliderProps) {
   if (device === "desktop") {
     return (
       <section
-        className="relative w-full h-[400px] aspect-[16/9] bg-black overflow-hidden group"
+        className="relative w-full h-100 aspect-video bg-black overflow-hidden group"
         data-purpose="hero-slider"
       >
         <style>{`
@@ -74,7 +74,7 @@ export default function Slider({ device }: SliderProps) {
 
         <SliderSlick
           {...data.settings}
-          className="desktop-slider-slick h-[400px]"
+          className="desktop-slider-slick h-100"
         >
           {data.typedSlides.map((slide) => (
             <Link
@@ -82,7 +82,7 @@ export default function Slider({ device }: SliderProps) {
               key={slide.id}
               className="block w-full"
             >
-              <div className="relative w-full aspect-[16/9] overflow-hidden rounded-lg">
+              <div className="relative w-full aspect-video overflow-hidden rounded-lg">
                 <Image
                   alt={slide.title}
                   src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
@@ -92,7 +92,7 @@ export default function Slider({ device }: SliderProps) {
                   className="object-cover"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-0" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-100% to-transparent z-0" />
 
                 <div className="absolute top-80 left-1/2 w-full  text-center  translate-x-[-50%] p-3 sm:p-4 pb-5 sm:pb-8">
                   <h1 className="text-white  font-bold text-[2rem]! sm:text-base leading-tight line-clamp-2 first-letter:capitalize">
@@ -152,14 +152,14 @@ export default function Slider({ device }: SliderProps) {
           opacity: 1 !important;
         }
       `}</style>
-      <div className="w-full aspect-[16/9] bg-gray-100 rounded-2xl overflow-hidden shadow-md relative">
+      <div className="w-full aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-md relative">
         <SliderSlick
           {...data.mobileSettings}
           className="mobile-slider-slick h-full"
         >
           {data.typedSlides.map((slide) => (
             <Link href={`/${slide.slug}`} key={slide.id}>
-              <div className="relative w-full h-full aspect-[16/9] outline-none">
+              <div className="relative w-full h-full aspect-video outline-none">
                 {/* <Image
                   alt={slide.title}
                   width={640}
@@ -168,7 +168,7 @@ export default function Slider({ device }: SliderProps) {
                   className="absolute inset-0 w-full h-full object-cover"
                   src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
                 /> */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 pb-8">
                   {/* <span className="bg-[#b91c1c] text-white text-[12px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider mb-2 inline-block">
                   Destaque

@@ -10,6 +10,8 @@ import {
   uploadEditorImage,
   getImages,
   updatePostStatus,
+  updatePostSlide,
+  slidersImages,
   allPosts,
 } from "../controllers/post.controller";
 import { authenticate } from "../middlewares/auth.middleware";
@@ -30,7 +32,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.get("/", authenticate, getPosts);
-router.get("/all", allPosts);
+router.get("/allSlides", slidersImages);
+router.get("/allPosts", allPosts);
 router.get("/images", authenticate, getImages);
 router.get("/:id", authenticate, getPostById);
 router.post(
@@ -47,6 +50,7 @@ router.post(
 );
 router.put("/:id", authenticate, upload.single("thumbnail"), updatePost);
 router.patch("/:id/status", authenticate, updatePostStatus);
+router.patch("/:id/slide", authenticate, updatePostSlide);
 router.delete("/:id", authenticate, deletePost);
 
 export default router;

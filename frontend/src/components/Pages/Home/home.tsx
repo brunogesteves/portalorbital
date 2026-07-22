@@ -33,7 +33,7 @@ export default function Home() {
           <section className="bg-white py-12" data-purpose="main-content-body">
             <div className="max-w-7xl mx-auto px-6">
               {/* Featured Content */}
-              <section className="mb-12">
+              {/* <section className="mb-12">
                 <div className="flex items-center space-x-4 mb-6">
                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
                     Destaques do Portal
@@ -45,7 +45,7 @@ export default function Home() {
                     .slice(0, 3)
                     .map((post) => methods.postCardDesktop(post))}
                 </div>
-              </section>
+              </section> */}
 
               {/* Tecnologia with Events Embedded */}
               <div className="mb-4">
@@ -152,11 +152,11 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                   {/* Main Geek Cards */}
-                  <div className="md:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {data.posts
+                  {/* <div className="md:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {data.content
                       .slice(0, 3)
-                      .map((post) => methods.geekCardsDesktop(post))}
-                  </div>
+                      .map((post) => methods.geekCardsDesktop(content))}
+                  </div> */}
 
                   {/* Embedded Redes Sociais Component */}
                   <div className="md:col-span-3 space-y-4">
@@ -216,71 +216,10 @@ export default function Home() {
                   ))}
                 </div>
               </section> */}
-              {methods.categoryModelDesktop("esportes", data.posts[0]?.posts)}
-              <section className="mb-12">
-                <div className="flex items-center space-x-4 mb-6 mt-10">
-                  <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    Categoria
-                  </h2>
-                  <div className="h-[1px] bg-gray-200 w-full"></div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {data.posts.slice(0, 3).map((post) => (
-                    <Link key={post.id} href={post.slug}>
-                      <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
-                        <Image
-                          alt={post.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-                          fill
-                          loading="eager"
-                          unoptimized
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                            {post.category?.name}
-                          </h3>
-                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                            {post.title}
-                          </h3>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-              <section className="mb-12">
-                <div className="flex items-center space-x-4 mb-6 mt-10">
-                  <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    Categoria
-                  </h2>
-                  <div className="h-[1px] bg-gray-200 w-full"></div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {data.posts.slice(0, 3).map((post) => (
-                    <Link key={post.id} href={post.slug}>
-                      <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
-                        <Image
-                          alt={post.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-                          fill
-                          loading="eager"
-                          unoptimized
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                            {post.category?.name}
-                          </h3>
-                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                            {post.title}
-                          </h3>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
+              
+               {data.content.map((info, i)=>{
+                return methods.categoryModelDesktop(info, i)
+              })} 
             </div>
           </section>
         </main>
@@ -300,16 +239,12 @@ export default function Home() {
           <div className="text-xs text-gray-500 mb-4">
             {data.loading
               ? "Carregando posts..."
-              : `Posts carregados: ${data.posts.length}`}
+              : `Posts carregados: ${data.content.length}`}
           </div>
 
           {/* Seção Dinâmica dos Posts */}
-          {data.posts.length > 0 ? (
-            <section className="grid grid-cols-2 gap-4">
-              {data.posts
-                .slice(0, 8)
-                .map((post) => methods.postCardMobile(post))}
-            </section>
+          {data.content.length > 0 ? (
+            null
           ) : (
             !data.loading && (
               <p className="text-center text-sm text-gray-500">
@@ -326,7 +261,7 @@ export default function Home() {
               >
                 Categoria
               </span>
-              <div className="flex-1 h-[1px] bg-gradient-to-r from-[#999] to-[#ccc]"></div>
+              <div className="flex-1 h-[1px] bg-linear-to-r from-[#999] to-[#ccc]"></div>
             </div>
           </section>
 
@@ -341,7 +276,7 @@ export default function Home() {
                 loading="eager"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
                   ESTILO DE VIDA
                 </p>
@@ -357,7 +292,7 @@ export default function Home() {
                 unoptimized
                 loading="eager"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
                   ENTRETENIMENTO
                 </p>
@@ -372,7 +307,7 @@ export default function Home() {
               >
                 Categoria
               </span>
-              <div className="flex-1 h-[1px] bg-gradient-to-r from-[#999] to-[#ccc]"></div>
+              <div className="flex-1 h-[1px] bg-linear-to-r from-[#999] to-[#ccc]"></div>
             </div>
           </section>
 
@@ -387,7 +322,7 @@ export default function Home() {
                 loading="eager"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
                   ESTILO DE VIDA
                 </p>
@@ -403,7 +338,7 @@ export default function Home() {
                 loading="eager"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
                   ENTRETENIMENTO
                 </p>
@@ -418,7 +353,7 @@ export default function Home() {
               >
                 Categoria
               </span>
-              <div className="flex-1 h-[1px] bg-gradient-to-r from-[#999] to-[#ccc]"></div>
+              <div className="flex-1 h-[1px] bg-linear-to-r from-[#999] to-[#ccc]"></div>
             </div>
           </section>
 
@@ -433,7 +368,7 @@ export default function Home() {
                 loading="eager"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
                   ESTILO DE VIDA
                 </p>
@@ -449,7 +384,7 @@ export default function Home() {
                 loading="eager"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
                 <p className="text-white font-bold text-xs leading-tight">
                   ENTRETENIMENTO
                 </p>
