@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { api } from "@/Utils/api";
-import { CategoryProps, PostFormValues } from "@/Utils/types";
-import { postSchema } from "@/Utils/schemas";
+import { CategoryProps } from "@/Utils/types";
+import { PostFormValues, postSchema } from "@/Utils/schemas";
 import { useState, useEffect } from "react";
 
 export const useNewPost = () => {
