@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface LibraryModalProps {
     existingImages: string[];
     setPreview: (preview: string) => void;
@@ -19,12 +21,14 @@ export const LibraryModal = ({ existingImages, setPreview, setThumbnailUrl, setS
                             key={i}
                             className="relative aspect-video rounded-xl overflow-hidden cursor-pointer group border-4 border-transparent hover:border-red-500 transition-all"
                             onClick={() => {
-                                setPreview(`${process.env.NEXT_PUBLIC_URL_SERVER}${img}`);
+                                setPreview(`${process.env.NEXT_PUBLIC_API_URL}${img}`);
                                 setThumbnailUrl(img);
                                 setShowImageModal(false);
                             }}
                         >
-                            <img src={`${process.env.NEXT_PUBLIC_URL_SERVER}${img}`} className="w-full h-full object-cover" />
+                            <Image src={`${process.env.NEXT_PUBLIC_API_URL}${img}`}
+                            alt={img}
+                             className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all">
                                 <span className="text-white font-bold opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
                                     SELECIONAR

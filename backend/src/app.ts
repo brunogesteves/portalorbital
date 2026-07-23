@@ -8,27 +8,7 @@ import postRoutes from "./routes/post.routes";
 import searchRoutes from "./routes/search.routes";
 
 const app = express();
-// ... (middleware stays same)
 
-// app.use(
-//   cors({
-//     // 1. Permite exatamente a origem da sua Vercel
-//     origin: "https://orbitalportalpolitico.vercel.app",
-
-//     // 2. Permite que cookies/sessões passem (necessário para o withCredentials: true)
-//     credentials: true,
-
-//     // 3. Libera os cabeçalhos padrão + o cabeçalho específico do ngrok
-//     allowedHeaders: [
-//       "Content-Type",
-//       "Authorization",
-//       "ngrok-skip-browser-warning",
-//     ],
-
-//     // 4. Garante que métodos comuns e o Preflight funcionem
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   }),
-// );
 
 app.use(
   cors({
@@ -40,8 +20,10 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
-
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "../public/uploads"))
+);
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/posts", postRoutes);

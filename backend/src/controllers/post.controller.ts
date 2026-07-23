@@ -5,9 +5,13 @@ import fs from "fs";
 import path from "path";
 import { isValidNameOrTitle, slugify } from "../lib/slug";
 
+const { post: pst } = prisma;
+const { category: cat } = prisma;
+
+
 export const slidersImages = async (req: any, res: Response) => {
   try {
-    const posts = await prisma.post.findMany({
+    const posts = await pst.findMany({
       where: {
         slide: true,
 
@@ -27,7 +31,7 @@ export const slidersImages = async (req: any, res: Response) => {
 
 export const allPosts = async (req: any, res: Response) => {
   try {
-    const posts = await prisma.category.findMany({
+    const posts = await cat.findMany({
       where: {
         posts: {
           some: {
@@ -99,7 +103,7 @@ export const getPosts = async (req: any, res: Response) => {
       whereClause.authorId = Number(authorId);
     }
 
-    const posts = await prisma.post.findMany({
+    const posts = await pst.findMany({
       where: whereClause,
       include: {
         category: true,
@@ -118,28 +122,22 @@ export const getPosts = async (req: any, res: Response) => {
 export const getPostById = async (req: any, res: Response) => {
   const { id } = req.params;
   try {
-    const post = await prisma.post.findUnique({
+    const uniquePost = await pst.findUnique({
       where: { id: Number(id) },
-      include: {
-        category: true,
-        author: {
-          select: { name: true, email: true, role: true },
-        },
-      },
     });
 
-    if (!post) {
+    if (!uniquePost) {
       return res.status(404).json({ message: "Post não encontrado" });
     }
 
     // Regra: PBR só vê os seus, ADM vê todos
-    if (req.user.role !== Role.ADM && post.authorId !== req.user.id) {
+    if (req.user.role !== Role.ADM && uniquePost.authorId !== req.user.id) {
       return res
         .status(403)
         .json({ message: "Sem permissão para visualizar este post" });
     }
 
-    return res.json(post);
+    return res.json(uniquePost);
   } catch (error) {
     return res.status(500).json({ message: "Erro ao buscar post" });
   }
@@ -166,7 +164,7 @@ export const createPost = async (req: any, res: Response) => {
   const slug = slugify(title);
 
   try {
-    const existingTitle = await prisma.post.findFirst({
+    const existingTitle = await pst.findFirst({
       where: { title },
     });
     if (existingTitle) {
@@ -175,7 +173,7 @@ export const createPost = async (req: any, res: Response) => {
         .json({ message: "Já existe um post com este título" });
     }
 
-    const existingSlug = await prisma.post.findFirst({
+    const existingSlug = await pst.findFirst({
       where: { slug },
     });
     if (existingSlug) {
@@ -184,7 +182,7 @@ export const createPost = async (req: any, res: Response) => {
         .json({ message: "Já existe um post com este slug" });
     }
 
-    const post = await prisma.post.create({
+    const createPost = await pst.create({
       data: {
         title,
         slug,
@@ -197,7 +195,7 @@ export const createPost = async (req: any, res: Response) => {
         slide: slide === "true",
       },
     });
-    return res.status(201).json(post);
+    return res.status(201).json(createPost);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erro ao criar post" });
@@ -213,7 +211,7 @@ export const updatePost = async (req: any, res: Response) => {
 
   try {
     // Verificar se o usuário pode editar (é dono ou ADM)
-    const existingPost = await prisma.post.findUnique({
+    const existingPost = await pst.findUnique({
       where: { id: Number(id) },
     });
     if (!existingPost)
@@ -254,7 +252,7 @@ export const updatePost = async (req: any, res: Response) => {
           .json({ message: "Já existe um post com este título" });
       }
 
-      const existingSlug = await prisma.post.findFirst({
+      const existingSlug = await pst.findFirst({
         where: { slug, NOT: { id: Number(id) } },
       });
       if (existingSlug) {
@@ -264,7 +262,7 @@ export const updatePost = async (req: any, res: Response) => {
       }
     }
 
-    const post = await prisma.post.update({
+    const post = await pst.update({
       where: { id: Number(id) },
       data: {
         title,
@@ -277,7 +275,7 @@ export const updatePost = async (req: any, res: Response) => {
       },
     });
     return res.json(post);
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: "Erro ao atualizar post" });
   }
 };
@@ -297,21 +295,47 @@ export const updatePostSlide = async (req: any, res: Response) => {
       return res.status(400).json({ message: "Valor inválido para slide" });
     }
 
-    const post = await prisma.post.update({
+    const post = await pst.update({
       where: { id: Number(id) },
       data: { slide },
     });
 
     return res.json(post);
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: "Erro ao atualizar slide" });
+  }
+};
+
+export const updatePostHighlight = async (req: any, res: Response) => {
+  const { id } = req.params;
+  const { highlight } = req.body;
+
+  try {
+    if (req.user.role !== Role.ADM) {
+      return res
+        .status(403)
+        .json({ message: "Apenas administradores podem alterar o destaque" });
+    }
+
+    if (typeof highlight !== "boolean") {
+      return res.status(400).json({ message: "Valor inválido para highlight" });
+    }
+
+    const post = await pst.update({
+      where: { id: Number(id) },
+      data: { highlight },
+    });
+
+    return res.json(post);
+  } catch {
+    return res.status(500).json({ message: "Erro ao atualizar destaque" });
   }
 };
 
 export const deletePost = async (req: any, res: Response) => {
   const { id } = req.params;
   try {
-    const existingPost = await prisma.post.findUnique({
+    const existingPost = await pst.findUnique({
       where: { id: Number(id) },
     });
     if (!existingPost)
@@ -323,9 +347,9 @@ export const deletePost = async (req: any, res: Response) => {
         .json({ message: "Sem permissão para excluir este post" });
     }
 
-    await prisma.post.delete({ where: { id: Number(id) } });
+    await pst.delete({ where: { id: Number(id) } });
     return res.json({ message: "Post excluído" });
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: "Erro ao excluir post" });
   }
 };
@@ -346,7 +370,7 @@ export const updatePostStatus = async (req: any, res: Response) => {
       return res.status(400).json({ message: "Status inválido" });
     }
 
-    const post = await prisma.post.update({
+    const post = await pst.update({
       where: { id: Number(id) },
       data: { status },
     });

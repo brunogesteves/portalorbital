@@ -107,7 +107,7 @@ export default function Login() {
               )}
             </div>
 
-            <div className="flex items-center justify-between py-2">
+            {/* <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -127,7 +127,7 @@ export default function Login() {
               >
                 Esqueceu a senha?
               </button>
-            </div>
+            </div> */}
 
             <button
               type="submit"

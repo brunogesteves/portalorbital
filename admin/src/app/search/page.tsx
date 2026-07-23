@@ -12,6 +12,7 @@ import {
   FiUser,
 } from "react-icons/fi";
 import { useSearchResults } from "./useSearch";
+import Image from "next/image";
 
 function SearchResults() {
   const searchParams = useSearchParams();
@@ -99,9 +100,11 @@ function SearchResults() {
                         <div className="flex items-center gap-6">
                           <div className="w-20 h-16 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border-2 border-white shadow-md">
                             {post.thumbnail ? (
-                              <img
-                                src={`${process.env.NEXT_PUBLIC_URL_SERVER}${post.thumbnail}`}
+                              <Image
+                                src={`${process.env.NEXT_PUBLIC_API_URL}/api/${post.thumbnail}`}
+                                alt={post.title}
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">

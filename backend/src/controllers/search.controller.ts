@@ -2,11 +2,16 @@ import { Response } from "express";
 
 import prisma from "../lib/prisma";
 
+const { post: pst } = prisma;
+const { category: cat } = prisma;
+
+
+
 export const searchOneContent = async (req: any, res: Response) => {
   const { slug } = req.params;
   console.log("controller searchOneContent: ", slug);
 
-  const categoryContent = await prisma.category.findFirst({
+  const categoryContent = await cat.findFirst({
     where: {
       slug,
     },
@@ -15,7 +20,7 @@ export const searchOneContent = async (req: any, res: Response) => {
     },
   });
 
-  const newsContent = await prisma.post.findFirst({
+  const newsContent = await pst.findFirst({
     where: {
       slug,
     },
@@ -50,7 +55,7 @@ export const searchOneContent = async (req: any, res: Response) => {
 export const searchContent = async (req: any, res: Response) => {
   const { term } = req.query;
   console.log("controller search: ", term);
-  const postsResults = await prisma.post.findMany({
+  const postsResults = await pst.findMany({
     where: {
       OR: [
         {

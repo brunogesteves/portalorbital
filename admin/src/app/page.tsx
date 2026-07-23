@@ -22,6 +22,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedAuthor, setSelectedAuthor] = useState<string>("");
+  const [selectedType, setSelectedType] = useState<string>("");
   const router = useRouter();
 
   const fetchData = async () => {
@@ -83,6 +84,18 @@ export default function Home() {
     }
   };
 
+  const handleToggleHighlight = async (id: number, currentHighlight: boolean) => {
+    if (currentUser?.role !== "ADM") return;
+    try {
+      await api.patch(`/posts/${id}/highlight`, { highlight: !currentHighlight });
+      setPosts(
+        posts.map((p) => (p.id === id ? { ...p, highlight: !currentHighlight } : p)),
+      );
+    } catch (error) {
+      alert("Erro ao atualizar destaque");
+    }
+  };
+
   const filteredPosts = posts.filter((post) => {
     const matchesSearch = post.title
       .toLowerCase()
@@ -91,7 +104,12 @@ export default function Home() {
       selectedCategory === "" || post.categoryId === Number(selectedCategory);
     const matchesAuthor =
       selectedAuthor === "" || post.authorId === Number(selectedAuthor);
-    return matchesSearch && matchesCategory && matchesAuthor;
+    const matchesType =
+      selectedType === "" ||
+      (selectedType === "slide" && post.slide) ||
+      (selectedType === "status" && post.status === "liveAir") ||
+      (selectedType === "destaque" && post.highlight);
+    return matchesSearch && matchesCategory && matchesAuthor && matchesType;
   });
 
   const uniqueAuthors = Array.from(
@@ -116,7 +134,7 @@ export default function Home() {
     );
 
   return (
-    <div className="space-y-12 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <div className="space-y-6 md:space-y-12 pb-12 md:pb-20 px-2 md:px-0 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <WelcomeSection />
 
       <StatsGrid
@@ -124,7 +142,7 @@ export default function Home() {
         categoriesCount={new Set(posts.map((p) => p.categoryId)).size}
       />
 
-      <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-2xl md:rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
         <PostFilters
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -132,6 +150,8 @@ export default function Home() {
           setSelectedCategory={setSelectedCategory}
           selectedAuthor={selectedAuthor}
           setSelectedAuthor={setSelectedAuthor}
+          selectedType={selectedType}
+          setSelectedType={setSelectedType}
           categories={categories}
           currentUser={currentUser}
           uniqueAuthors={uniqueAuthors}
@@ -142,6 +162,7 @@ export default function Home() {
           currentUser={currentUser}
           handleToggleStatus={handleToggleStatus}
           handleToggleSlide={handleToggleSlide}
+          handleToggleHighlight={handleToggleHighlight}
           setPostToDelete={(id) => setPostToDelete(id)}
           setShowModal={setShowModal}
         />

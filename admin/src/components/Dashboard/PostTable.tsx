@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import Link from "next/link";
 import {
   FiFileText,
@@ -10,16 +10,18 @@ import {
   FiXCircle,
   FiToggleRight,
   FiToggleLeft,
-  FiInfo,
   FiX,
 } from "react-icons/fi";
-import { PostProps, PostTableProps, UserProps } from "@/Utils/types";
+import { PostProps, PostTableProps } from "@/Utils/types";
+import Image from "next/image";
+import { imageUrl } from "@/Utils/api";
 
 const PostTable = ({
   posts,
   currentUser,
   handleToggleStatus,
   handleToggleSlide,
+  handleToggleHighlight,
   setPostToDelete,
   setShowModal,
 }: PostTableProps) => {
@@ -30,173 +32,193 @@ const PostTable = ({
   const closeMobileModal = () => setMobilePostDetail(null);
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left">
-        <thead>
-          <tr className="text-slate-400 uppercase text-[10px] font-black tracking-[3px]">
-            <th className="px-6 md:px-10 py-8">Notícia / Autor</th>
-            <th className="px-10 py-8 hidden md:table-cell">Categoria</th>
-            <th className="px-10 py-8 hidden md:table-cell">Status</th>
-            <th className="px-10 py-8 hidden md:table-cell">Slide</th>
-            <th className="px-10 py-8 hidden md:table-cell">Data</th>
-            <th className="px-10 py-8 text-center hidden md:table-cell">
-              Ações
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-50">
-          {posts.length > 0 ? (
-            posts.map((post) => (
-              <tr
-                key={post.id}
-                className="hover:bg-slate-50/80 transition-all group"
+    <div>
+      {/* ========== ALL SCREENS: Compact rows ========== */}
+      <div className="flex flex-col divide-y divide-slate-50">
+        {/* Header - hidden on mobile */}
+        <div className="hidden md:grid grid-cols-[2fr_0.8fr_0.6fr_0.5fr_0.5fr_0.6fr_0.5fr] items-center gap-2 px-3 py-4 text-slate-400 uppercase text-[9px] font-black tracking-[2px]">
+          <span>Notícia</span>
+          <span className="text-center">Categoria</span>
+          <span className="text-center">Status</span>
+          <span className="text-center">Slide</span>
+          <span className="text-center">Destaque</span>
+          <span className="text-center">Data</span>
+          <span className="text-center">Ações</span>
+        </div>
+
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div
+              key={post.id}
+              className="grid grid-cols-1 md:grid-cols-[2fr_0.8fr_0.6fr_0.5fr_0.5fr_0.6fr_0.5fr] items-center gap-2 md:gap-2 px-3 py-3 md:py-4 hover:bg-slate-50/80 transition-all group"
+            >
+              {/* Notícia / Autor */}
+              <div
+                onClick={() => setMobilePostDetail(post)}
+                className="flex items-center gap-3 cursor-pointer group/item"
               >
-                <td className="px-6 md:px-10 py-8">
-                  <div
-                    onClick={() => setMobilePostDetail(post)}
-                    className="flex items-center gap-4 md:gap-6 cursor-pointer group/item"
-                  >
-                    <div className="w-16 h-12 md:w-20 md:h-16 rounded-xl md:rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border-2 border-white shadow-md">
-                      {post.thumbnail ? (
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_URL_SERVER}${post.thumbnail}`}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
-                          alt={post.title}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
-                          <FiFileText size={20} />
-                        </div>
-                      )}
+                <div className="w-14 h-10 md:w-16 md:h-12 rounded-lg md:rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 border border-white shadow-sm">
+                  {post.thumbnail ? (
+                    <Image
+                      src={`${imageUrl}/${post.thumbnail}`}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
+                      alt={post?.thumbnail}
+                      width={200}
+                      height={200}
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
+                      <FiFileText size={14} />
                     </div>
-                    <div className="max-w-[200px] md:max-w-xs space-y-1">
-                      <h4 className="font-bold text-slate-800 leading-tight group-hover/item:text-red-600 transition-colors line-clamp-2 text-sm md:text-base">
-                        {post.title}
-                      </h4>
-
-                      {/* Desktop Author */}
-                      <div className="hidden md:flex items-center gap-2 text-slate-400 text-xs font-semibold">
-                        <FiUser size={12} /> {post.author?.name || "Redação"}
-                      </div>
-
-                      {/* Mobile Author Button */}
-                      <button className="md:hidden flex items-center gap-2 text-red-600 text-[10px] font-black uppercase tracking-wider bg-red-50 px-2 py-1 rounded-lg border border-red-100">
-                        <FiUser size={10} /> {post.author?.name || "Redação"}
-                      </button>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-10 py-8 hidden md:table-cell">
-                  <span className="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider border border-slate-200">
-                    {post.category?.name || "Geral"}
-                  </span>
-                </td>
-                <td className="px-10 py-8 hidden md:table-cell">
-                  <div className="flex flex-col gap-2">
-                    {post.status === "liveAir" ? (
-                      <span className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 uppercase tracking-wider bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100 w-fit">
-                        <FiCheckCircle /> No ar
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase tracking-wider bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 w-fit">
-                        <FiXCircle /> Fora do ar
-                      </span>
-                    )}
-                    {currentUser?.role === "ADM" && (
-                      <button
-                        onClick={() => handleToggleStatus(post.id, post.status)}
-                        className="flex items-center gap-2 text-[10px] font-bold text-red-600 hover:underline transition-all"
-                      >
-                        {post.status === "liveAir" ? (
-                          <FiToggleRight size={16} />
-                        ) : (
-                          <FiToggleLeft size={16} />
-                        )}
-                        Alternar Status
-                      </button>
-                    )}
-                  </div>
-                </td>
-                <td className="px-10 py-8 hidden md:table-cell">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() =>
-                        currentUser?.role === "ADM" &&
-                        handleToggleSlide(post.id, post.slide)
-                      }
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        post.slide ? "bg-red-600" : "bg-gray-300"
-                      } ${currentUser?.role !== "ADM" ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
-                          post.slide ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
-                    </button>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                      {post.slide ? "Sim" : "Não"}
-                    </span>
-                  </div>
-                </td>
-                <td className="px-10 py-8 text-sm font-bold text-slate-500 hidden md:table-cell">
-                  <div className="flex items-center gap-2">
-                    <FiCalendar className="text-red-600" />
-                    {new Date(post.scheduledAt).toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}
-                  </div>
-                </td>
-                <td className="px-10 py-8 hidden md:table-cell">
-                  <div className="flex justify-center gap-3">
-                    <Link
-                      href={`/post/edit/${post.id}`}
-                      className="p-3.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-slate-800 rounded-2xl transition-all shadow-sm"
-                    >
-                      <FiEdit2 size={18} />
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setPostToDelete(post.id);
-                        setShowModal(true);
-                      }}
-                      className="p-3.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-red-600 rounded-2xl transition-all shadow-sm"
-                    >
-                      <FiTrash2 size={18} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} className="px-10 py-32 text-center">
-                <div className="flex flex-col items-center gap-6">
-                  <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center text-slate-200">
-                    <FiFileText size={48} />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-slate-900 font-black text-xl tracking-tight">
-                      Nenhuma notícia encontrada
-                    </p>
-                    <p className="text-slate-400 font-medium">
-                      Tente ajustar seus filtros ou termos de pesquisa.
-                    </p>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-bold text-slate-800 leading-tight group-hover/item:text-red-600 transition-colors line-clamp-1 text-sm">
+                    {post.title}
+                  </h4>
+                  <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-semibold mt-0.5">
+                    <FiUser size={9} /> {post.author?.name || "Redação"}
                   </div>
                 </div>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+              </div>
 
-      {/* Mobile Details Modal */}
+              {/* Categoria */}
+              <div className="hidden md:flex justify-center">
+                <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border border-slate-200">
+                  {post.category?.name || "Geral"}
+                </span>
+              </div>
+
+              {/* Status */}
+              <div className="hidden md:flex justify-center items-center gap-1.5">
+                <button
+                  onClick={() => handleToggleStatus(post.id, post.status)}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
+                    post.status === "liveAir" ? "bg-green-600" : "bg-red-300"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
+                      post.status === "liveAir"
+                        ? "translate-x-[18px]"
+                        : "translate-x-[3px]"
+                    }`}
+                  />
+                </button>
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider hidden md:inline">
+                  {post.status === "liveAir" ? "No Ar" : "Fora"}
+                </span>
+              </div>
+
+              {/* Slide */}
+              <div className="hidden md:flex justify-center items-center gap-1.5">
+                <button
+                  onClick={() =>
+                    currentUser?.role === "ADM" &&
+                    handleToggleSlide(post.id, post.slide)
+                  }
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
+                    post.slide ? "bg-green-600" : "bg-red-300"
+                  } ${
+                    currentUser?.role !== "ADM"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
+                      post.slide ? "translate-x-[18px]" : "translate-x-[3px]"
+                    }`}
+                  />
+                </button>
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                  {post.slide ? "Sim" : "Não"}
+                </span>
+              </div>
+
+              {/* Destaque */}
+              <div className="hidden md:flex justify-center items-center gap-1.5">
+                <button
+                  onClick={() =>
+                    currentUser?.role === "ADM" &&
+                    handleToggleHighlight(post.id, post.highlight)
+                  }
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
+                    post.highlight ? "bg-yellow-500" : "bg-gray-300"
+                  } ${
+                    currentUser?.role !== "ADM"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
+                      post.highlight
+                        ? "translate-x-[18px]"
+                        : "translate-x-[3px]"
+                    }`}
+                  />
+                </button>
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                  {post.highlight ? "Sim" : "Não"}
+                </span>
+              </div>
+
+              {/* Data */}
+              <div className="hidden md:flex justify-center items-center">
+                <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                  <FiCalendar className="text-red-600" size={12} />
+                  {new Date(post.scheduledAt).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                  })}
+                </span>
+              </div>
+
+              {/* Ações */}
+              <div className="hidden md:flex justify-center items-center gap-2">
+                <Link
+                  href={`/post/edit/${post.id}`}
+                  className="p-2.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all shadow-sm"
+                >
+                  <FiEdit2 size={14} />
+                </Link>
+                <button
+                  onClick={() => {
+                    setPostToDelete(post.id);
+                    setShowModal(true);
+                  }}
+                  className="p-2.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-red-600 rounded-xl transition-all shadow-sm"
+                >
+                  <FiTrash2 size={14} />
+                </button>
+              </div>
+
+            </div>
+          ))
+        ) : (
+          <div className="flex flex-col items-center gap-4 py-16">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center text-slate-200">
+              <FiFileText size={40} />
+            </div>
+            <div className="space-y-1 text-center">
+              <p className="text-slate-900 font-black text-lg tracking-tight">
+                Nenhuma notícia encontrada
+              </p>
+              <p className="text-slate-400 font-medium text-sm">
+                Tente ajustar seus filtros ou termos de pesquisa.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ========== Mobile Details Modal ========== */}
       {mobilePostDetail && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden animate-in zoom-in-95 duration-300">
-            <div className="relative p-8 space-y-6">
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-4 md:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-sm rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden animate-in slide-in-from-bottom-4 md:zoom-in-95 duration-300 max-h-[85vh] overflow-y-auto">
+            <div className="relative p-6 md:p-8 space-y-5">
               <button
                 onClick={closeMobileModal}
                 className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-full transition-colors"
@@ -208,12 +230,12 @@ const PostTable = ({
                 <span className="text-[10px] font-black uppercase tracking-[3px] text-red-600">
                   Detalhes da Notícia
                 </span>
-                <h3 className="text-xl font-bold text-slate-800 leading-tight">
+                <h3 className="text-xl font-bold text-slate-800 leading-tight pr-8">
                   {mobilePostDetail.title}
                 </h3>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
                     Categoria
@@ -228,9 +250,9 @@ const PostTable = ({
                   </p>
                   <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
                     <FiCalendar className="text-red-600" />
-                    {new Date(mobilePostDetail.scheduledAt).toLocaleDateString(
-                      "pt-BR",
-                    )}
+                    {new Date(
+                      mobilePostDetail.scheduledAt,
+                    ).toLocaleDateString("pt-BR")}
                   </div>
                 </div>
               </div>
@@ -257,7 +279,6 @@ const PostTable = ({
                           mobilePostDetail.id,
                           mobilePostDetail.status,
                         );
-                        // Update local state to reflect change in modal
                         setMobilePostDetail({
                           ...mobilePostDetail,
                           status:
@@ -284,11 +305,13 @@ const PostTable = ({
                   Slide
                 </p>
                 <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <span className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${
-                    mobilePostDetail.slide
-                      ? "text-red-600 bg-red-50 border-red-100"
-                      : "text-slate-400 bg-slate-50 border-slate-100"
-                  }`}>
+                  <span
+                    className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${
+                      mobilePostDetail.slide
+                        ? "text-red-600 bg-red-50 border-red-100"
+                        : "text-slate-400 bg-slate-50 border-slate-100"
+                    }`}
+                  >
                     {mobilePostDetail.slide ? "No slide" : "Fora do slide"}
                   </span>
                   {currentUser?.role === "ADM" && (
@@ -316,7 +339,48 @@ const PostTable = ({
                 </div>
               </div>
 
-              <div className="pt-4 flex gap-3">
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                  Destaque
+                </p>
+                <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <span
+                    className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${
+                      mobilePostDetail.highlight
+                        ? "text-yellow-600 bg-yellow-50 border-yellow-100"
+                        : "text-slate-400 bg-slate-50 border-slate-100"
+                    }`}
+                  >
+                    {mobilePostDetail.highlight
+                      ? "Em destaque"
+                      : "Sem destaque"}
+                  </span>
+                  {currentUser?.role === "ADM" && (
+                    <button
+                      onClick={() => {
+                        handleToggleHighlight(
+                          mobilePostDetail.id,
+                          mobilePostDetail.highlight,
+                        );
+                        setMobilePostDetail({
+                          ...mobilePostDetail,
+                          highlight: !mobilePostDetail.highlight,
+                        });
+                      }}
+                      className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
+                    >
+                      {mobilePostDetail.highlight ? (
+                        <FiToggleRight size={18} />
+                      ) : (
+                        <FiToggleLeft size={18} />
+                      )}
+                      Alterar
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-2 flex gap-3">
                 <Link
                   href={`/post/edit/${mobilePostDetail.id}`}
                   className="flex-1 flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"

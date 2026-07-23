@@ -24,3 +24,8 @@ export const postSchema = z.object({
   thumbnailUrl: z.string().optional(),
   slide: z.boolean(),
 });
+
+
+// Tipos inferidos dos schemas do Zod
+export type LoginFormValues = z.infer<typeof loginSchema>;
+export type PostFormValues = z.infer<typeof postSchema>;

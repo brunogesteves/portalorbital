@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/Utils/api";
 import { loginSchema } from "@/Utils/schemas";
 import { LoginFormValues } from "@/Utils/types";
+import axios from "axios";
 
 export default function useLogin() {
   const [error, setError] = useState("");
@@ -19,8 +20,8 @@ export default function useLogin() {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "admin@portal.com",
+      password: "admin123",
     },
   });
 
@@ -28,13 +29,17 @@ export default function useLogin() {
     setLoading(true);
     setError("");
     try {
-      await api.post("/auth/login", data);
+      await api.post("auth/login", data);
       router.push("/");
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          "Credenciais inválidas ou erro de conexão.",
-      );
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ??
+          "Credenciais inválidas ou erro de conexão."
+        );
+      } else {
+        setError("Ocorreu um erro inesperado.");
+      }
     } finally {
       setLoading(false);
     }

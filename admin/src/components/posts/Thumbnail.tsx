@@ -1,12 +1,7 @@
 import { api } from "@/Utils/api";
+import { ThumbnailProps } from "@/Utils/types";
+import Image from "next/image";
 
-interface ThumbnailProps {
-    preview: string;
-    setThumbnailUrl: (url: string) => void;
-    setShowImageModal: (show: boolean) => void;
-    setPreview: (show: string) => void
-    setExistingImages: (img: string[]) => void
-}
 
 export const Thumbnail = ({ preview, setThumbnailUrl, setShowImageModal, setPreview, setExistingImages }: ThumbnailProps) => {
     return (
@@ -14,7 +9,13 @@ export const Thumbnail = ({ preview, setThumbnailUrl, setShowImageModal, setPrev
             <label className="block text-sm font-bold text-gray-700 mb-2">Thumbnail (Capa)</label>
             <div className="border-2 border-dashed border-gray-200 rounded-2xl p-4 text-center hover:border-red-400 transition-colors bg-gray-50 h-64 flex flex-col items-center justify-center relative overflow-hidden group">
                 {preview ? (
-                    <img src={preview} className="w-full h-full object-cover" />
+                    <Image 
+                    alt={preview}
+                    src={preview} className="w-full h-full object-cover" 
+                    width={500}
+                    height={500}
+                    unoptimized
+                    />
                 ) : (
                     <div className="text-gray-400">
                         <p>Nenhuma imagem selecionada</p>
@@ -30,7 +31,7 @@ export const Thumbnail = ({ preview, setThumbnailUrl, setShowImageModal, setPrev
                                 formData.append('image', file);
                                 api.post('/posts/upload-image', formData).then(res => {
                                     setThumbnailUrl(res.data.url);
-                                    setPreview(`${process.env.NEXT_PUBLIC_URL_SERVER}${res.data.url}`);
+                                    setPreview(`${process.env.NEXT_PUBLIC_API_URL}${res.data.url}`);
                                     api.get('/posts/images').then(r => setExistingImages(r.data));
                                 }).catch(err => {
                                     console.error('Erro ao fazer upload da capa:', err);

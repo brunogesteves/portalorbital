@@ -11,6 +11,7 @@ import {
   getImages,
   updatePostStatus,
   updatePostSlide,
+  updatePostHighlight,
   slidersImages,
   allPosts,
 } from "../controllers/post.controller";
@@ -51,6 +52,7 @@ router.post(
 router.put("/:id", authenticate, upload.single("thumbnail"), updatePost);
 router.patch("/:id/status", authenticate, updatePostStatus);
 router.patch("/:id/slide", authenticate, updatePostSlide);
+router.patch("/:id/highlight", authenticate, updatePostHighlight);
 router.delete("/:id", authenticate, deletePost);
 
 export default router;

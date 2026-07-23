@@ -14,8 +14,8 @@ const Header = () => {
   const { data, methods } = useHeader();
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0f172a] h-20 flex items-center justify-between px-8 text-white shadow-lg border-b border-slate-700">
-      <div className="flex items-center gap-6">
+    <header className="sticky top-0 z-50 bg-[#0f172a] h-16 md:h-20 flex items-center justify-between px-4 md:px-8 text-white shadow-lg border-b border-slate-700">
+      <div className="flex items-center gap-4 md:gap-6">
         <button
           onClick={methods.toggleSidebar}
           className="text-slate-400 hover:text-white transition-colors"
@@ -24,8 +24,8 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Barra de Busca (como na imagem) */}
-      <div className="flex-1 max-w-xl px-10">
+      {/* Barra de Busca */}
+      <div className="flex-1 max-w-xl px-3 md:px-10 hidden sm:block">
         <div className="relative group">
           <input
             type="text"
@@ -45,21 +45,21 @@ const Header = () => {
       </div>
 
       {/* Perfil do Usuário e Logout */}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-3 md:gap-8">
         {/* Relógio Minimalista */}
-        <div className="hidden md:block text-slate-400 font-mono text-sm tracking-widest">
+        <div className="hidden lg:block text-slate-400 font-mono text-sm tracking-widest">
           {data.mounted
             ? data.time.toLocaleTimeString("pt-BR", { hour12: false })
             : "--:--:--"}
         </div>
 
         {/* Dropdown de Usuário */}
-        <div className="flex items-center gap-3 cursor-pointer group hover:bg-slate-800 p-2 rounded-lg transition-colors">
-          <span className="text-sm font-bold text-slate-300">Admin</span>
-          <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
-            <FiUser className="text-slate-400" />
+        <div className="flex items-center gap-2 md:gap-3 cursor-pointer group hover:bg-slate-800 p-1.5 md:p-2 rounded-lg transition-colors">
+          <span className="text-xs md:text-sm font-bold text-slate-300 hidden sm:inline">Admin</span>
+          <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
+            <FiUser className="text-slate-400" size={14} />
           </div>
-          <FiChevronDown className="text-slate-500 group-hover:text-white transition-colors" />
+          <FiChevronDown className="text-slate-500 group-hover:text-white transition-colors hidden sm:block" />
 
           {/* Logout embutido no clique (simplificado para o teste) */}
           <button

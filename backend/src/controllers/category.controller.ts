@@ -2,9 +2,12 @@ import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
 import { isValidNameOrTitle, slugify } from '../lib/slug';
 
+const { category: cat } = prisma;
+
+
 export const frontCategories = async (req: Request, res: Response) => {
   try {
-    const categories = await prisma.category.findMany({
+    const categories = await cat.findMany({
       where: {
         posts: {
           some: {
@@ -22,7 +25,7 @@ export const frontCategories = async (req: Request, res: Response) => {
 
 export const getCategories = async (req: Request, res: Response) => {
   try {
-    const categories = await prisma.category.findMany({
+    const categories = await cat.findMany({
       orderBy: { name: 'asc' },
     });
     return res.json(categories);
@@ -48,21 +51,21 @@ export const createCategory = async (req: Request, res: Response) => {
 
   try {
     // 2. Validar se nome ou slug já existem no banco
-    const existingName = await prisma.category.findFirst({
+    const existingName = await cat.findFirst({
       where: { name }
     });
     if (existingName) {
       return res.status(400).json({ message: 'Já existe uma categoria com este nome' });
     }
 
-    const existingSlug = await prisma.category.findFirst({
+    const existingSlug = await cat.findFirst({
       where: { slug }
     });
     if (existingSlug) {
       return res.status(400).json({ message: 'Já existe uma categoria com este slug' });
     }
 
-    const category = await prisma.category.create({
+    const category = await cat.create({
       data: { name, slug },
     });
     return res.status(201).json(category);
@@ -75,7 +78,7 @@ export const createCategory = async (req: Request, res: Response) => {
 export const deleteCategory = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    await prisma.category.delete({
+    await cat.delete({
       where: { id: Number(id) },
     });
     return res.json({ message: 'Categoria excluída' });

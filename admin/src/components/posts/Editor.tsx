@@ -29,7 +29,7 @@ export const Editor = ({ content, setContent }: EditorProps) => {
         const response = {
           result: [
             {
-              url: `${process.env.NEXT_PUBLIC_URL_SERVER}${res.data.url}`,
+              url: `${process.env.NEXT_PUBLIC_API_URL}${res.data.url}`,
               name: file.name,
               size: file.size,
             },
