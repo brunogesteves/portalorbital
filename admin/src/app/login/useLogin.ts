@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { api } from "@/Utils/api";
-import { loginSchema } from "@/Utils/schemas";
-import { LoginFormValues } from "@/Utils/types";
+import { LoginFormValues, loginSchema } from "@/Utils/schemas";
+
 import axios from "axios";
 
 export default function useLogin() {
