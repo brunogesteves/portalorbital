@@ -54,7 +54,7 @@ export default function SearchResults() {
                   <h1 className="text-black font-bold text-2xl md:text-3xl uppercase tracking-wider whitespace-nowrap font-awanzaman">
                     Resultados da Busca
                   </h1>
-                  <div className="h-[1px] bg-blue-900/40 w-full" />
+                  <div className="h-px bg-blue-900/40 w-full" />
                 </div>
                 <p className="text-black/60 text-sm italic capitalize">
                   Resultados para:{data.term}
@@ -82,7 +82,7 @@ export default function SearchResults() {
                         unoptimized
                       />
                     </Link>
-                    <div className="p-4 flex flex-col flex-grow space-y-2">
+                    <div className="p-4 flex flex-col grow space-y-2">
                       <span className="text-[#b91c1c] text-[10px] font-bold uppercase tracking-widest">
                         {item.category?.name}
                       </span>

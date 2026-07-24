@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Link from "next/link";
 import Image from "next/image";
+import { imageUrl } from "@/utils/api";
 
 export default function Slider({ device }: SliderProps) {
   const { data } = useSlider();
@@ -85,7 +86,7 @@ export default function Slider({ device }: SliderProps) {
               <div className="relative w-full aspect-video overflow-hidden rounded-lg">
                 <Image
                   alt={slide.title}
-                  src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
+                  src={`${imageUrl}/${slide.thumbnail}`}
                   fill
                   unoptimized
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

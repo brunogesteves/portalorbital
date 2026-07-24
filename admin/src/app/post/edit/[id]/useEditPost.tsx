@@ -1,16 +1,15 @@
 "use client";
 
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { api, imageUrl } from "@/Utils/api";
-import { CategoryProps,  } from "@/Utils/types";
+import { CategoryProps } from "@/Utils/types";
 import { PostFormValues, postSchema } from "@/Utils/schemas";
 
-
-export default function useEditPost() {
+export const useEditPost = () => {
   const router = useRouter();
   const params = useParams();
   const id = params.id;
@@ -21,6 +20,8 @@ export default function useEditPost() {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showModalMessage, setShowModalMessage] = useState(false);
+  const [modalWarning, setModalWarning] = useState("");
 
   const {
     register,
@@ -38,6 +39,7 @@ export default function useEditPost() {
       scheduledAt: "",
       thumbnailUrl: "",
       slide: false,
+      highlight: false,
     },
   });
 
@@ -61,17 +63,16 @@ export default function useEditPost() {
             scheduledAt: new Date(post.scheduledAt).toISOString().slice(0, 16),
             thumbnailUrl: post.thumbnail || "",
             slide: post.slide ?? false,
+            highlight: post.highlight ?? false,
           });
 
           if (post.thumbnail) {
-            setPreview(
-              `${imageUrl}/${post.thumbnail}`,
-            );
+            setPreview(`${imageUrl}/${post.thumbnail}`);
           }
         })
-        .catch((err) => {
-          console.error("Erro ao carregar post:", err);
-          alert("Erro ao carregar os dados da notícia.");
+        .catch(() => {
+          setShowModalMessage(true);
+          setModalWarning("Erro ao carregar os dados da notícia.");
         });
     }
   }, [id, reset]);
@@ -87,15 +88,15 @@ export default function useEditPost() {
     formData.append("scheduledAt", data.scheduledAt);
     if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);
     formData.append("slide", String(data.slide));
+    formData.append("highlight", String(data.highlight));
 
     try {
       await api.put(`/posts/${id}`, formData);
       setSuccess(true);
       setTimeout(() => router.push("/"), 1500);
-    } catch  {      
-      const message =        
-        "Erro ao salvar as alterações. Verifique os campos.";
-      alert(message);
+    } catch {
+      setShowModalMessage(true);
+      setModalWarning("Erro ao salvar as alterações. Verifique os campos.");
     } finally {
       setLoading(false);
     }
@@ -109,20 +110,24 @@ export default function useEditPost() {
       existingImages,
       loading,
       success,
+      modalWarning,
+      showModalMessage,
+      formState: {
+        errors,
+      },
     },
     methods: {
       onSubmit,
       setShowImageModal,
       setPreview,
       setExistingImages,
+      setShowModalMessage,
       setValue,
       watch,
       reset,
       handleSubmit,
       register,
-      formState: {
-        errors,
-      },
+
     },
   };
 }

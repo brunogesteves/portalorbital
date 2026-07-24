@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   FiFileText,
@@ -95,19 +95,17 @@ const PostTable = ({
                 <button
                   onClick={() => handleToggleStatus(post.id, post.status)}
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
-                    post.status === "liveAir" ? "bg-green-600" : "bg-red-300"
+                    post.status ? "bg-green-600" : "bg-red-300"
                   }`}
                 >
                   <span
                     className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
-                      post.status === "liveAir"
-                        ? "translate-x-[18px]"
-                        : "translate-x-[3px]"
+                      post.status ? "translate-x-[18px]" : "translate-x-[3px]"
                     }`}
                   />
                 </button>
                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider hidden md:inline">
-                  {post.status === "liveAir" ? "No Ar" : "Fora"}
+                  {post.status ? "No Ar" : "Fora"}
                 </span>
               </div>
 
@@ -194,7 +192,6 @@ const PostTable = ({
                   <FiTrash2 size={14} />
                 </button>
               </div>
-
             </div>
           ))
         ) : (
@@ -250,9 +247,9 @@ const PostTable = ({
                   </p>
                   <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
                     <FiCalendar className="text-red-600" />
-                    {new Date(
-                      mobilePostDetail.scheduledAt,
-                    ).toLocaleDateString("pt-BR")}
+                    {new Date(mobilePostDetail.scheduledAt).toLocaleDateString(
+                      "pt-BR",
+                    )}
                   </div>
                 </div>
               </div>
@@ -262,7 +259,7 @@ const PostTable = ({
                   Status
                 </p>
                 <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  {mobilePostDetail.status === "liveAir" ? (
+                  {mobilePostDetail.status ? (
                     <span className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 uppercase tracking-wider bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
                       <FiCheckCircle /> No ar
                     </span>
@@ -281,15 +278,12 @@ const PostTable = ({
                         );
                         setMobilePostDetail({
                           ...mobilePostDetail,
-                          status:
-                            mobilePostDetail.status === "liveAir"
-                              ? "offAir"
-                              : "liveAir",
+                          status: !mobilePostDetail.status,
                         });
                       }}
                       className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
                     >
-                      {mobilePostDetail.status === "liveAir" ? (
+                      {mobilePostDetail.status ? (
                         <FiToggleRight size={18} />
                       ) : (
                         <FiToggleLeft size={18} />

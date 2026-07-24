@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import Image from "next/image";
-import Link from "next/link";
+
 
 
 import Slider from "@/components/Header/Slider/Slider";
@@ -99,7 +99,7 @@ export default function Home() {
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-center space-x-4 p-2 bg-white rounded-lg border border-gray-100">
-                        <div className="bg-red-600 text-white rounded p-1 text-center min-w-[45px]">
+                        <div className="bg-red-600 text-white rounded p-1 text-center min-w-11.25">
                           <div className="text-[8px] uppercase font-bold leading-tight">
                             Julho
                           </div>
@@ -117,7 +117,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex items-center space-x-4 p-2 bg-white rounded-lg border border-gray-100">
-                        <div className="bg-red-600 text-white rounded p-1 text-center min-w-[45px]">
+                        <div className="bg-red-600 text-white rounded p-1 text-center min-w-11.25">
                           <div className="text-[8px] uppercase font-bold leading-tight">
                             Julho
                           </div>
@@ -148,7 +148,7 @@ export default function Home() {
                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
                     Mundo Geek
                   </h2>
-                  <div className="h-[1px] bg-gray-200 w-full"></div>
+                  <div className="h-px bg-gray-200 w-full"></div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                   {/* Main Geek Cards */}
@@ -216,10 +216,10 @@ export default function Home() {
                   ))}
                 </div>
               </section> */}
-              
-               {data.content.map((info, i)=>{
+
+              {data.content.map((info, i) => {
                 return methods.categoryModelDesktop(info, i)
-              })} 
+              })}
             </div>
           </section>
         </main>

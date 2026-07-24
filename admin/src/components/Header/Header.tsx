@@ -55,7 +55,9 @@ const Header = () => {
 
         {/* Dropdown de Usuário */}
         <div className="flex items-center gap-2 md:gap-3 cursor-pointer group hover:bg-slate-800 p-1.5 md:p-2 rounded-lg transition-colors">
-          <span className="text-xs md:text-sm font-bold text-slate-300 hidden sm:inline">Admin</span>
+          <span className="text-xs md:text-sm font-bold text-slate-300 hidden sm:inline">
+            Admin
+          </span>
           <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
             <FiUser className="text-slate-400" size={14} />
           </div>

@@ -32,10 +32,11 @@ export default function useLogin() {
       await api.post("auth/login", data);
       router.push("/");
     } catch (err: unknown) {
+      console.log(err);
       if (axios.isAxiosError(err)) {
         setError(
           err.response?.data?.message ??
-          "Credenciais inválidas ou erro de conexão."
+            "Credenciais inválidas ou o de conexão.",
         );
       } else {
         setError("Ocorreu um erro inesperado.");

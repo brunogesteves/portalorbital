@@ -104,7 +104,6 @@ function SearchResults() {
                                 src={`${process.env.NEXT_PUBLIC_API_URL}/api/${post.thumbnail}`}
                                 alt={post.title}
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
@@ -178,7 +177,7 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div>Carregando busca...</div>}>
+    <Suspense fallback={<div>Carregando Informações...</div>}>
       <SearchResults />
     </Suspense>
   );

@@ -8,7 +8,6 @@ const { user: usr } = prisma;
 
 
 export const login = async (req: Request, res: Response) => {
-  console.log("auth")
   const { email, password } = req.body;
 
   try {

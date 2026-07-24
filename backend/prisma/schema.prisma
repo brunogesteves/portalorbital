@@ -37,7 +37,7 @@ model Post {
   scheduledAt DateTime
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  status      String   @default("offAir")
+  status      Boolean  @default(false)
   slide      Boolean  @default(false)
   highlight  Boolean  @default(false)
 

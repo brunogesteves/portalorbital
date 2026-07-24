@@ -1,11 +1,8 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
-import React from "react";
+
 import { FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiArrowRight } from "react-icons/fi";
-import { HeaderCategoriesDesktop } from "@/components/Header/Categories/HeaderCategories";
-import Footer from "@/components/Footer";
 import HeroSlider from "@/components/Header/Slider/Slider";
 import Header from "../Header/Header";
 // import { CategoryDataProps } from "@/utils/types";
@@ -35,11 +32,11 @@ export default function CategoryPage() {
                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
                     Destaques Automotivos
                   </h2>
-                  <div className="h-[1px] bg-gray-200 w-full"></div>
+                  <div className="h-px bg-gray-200 w-full"></div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="group cursor-pointer">
-                    <div className="relative rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 mb-3">
+                    <div className="relative rounded-xl overflow-hidden aspect-4/3 bg-gray-100 mb-3">
                       <img
                         alt="Toyota blindado"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"

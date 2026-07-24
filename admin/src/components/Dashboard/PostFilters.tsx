@@ -1,20 +1,6 @@
-import React from 'react';
-import { FiSearch } from 'react-icons/fi';
-import { CategoryProps, UserProps } from '@/Utils/types';
-
-interface PostFiltersProps {
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (value: string) => void;
-  selectedAuthor: string;
-  setSelectedAuthor: (value: string) => void;
-  selectedType: string;
-  setSelectedType: (value: string) => void;
-  categories: CategoryProps[];
-  currentUser: UserProps | null;
-  uniqueAuthors: { id: number; name: string }[];
-}
+import React from "react";
+import { FiSearch } from "react-icons/fi";
+import { PostFiltersProps } from "@/Utils/types";
 
 const PostFilters = ({
   searchTerm,
@@ -27,7 +13,7 @@ const PostFilters = ({
   setSelectedType,
   categories,
   currentUser,
-  uniqueAuthors
+  uniqueAuthors,
 }: PostFiltersProps) => {
   const selectClass =
     "w-full sm:w-auto bg-white border-2 border-slate-200 rounded-2xl px-4 py-3 md:py-3.5 outline-none text-sm font-semibold text-slate-700 focus:border-red-600 transition-colors";
@@ -37,7 +23,9 @@ const PostFilters = ({
       {/* Linha de cima: título + selects */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-lg md:text-2xl font-black text-slate-900 tracking-tight">Publicações Recentes</h2>
+          <h2 className="text-lg md:text-2xl font-black text-slate-900 tracking-tight">
+            Publicações Recentes
+          </h2>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
@@ -47,20 +35,24 @@ const PostFilters = ({
             className={selectClass}
           >
             <option value="">Todas Categorias</option>
-            {categories.map(cat => (
-              <option key={cat.id} value={cat.id.toString()}>{cat.name}</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id.toString()}>
+                {cat.name}
+              </option>
             ))}
           </select>
 
-          {currentUser?.role === 'ADM' && (
+          {currentUser?.role === "ADM" && (
             <select
               value={selectedAuthor}
               onChange={(e) => setSelectedAuthor(e.target.value)}
               className={selectClass}
             >
               <option value="">Todos Autores</option>
-              {uniqueAuthors.map(auth => (
-                <option key={auth.id} value={auth.id.toString()}>{auth.name}</option>
+              {uniqueAuthors.map((auth) => (
+                <option key={auth.id} value={auth.id.toString()}>
+                  {auth.name}
+                </option>
               ))}
             </select>
           )}
@@ -70,7 +62,7 @@ const PostFilters = ({
             onChange={(e) => setSelectedType(e.target.value)}
             className={selectClass}
           >
-            <option value="">Todos</option>
+            <option value="">Mais Filtros</option>
             <option value="slide">Slide</option>
             <option value="status">No Ar</option>
             <option value="destaque">Destaque</option>

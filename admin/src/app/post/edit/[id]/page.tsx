@@ -1,21 +1,16 @@
 "use client";
 
-// import React, { useState, useEffect } from "react";
-// import { useRouter, useParams } from "next/navigation";
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import * as z from "zod";
-// import { api } from "@/Utils/api";
-// import { CategoryProps, PostFormValues } from "@/Utils/types";
-// import { postSchema } from "@/Utils/schemas";
+
 import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
 
 import { LibraryModal } from "@/components/posts/Libray";
 import { Thumbnail } from "@/components/posts/Thumbnail";
 import { Editor } from "@/components/posts/Editor";
-import useEditPost from "@/app/post/edit/[id]/useEditPost";
+import { useEditPost } from "@/app/post/edit/[id]/useEditPost";
+import ModalMessage from "@/components/Dashboard/ModalMessage";
+import { Suspense } from "react";
 
-export default function EditPost() {
+function EditPost() {
   const { data, methods } = useEditPost();
 
   return (
@@ -52,13 +47,13 @@ export default function EditPost() {
                 <input
                   {...methods.register("title")}
                   type="text"
-                  className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${methods.formState.errors.title ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
+                  className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${data.formState.errors.title ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
                   placeholder="Ex: Nova reforma política é aprovada no congresso"
                 />
-                {methods.formState.errors.title && (
+                {data.formState.errors.title && (
                   <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
                     <FiAlertCircle size={12} />{" "}
-                    {methods.formState.errors.title.message}
+                    {data.formState.errors.title.message}
                   </span>
                 )}
               </div>
@@ -71,7 +66,7 @@ export default function EditPost() {
                   <div className="relative">
                     <select
                       {...methods.register("categoryId")}
-                      className={`w-full border-2 rounded-2xl px-5 py-4 outline-none appearance-none transition-all font-semibold cursor-pointer ${methods.formState.errors.categoryId ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
+                      className={`w-full border-2 rounded-2xl px-5 py-4 outline-none appearance-none transition-all font-semibold cursor-pointer ${data.formState.errors.categoryId ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
                     >
                       <option value="">Selecione...</option>
                       {data.categories.map((cat) => (
@@ -84,10 +79,10 @@ export default function EditPost() {
                       ▼
                     </div>
                   </div>
-                  {methods.formState.errors.categoryId && (
+                  {data.formState.errors.categoryId && (
                     <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
                       <FiAlertCircle size={12} />{" "}
-                      {methods.formState.errors.categoryId.message}
+                      {data.formState.errors.categoryId.message}
                     </span>
                   )}
                 </div>
@@ -99,12 +94,12 @@ export default function EditPost() {
                   <input
                     {...methods.register("scheduledAt")}
                     type="datetime-local"
-                    className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${methods.formState.errors.scheduledAt ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
+                    className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${data.formState.errors.scheduledAt ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
                   />
-                  {methods.formState.errors.scheduledAt && (
+                  {data.formState.errors.scheduledAt && (
                     <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
                       <FiAlertCircle size={12} />{" "}
-                      {methods.formState.errors.scheduledAt.message}
+                      {data.formState.errors.scheduledAt.message}
                     </span>
                   )}
                 </div>
@@ -126,28 +121,45 @@ export default function EditPost() {
             </div>
           </div>
 
-          <div className="mt-6 flex items-center gap-3">
-            <label className="text-sm font-black text-gray-700 ml-1">
-              Exibir no Slide
-            </label>
-            <button
-              type="button"
-              onClick={() => methods.setValue("slide", !methods.watch("slide"))}
-              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
-                methods.watch("slide") ? "bg-red-600" : "bg-gray-300"
-              }`}
-            >
-              <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${
-                  methods.watch("slide") ? "translate-x-6" : "translate-x-1"
-                }`}
-              />
-            </button>
+          <div className="mt-6 flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-black text-gray-700 ml-1">
+                Exibir no Slide
+              </label>
+              <button
+                type="button"
+                onClick={() => methods.setValue("slide", !methods.watch("slide"))}
+                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${methods.watch("slide") ? "bg-red-600" : "bg-gray-300"
+                  }`}
+              >
+                <span
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${methods.watch("slide") ? "translate-x-6" : "translate-x-1"
+                    }`}
+                />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-black text-gray-700 ml-1">
+                Exibir no Destaque
+              </label>
+              <button
+                type="button"
+                onClick={() => methods.setValue("highlight", !methods.watch("highlight"))}
+                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${methods.watch("highlight") ? "bg-red-600" : "bg-gray-300"
+                  }`}
+              >
+                <span
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${methods.watch("highlight") ? "translate-x-6" : "translate-x-1"
+                    }`}
+                />
+              </button>
+            </div>
           </div>
 
           <div className="mt-8 space-y-2">
             <div
-              className={`rounded-3xl overflow-hidden border-2 transition-all ${methods.formState.errors.content ? "border-red-200" : "border-gray-100"}`}
+              className={`rounded-3xl overflow-hidden border-2 transition-all ${data.formState.errors.content ? "border-red-200" : "border-gray-100"}`}
             >
               <Editor
                 content={methods.watch("content")}
@@ -156,10 +168,10 @@ export default function EditPost() {
                 }
               />
             </div>
-            {methods.formState.errors.content && (
+            {data.formState.errors.content && (
               <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
                 <FiAlertCircle size={12} />{" "}
-                {methods.formState.errors.content.message}
+                {data.formState.errors.content.message}
               </span>
             )}
           </div>
@@ -189,6 +201,18 @@ export default function EditPost() {
           setShowImageModal={methods.setShowImageModal}
         />
       )}
+      {data.showModalMessage && (
+        <ModalMessage text={data.modalWarning} setShowModal={(e: boolean) => methods.setShowModalMessage(e)} />
+      )}
     </div>
+  );
+}
+
+
+export default function EditPostPage() {
+  return (
+    <Suspense fallback={<div>Carregando Informações...</div>}>
+      <EditPost />
+    </Suspense>
   );
 }

@@ -36,6 +36,7 @@ export const useNewPost = () => {
       scheduledAt: "",
       thumbnailUrl: "",
       slide: false,
+      highlight: false,
     },
   });
 
@@ -58,6 +59,7 @@ export const useNewPost = () => {
     formData.append("scheduledAt", data.scheduledAt);
     if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);
     formData.append("slide", String(data.slide));
+    formData.append("highlight", String(data.highlight));
 
     try {
       await api.post("/posts/createpost", formData);

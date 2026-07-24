@@ -1,5 +1,4 @@
-import * as z from "zod";
-import { loginSchema, postSchema } from "./schemas";
+
 
 export interface UserProps {
   id: number;
@@ -17,7 +16,7 @@ export interface CategoryProps {
 export interface PostTableProps {
   posts: PostProps[];
   currentUser: UserProps | null;
-  handleToggleStatus: (id: number, currentStatus: string) => void;
+  handleToggleStatus: (id: number, currentStatus: boolean) => void;
   handleToggleSlide: (id: number, currentSlide: boolean) => void;
   handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
   setPostToDelete: (id: number) => void;
@@ -38,7 +37,7 @@ export interface PostProps {
   scheduledAt: string;
   createdAt: string;
   updatedAt: string;
-  status: string;
+  status: boolean;
   slide: boolean;
   highlight: boolean;
   categoryId: number;
@@ -51,8 +50,6 @@ export interface PostProps {
   };
 }
 
-
-
 // // Para retrocompatibilidade com o código anterior se necessário
 // export type contentNewsProps = PostProps;
 // export type BannerProps = any; // Ajustar se necessário
@@ -60,6 +57,37 @@ export interface ThumbnailProps {
   preview: string;
   setThumbnailUrl: (url: string) => void;
   setShowImageModal: (show: boolean) => void;
-  setPreview: (show: string) => void
-  setExistingImages: (img: string[]) => void
+  setPreview: (show: string) => void;
+  setExistingImages: (img: string[]) => void;
+}
+
+export interface PostFiltersProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (value: string) => void;
+  selectedAuthor: string;
+  setSelectedAuthor: (value: string) => void;
+  selectedType: string;
+  setSelectedType: (value: string) => void;
+  categories: CategoryProps[];
+  currentUser: UserProps | null;
+  uniqueAuthors: { id: number; name: string }[];
+}
+
+
+export interface DeleteModalProps {
+  postTitle: string | undefined;
+  handleDelete: () => void;
+  setShowModal: (show: boolean) => void;
+}
+export interface ModalMessageProps {
+  text: string;
+  setShowModal: (show: boolean) => void;
+}
+
+export interface StatsGridProps {
+  lenghtHighliht: number;
+  lenghtActivePosts: number;
+  lenghtSlides: number;
 }

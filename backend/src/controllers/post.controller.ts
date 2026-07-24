@@ -30,6 +30,7 @@ export const slidersImages = async (req: any, res: Response) => {
 };
 
 export const allPosts = async (req: any, res: Response) => {
+
   try {
     const posts = await cat.findMany({
       where: {
@@ -76,6 +77,7 @@ export const allPosts = async (req: any, res: Response) => {
 };
 
 export const getPosts = async (req: any, res: Response) => {
+  console.log("first")
   try {
     const { q } = req.query;
     const whereClause: any = {};
@@ -114,8 +116,9 @@ export const getPosts = async (req: any, res: Response) => {
       orderBy: { scheduledAt: "desc" },
     });
     return res.json(posts);
-  } catch (error) {
-    return res.status(500).json({ message: "Erro ao buscar posts" });
+  } catch (error: any) {
+    console.error("error posts", error?.message, error?.stack);
+    return res.status(500).json({ message: "Erro ao buscar posts", error: error?.message });
   }
 };
 
@@ -145,7 +148,7 @@ export const getPostById = async (req: any, res: Response) => {
 
 export const createPost = async (req: any, res: Response) => {
   console.log("createpost");
-  const { title, content, categoryId, scheduledAt, thumbnailUrl, slide } = req.body;
+  const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
   const thumbnail = req.file
     ? `/uploads/${req.file.filename}`
     : thumbnailUrl || null;
@@ -191,8 +194,9 @@ export const createPost = async (req: any, res: Response) => {
         scheduledAt: new Date(scheduledAt),
         categoryId: Number(categoryId),
         authorId: req.user.id,
-        status: "offAir",
+        status: false,
         slide: slide === "true",
+        highlight: highlight === "true",
       },
     });
     return res.status(201).json(createPost);
@@ -204,7 +208,7 @@ export const createPost = async (req: any, res: Response) => {
 
 export const updatePost = async (req: any, res: Response) => {
   const { id } = req.params;
-  const { title, content, categoryId, scheduledAt, thumbnailUrl, slide } = req.body;
+  const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
   const thumbnail = req.file
     ? `/uploads/${req.file.filename}`
     : thumbnailUrl || undefined;
@@ -272,6 +276,7 @@ export const updatePost = async (req: any, res: Response) => {
         scheduledAt: new Date(scheduledAt),
         ...(thumbnail && { thumbnail }),
         ...(slide !== undefined && { slide: slide === "true" }),
+        ...(highlight !== undefined && { highlight: highlight === "true" }),
       },
     });
     return res.json(post);
@@ -366,7 +371,7 @@ export const updatePostStatus = async (req: any, res: Response) => {
         .json({ message: "Apenas administradores podem mudar o status" });
     }
 
-    if (!["liveAir", "offAir"].includes(status)) {
+    if (typeof status !== "boolean") {
       return res.status(400).json({ message: "Status inválido" });
     }
 
