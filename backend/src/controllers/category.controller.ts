@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
-import { isValidNameOrTitle, slugify } from '../lib/slug';
+import { slugify } from '../lib/slug';
 
 const { category: cat } = prisma;
 
@@ -27,6 +27,11 @@ export const getCategories = async (req: Request, res: Response) => {
   try {
     const categories = await cat.findMany({
       orderBy: { name: 'asc' },
+      include: {
+        _count: {
+          select: { posts: true }
+        }
+      }
     });
     return res.json(categories);
   } catch (error) {
@@ -35,19 +40,10 @@ export const getCategories = async (req: Request, res: Response) => {
 };
 
 export const createCategory = async (req: Request, res: Response) => {
-  const { name } = req.body;
-
-  if (!name || typeof name !== 'string' || !name.trim()) {
-    return res.status(400).json({ message: 'O nome da categoria é obrigatório' });
-  }
-
-  // 1. Validar se há caracteres especiais
-  if (!isValidNameOrTitle(name)) {
-    return res.status(400).json({ message: 'Caracteres especiais (como ?, !, @, etc.) não são permitidos no nome da categoria' });
-  }
+  const { name, slug } = req.body;
 
   // Gerar o slug
-  const slug = slugify(name);
+
 
   try {
     // 2. Validar se nome ou slug já existem no banco
@@ -56,13 +52,6 @@ export const createCategory = async (req: Request, res: Response) => {
     });
     if (existingName) {
       return res.status(400).json({ message: 'Já existe uma categoria com este nome' });
-    }
-
-    const existingSlug = await cat.findFirst({
-      where: { slug }
-    });
-    if (existingSlug) {
-      return res.status(400).json({ message: 'Já existe uma categoria com este slug' });
     }
 
     const category = await cat.create({

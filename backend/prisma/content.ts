@@ -14,7 +14,7 @@ export const posts = [
     title:
       "Inteligência artificial acelera diagnósticos em hospitais brasileiros",
     slug: "inteligencia-artificial-acelera-diagnosticos-em-hospitais-brasileiros",
-    thumbnail: "/uploads/p1.webp",
+    thumbnail: "/p1.webp",
     content:
       "Hospitais brasileiros vêm ampliando o uso de sistemas baseados em inteligência artificial para auxiliar médicos na análise de exames e identificação de doenças. A tecnologia permite comparar milhares de imagens médicas em poucos segundos, oferecendo sugestões que apoiam o diagnóstico clínico.Especialistas afirmam que a inteligência artificial não substitui os profissionais da saúde, mas atua como uma ferramenta complementar capaz de aumentar a precisão dos resultados e reduzir o tempo de atendimento.Além da radiologia, hospitais também utilizam algoritmos para prever riscos de internação, acompanhar pacientes crônicos e organizar filas de atendimento. O avanço tecnológico deve impulsionar novos investimentos no setor nos próximos anos.",
     scheduledAt: new Date(),
@@ -28,7 +28,7 @@ export const posts = [
     id: 2,
     title: "Pequenas empresas registram crescimento nas vendas online",
     slug: "pequenas-empresas-crescem-nas-vendas-online",
-    thumbnail: "/uploads/p2.webp",
+    thumbnail: "p2.webp",
     content:
       "O comércio eletrônico continua sendo uma importante fonte de crescimento para pequenos negócios. Dados recentes mostram aumento significativo no volume de pedidos realizados pela internet durante o primeiro semestre.Empreendedores têm investido em redes sociais, marketplaces e lojas próprias para alcançar novos consumidores. A facilidade dos meios de pagamento e a melhoria na logística contribuíram para o aumento das vendas.Especialistas destacam que oferecer atendimento rápido, boas descrições de produtos e entrega eficiente tornou-se um diferencial competitivo para empresas de todos os segmentos.",
     scheduledAt: new Date(),

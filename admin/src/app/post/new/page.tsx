@@ -126,14 +126,12 @@ export default function PostForm() {
               <button
                 type="button"
                 onClick={() => methods.setValue("slide", !methods.watch("slide"))}
-                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
-                  methods.watch("slide") ? "bg-red-600" : "bg-gray-300"
-                }`}
+                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${methods.watch("slide") ? "bg-red-600" : "bg-gray-300"
+                  }`}
               >
                 <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${
-                    methods.watch("slide") ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${methods.watch("slide") ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
             </div>
@@ -145,14 +143,12 @@ export default function PostForm() {
               <button
                 type="button"
                 onClick={() => methods.setValue("highlight", !methods.watch("highlight"))}
-                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
-                  methods.watch("highlight") ? "bg-red-600" : "bg-gray-300"
-                }`}
+                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${methods.watch("highlight") ? "bg-red-600" : "bg-gray-300"
+                  }`}
               >
                 <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${
-                    methods.watch("highlight") ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${methods.watch("highlight") ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
             </div>
@@ -166,7 +162,7 @@ export default function PostForm() {
               className={`rounded-3xl overflow-hidden border-2 transition-all ${data.errors.content ? "border-red-200" : "border-gray-100"}`}
             >
               <Editor
-                content={data.contentValue}
+                content={""}
                 setContent={(val) =>
                   methods.setValue("content", val, { shouldValidate: true })
                 }

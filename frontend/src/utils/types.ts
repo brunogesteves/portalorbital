@@ -36,7 +36,7 @@ export interface PostProps {
   thumbnail: string
   title: string
   author: AuthorProps
-  createdAt?: any
+  createdAt?: Date
 
 }
 

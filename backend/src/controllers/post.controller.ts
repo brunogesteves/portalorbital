@@ -3,8 +3,7 @@ import prisma from "../lib/prisma";
 import { Role } from "@prisma/client";
 import fs from "fs";
 import path from "path";
-import { isValidNameOrTitle, slugify } from "../lib/slug";
-
+import { slugify } from "../lib/slug";
 const { post: pst } = prisma;
 const { category: cat } = prisma;
 
@@ -24,7 +23,7 @@ export const slidersImages = async (req: any, res: Response) => {
     // console.log(posts)
 
     return res.json(posts);
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: "Erro ao buscar posts" });
   }
 };
@@ -146,47 +145,51 @@ export const getPostById = async (req: any, res: Response) => {
   }
 };
 
-export const createPost = async (req: any, res: Response) => {
-  console.log("createpost");
-  const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
-  const thumbnail = req.file
-    ? `/uploads/${req.file.filename}`
-    : thumbnailUrl || null;
-
-  if (!title || typeof title !== "string" || !title.trim()) {
-    return res.status(400).json({ message: "O título do post é obrigatório" });
-  }
-
-  if (!isValidNameOrTitle(title)) {
-    return res.status(400).json({
-      message:
-        "Caracteres especiais (como ?, !, @, etc.) não são permitidos no título do post",
-    });
-  }
-
-  const slug = slugify(title);
+export const createUpdatePost = async (req: any, res: Response) => {
+  const { id } = req.params;
+  const isEdit = id && id !== "undefined" && id !== "null";
 
   try {
+    const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
+    const thumbnail = req.file
+      ? `/images/${req.file.filename}`
+      : thumbnailUrl || null;
+
+    const slug = slugify(title);
+
     const existingTitle = await pst.findFirst({
-      where: { title },
+      where: {
+        title,
+        ...(isEdit && { id: { not: Number(id) } }),
+      },
     });
     if (existingTitle) {
-      return res
-        .status(400)
-        .json({ message: "Já existe um post com este título" });
+      return res.status(400).json({ message: "Já existe uma notícia com este título" });
     }
 
     const existingSlug = await pst.findFirst({
-      where: { slug },
+      where: {
+        slug,
+        ...(isEdit && { id: { not: Number(id) } }),
+      },
     });
     if (existingSlug) {
-      return res
-        .status(400)
-        .json({ message: "Já existe um post com este slug" });
+      return res.status(400).json({ message: "Já existe uma notícia com este slug" });
     }
 
-    const createPost = await pst.create({
-      data: {
+    const upsertPost = await pst.upsert({
+      where: { id: isEdit ? Number(id) : 0 },
+      update: {
+        title,
+        slug,
+        content,
+        categoryId: Number(categoryId),
+        scheduledAt: new Date(scheduledAt),
+        ...(thumbnail && { thumbnail }),
+        ...(slide !== undefined && { slide: slide === "true" }),
+        ...(highlight !== undefined && { highlight: highlight === "true" }),
+      },
+      create: {
         title,
         slug,
         content,
@@ -199,89 +202,9 @@ export const createPost = async (req: any, res: Response) => {
         highlight: highlight === "true",
       },
     });
-    return res.status(201).json(createPost);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Erro ao criar post" });
-  }
-};
-
-export const updatePost = async (req: any, res: Response) => {
-  const { id } = req.params;
-  const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
-  const thumbnail = req.file
-    ? `/uploads/${req.file.filename}`
-    : thumbnailUrl || undefined;
-
-  try {
-    // Verificar se o usuário pode editar (é dono ou ADM)
-    const existingPost = await pst.findUnique({
-      where: { id: Number(id) },
-    });
-    if (!existingPost)
-      return res.status(404).json({ message: "Post não encontrado" });
-
-    if (req.user.role !== Role.ADM && existingPost.authorId !== req.user.id) {
-      return res
-        .status(403)
-        .json({ message: "Sem permissão para editar este post" });
-    }
-
-    let slug = existingPost.slug;
-
-    if (title && title !== existingPost.title) {
-      if (typeof title !== "string" || !title.trim()) {
-        return res
-          .status(400)
-          .json({ message: "O título do post não pode ser vazio" });
-      }
-
-      // 1. Validar se há caracteres especiais no novo título
-      if (!isValidNameOrTitle(title)) {
-        return res.status(400).json({
-          message:
-            "Caracteres especiais (como ?, !, @, etc.) não são permitidos no título do post",
-        });
-      }
-
-      slug = slugify(title);
-
-      // 2. Verificar se o novo título ou slug já existem em outro post
-      const existingTitle = await prisma.post.findFirst({
-        where: { title, NOT: { id: Number(id) } },
-      });
-      if (existingTitle) {
-        return res
-          .status(400)
-          .json({ message: "Já existe um post com este título" });
-      }
-
-      const existingSlug = await pst.findFirst({
-        where: { slug, NOT: { id: Number(id) } },
-      });
-      if (existingSlug) {
-        return res
-          .status(400)
-          .json({ message: "Já existe um post com este slug" });
-      }
-    }
-
-    const post = await pst.update({
-      where: { id: Number(id) },
-      data: {
-        title,
-        slug,
-        content,
-        categoryId: Number(categoryId),
-        scheduledAt: new Date(scheduledAt),
-        ...(thumbnail && { thumbnail }),
-        ...(slide !== undefined && { slide: slide === "true" }),
-        ...(highlight !== undefined && { highlight: highlight === "true" }),
-      },
-    });
-    return res.json(post);
+    return res.status(201).json(upsertPost);
   } catch {
-    return res.status(500).json({ message: "Erro ao atualizar post" });
+    return res.status(500).json({ message: isEdit ? "Erro ao atualizar o post" : "Erro ao criar o post" });
   }
 };
 
@@ -386,24 +309,32 @@ export const updatePostStatus = async (req: any, res: Response) => {
   }
 };
 
+export const uploadEditorAudio = async (req: any, res: Response) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "Nenhum áudio enviado" });
+  }
+  const url = `/audio/${req.file.filename}`;
+  return res.json({ url });
+};
+
 export const uploadEditorImage = async (req: any, res: Response) => {
   if (!req.file) {
     return res.status(400).json({ message: "Nenhuma imagem enviada" });
   }
-  const url = `/uploads/${req.file.filename}`;
+  const url = `/images/${req.file.filename}`;
   return res.json({ url });
 };
 
 export const getImages = async (req: Request, res: Response) => {
   try {
-    const uploadsDir = path.join(__dirname, "../../public/uploads");
+    const uploadsDir = path.join(__dirname, "../../public/images");
     if (!fs.existsSync(uploadsDir)) {
       return res.json([]);
     }
     const files = fs.readdirSync(uploadsDir);
     const images = files
       .filter((file) => /\.(jpg|jpeg|png|gif|webp)$/i.test(file))
-      .map((file) => `/uploads/${file}`);
+      .map((file) => `/images/${file}`);
     return res.json(images);
   } catch (error) {
     console.error(error);

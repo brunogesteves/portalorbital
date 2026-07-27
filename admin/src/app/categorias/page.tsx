@@ -44,22 +44,37 @@ function Categories() {
       <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
         <div className="grid grid-cols-1 divide-y divide-gray-100">
           {data.categories.length > 0 ? (
-            data.categories.map((cat) => (
-              <div
-                key={cat.id}
-                className="flex justify-between items-center px-6 py-4 hover:bg-gray-50 transition-colors"
-              >
-                <span className="text-lg font-medium text-gray-700">
-                  {cat.name}
-                </span>
-                <button
-                  onClick={() => methods.handleDeleteClick(cat)}
-                  className="text-red-500 hover:text-red-700 transition-colors p-2 rounded-full hover:bg-red-50"
+            data.categories.map((cat) => {
+              const postCount = cat._count?.posts || 0;
+              const hasPosts = postCount > 0;
+              return (
+                <div
+                  key={cat.id}
+                  className="flex justify-between items-center px-6 py-4 hover:bg-gray-50 transition-colors"
                 >
-                  <FiTrash2 size={20} />
-                </button>
-              </div>
-            ))
+                  <span className="text-lg font-medium text-gray-700">
+                    {cat.name}
+                  </span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-gray-500">
+                      {postCount} {postCount === 1 ? 'post' : 'posts'}
+                    </span>
+                    <button
+                      onClick={() => methods.handleDeleteClick(cat)}
+                      disabled={hasPosts}
+                      className={`transition-colors p-2 rounded-full ${
+                        hasPosts
+                          ? 'text-gray-300 cursor-not-allowed'
+                          : 'text-red-500 hover:text-red-700 hover:bg-red-50'
+                      }`}
+                      title={hasPosts ? 'Não é possível excluir categorias com posts' : 'Excluir categoria'}
+                    >
+                      <FiTrash2 size={20} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })
           ) : (
             <div className="p-8 text-center text-gray-400 italic">
               Nenhuma categoria cadastrada.

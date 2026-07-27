@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { api, imageUrl } from "@/Utils/api";
 import { CategoryProps } from "@/Utils/types";
 import { PostFormValues, postSchema } from "@/Utils/schemas";
+import { AxiosError } from "axios";
 
 export const useEditPost = () => {
   const router = useRouter();
@@ -16,12 +17,13 @@ export const useEditPost = () => {
 
   const [preview, setPreview] = useState("");
   const [categories, setCategories] = useState<CategoryProps[]>([]);
+
   const [showImageModal, setShowImageModal] = useState(false);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [showModalMessage, setShowModalMessage] = useState(false);
-  const [modalWarning, setModalWarning] = useState("");
+  const [showWarningModal, setShowWarningModal] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
 
   const {
     register,
@@ -43,38 +45,42 @@ export const useEditPost = () => {
     },
   });
 
-  // const contentValue = watch("content");
 
   useEffect(() => {
-    // Carregar categorias e imagens da biblioteca
-    api.get("/categories").then((res) => setCategories(res.data));
-    api.get("/posts/images").then((res) => setExistingImages(res.data));
+    const fetchData = async () => {
 
-    // Carregar dados do post para edição
-    if (id) {
-      api
-        .get(`/posts/${id}`)
-        .then((res) => {
-          const post = res.data;
+      if (id) {
+        try {
+          const [cats, images, post] = await Promise.all([
+            api.get("/categories"),
+            api.get("/posts/images"),
+            api.get(`/posts/${id}`)
+          ])
+          setCategories(cats.data);
+          setExistingImages(images.data);
           reset({
-            title: post.title,
-            content: post.content,
-            categoryId: post.categoryId.toString(),
-            scheduledAt: new Date(post.scheduledAt).toISOString().slice(0, 16),
-            thumbnailUrl: post.thumbnail || "",
-            slide: post.slide ?? false,
-            highlight: post.highlight ?? false,
-          });
+            title: post.data.title,
+            content: post.data.content,
+            categoryId: post.data.categoryId.toString(),
+            scheduledAt: new Date(post.data.scheduledAt).toISOString().slice(0, 16),
+            thumbnailUrl: post.data.thumbnail || "",
+            slide: post.data.slide ?? false,
+            highlight: post.data.highlight ?? false,
+          })
 
-          if (post.thumbnail) {
-            setPreview(`${imageUrl}/${post.thumbnail}`);
+          if (post.data.thumbnail) {
+            setPreview(`${imageUrl}/${post.data.thumbnail}`);
           }
-        })
-        .catch(() => {
-          setShowModalMessage(true);
-          setModalWarning("Erro ao carregar os dados da notícia.");
-        });
+
+
+        } catch {
+          setShowWarningModal(true);
+          setWarningMessage("Erro ao carregar os dados");
+        }
+      }
     }
+    fetchData();
+
   }, [id, reset]);
 
   const onSubmit = async (data: PostFormValues) => {
@@ -94,9 +100,13 @@ export const useEditPost = () => {
       await api.put(`/posts/${id}`, formData);
       setSuccess(true);
       setTimeout(() => router.push("/"), 1500);
-    } catch {
-      setShowModalMessage(true);
-      setModalWarning("Erro ao salvar as alterações. Verifique os campos.");
+    } catch (error) {
+
+      const err = error as AxiosError<{ message: string }>;
+      const message = err.response?.data.message
+      setShowWarningModal(true);
+      setWarningMessage(message ?? "");
+
     } finally {
       setLoading(false);
     }
@@ -110,8 +120,8 @@ export const useEditPost = () => {
       existingImages,
       loading,
       success,
-      modalWarning,
-      showModalMessage,
+      showWarningModal,
+      warningMessage,
       formState: {
         errors,
       },
@@ -121,7 +131,7 @@ export const useEditPost = () => {
       setShowImageModal,
       setPreview,
       setExistingImages,
-      setShowModalMessage,
+      setShowWarningModal,
       setValue,
       watch,
       reset,

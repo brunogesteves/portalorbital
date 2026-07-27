@@ -17,9 +17,9 @@ export const postSchema = z.object({
   title: z
     .string()
     .min(1, "O título é obrigatório")
-    .min(5, "O título deve ser mais descritivo (mín. 5 caracteres)")
+    .max(100, "O título deve ser mais descritivo (max. 100 caracteres)")
     .regex(
-      /^[a-zA-Z0-9\s-À-ÿ]+$/,
+      /^[\p{L}\p{N}\s]+$/u,
       "Caracteres especiais (como ?, !, @, etc.) não são permitidos",
     ),
   content: z

@@ -44,6 +44,38 @@ export const Editor = ({ content, setContent }: EditorProps) => {
 
     return undefined;
   };
+
+  const handleAudioUploadBefore = (
+    files: any[],
+    info: object,
+    uploadHandler: Function,
+  ) => {
+    const file = files[0];
+    const formData = new FormData();
+    formData.append("audio", file);
+
+    api
+      .post("/posts/upload-audio", formData)
+      .then((res) => {
+        const response = {
+          result: [
+            {
+              url: `${process.env.NEXT_PUBLIC_API_URL}${res.data.url}`,
+              name: file.name,
+              size: file.size,
+            },
+          ],
+        };
+        uploadHandler(response);
+      })
+      .catch((err) => {
+        console.error("Erro ao fazer upload do áudio no editor:", err);
+        uploadHandler(err.message);
+      });
+
+    return undefined;
+  };
+
   return (
     <div>
       <div className="rounded-xl overflow-hidden border border-gray-200">
@@ -51,6 +83,7 @@ export const Editor = ({ content, setContent }: EditorProps) => {
           setContents={content}
           onChange={setContent}
           onImageUploadBefore={handleImageUploadBefore}
+          onAudioUploadBefore={handleAudioUploadBefore}
           height="300px"
           setOptions={{
             buttonList: [
@@ -69,11 +102,14 @@ export const Editor = ({ content, setContent }: EditorProps) => {
               ["removeFormat"],
               ["outdent", "indent"],
               ["align", "horizontalRule", "list", "lineHeight"],
-              ["table", "link"],
+              ["table", "link", "image", "audio"],
               ["fullScreen", "showBlocks"],
               ["preview"],
             ],
             height: "600px",
+            audioFileInput: true,
+            audioUrlInput: true,
+            audioAccept: "audio/*",
           }}
         />
       </div>

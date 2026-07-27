@@ -6,12 +6,10 @@ import { api } from "@/Utils/api";
 import { CategoryProps } from "@/Utils/types";
 import { PostFormValues, postSchema } from "@/Utils/schemas";
 import { useState, useEffect } from "react";
+import { AxiosError } from "axios";
 
 export const useNewPost = () => {
   const router = useRouter();
-  const params = useParams();
-  const isEdit = !!params.id;
-
   const [preview, setPreview] = useState("");
   const [categories, setCategories] = useState<CategoryProps[]>([]);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -41,12 +39,22 @@ export const useNewPost = () => {
   });
 
   useEffect(() => {
-    api.get("/categories").then((res) => setCategories(res.data));
-    api.get("/posts/images").then((res) => setExistingImages(res.data));
-  }, []);
+    const fetchData = async () => {
+      try {
+        const [cats, images] = await Promise.all([
+          api.get("/categories"),
+          api.get("/posts/images")
+        ])
+        setCategories(cats.data)
+        setExistingImages(images.data)
+      } catch {
+        setWarningMessage("Erro ao carregar os dados");
+        setShowWarningModal(true);
+      }
+    }
 
-  const contentValue = watch("content");
-  const thumbnailUrlValue = watch("thumbnailUrl");
+    fetchData()
+  }, []);
 
   const onSubmit = async (data: PostFormValues) => {
     setLoading(true);
@@ -65,10 +73,11 @@ export const useNewPost = () => {
       await api.post("/posts/createpost", formData);
       setSuccess(true);
       setTimeout(() => router.push("/"), 1500);
-    } catch (error: any) {
-      const message = error.response?.data?.message;
-      setWarningMessage(message);
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
+      const message = err.response?.data.message
       setShowWarningModal(true);
+      setWarningMessage(message ?? "");
     } finally {
       setLoading(false);
     }
@@ -83,8 +92,6 @@ export const useNewPost = () => {
       success,
       showWarningModal,
       warningMessage,
-      contentValue,
-      thumbnailUrlValue,
       errors,
     },
     methods: {

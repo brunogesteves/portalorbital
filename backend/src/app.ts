@@ -22,7 +22,12 @@ app.use(cookieParser());
 
 app.use(
   "/images",
-  express.static(path.join(__dirname, "../public/uploads"))
+  express.static(path.join(__dirname, "../public/images"))
+);
+
+app.use(
+  "/audio",
+  express.static(path.join(__dirname, "../public/audio"))
 );
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);

@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: `${process.env.NEXT_PUBLIC_API_URL}`,
         port: "3001",
-        pathname: "/uploads/**",
+        pathname: "/images/**",
       },
     ],
   },

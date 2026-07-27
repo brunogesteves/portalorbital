@@ -9,8 +9,4 @@ export function slugify(text: string): string {
     .replace(/-+/g, '-');
 }
 
-export function isValidNameOrTitle(text: string): boolean {
-  // Permite letras (incluindo acentuadas), números, espaços e hífens
-  const regex = /^[a-zA-Z0-9\s-À-ÿ]+$/;
-  return regex.test(text);
-}
+

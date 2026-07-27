@@ -11,6 +11,9 @@ export interface CategoryProps {
   id: number;
   name: string;
   slug: string;
+  _count?: {
+    posts: number;
+  };
 }
 
 export interface PostTableProps {

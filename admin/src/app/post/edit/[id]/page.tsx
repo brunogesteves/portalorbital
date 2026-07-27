@@ -201,8 +201,8 @@ function EditPost() {
           setShowImageModal={methods.setShowImageModal}
         />
       )}
-      {data.showModalMessage && (
-        <ModalMessage text={data.modalWarning} setShowModal={(e: boolean) => methods.setShowModalMessage(e)} />
+      {data.showWarningModal && (
+        <ModalMessage text={data.warningMessage} setShowModal={(e: boolean) => methods.setShowWarningModal(e)} />
       )}
     </div>
   );
