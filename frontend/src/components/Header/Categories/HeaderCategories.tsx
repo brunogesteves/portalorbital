@@ -1,12 +1,10 @@
 "use client";
-import { CategoryProps, HeaderProps } from "@/utils/types";
+import { CategoryProps } from "@/utils/types";
 import { useHeaderCategories } from "./useHeaderCategories";
 import Link from "next/link";
 
-export const HeaderCategoriesDesktop = ({ slug }: HeaderProps) => {
+export const HeaderCategoriesDesktop = () => {
   const { data } = useHeaderCategories();
-  console.log(`slug: ${slug}`);
-  // console.log("size:", window.innerWidth);
 
   return (
     <nav
@@ -34,7 +32,7 @@ export const HeaderCategoriesDesktop = ({ slug }: HeaderProps) => {
   );
 };
 
-export const HeaderCategoriesMobile = ({ slug }: HeaderProps) => {
+export const HeaderCategoriesMobile = ({ slug }: { slug: string }) => {
   const { data } = useHeaderCategories();
 
   return (

@@ -8,7 +8,7 @@ import { useHeaderTop } from "./useHeaderTop";
 import { ModalSearchlMobile } from "@/components/ModaSearchlMobile";
 
 export const HeaderTopDesktop = () => {
-  const { isSidebarOpen, setIsSidebarOpen } = useUIStore();
+
 
   const { data, methods } = useHeaderTop();
   return (
@@ -22,7 +22,7 @@ export const HeaderTopDesktop = () => {
         </button>
       </div>
       <div
-        className="flex-grow flex justify-center items-center "
+        className="grow flex justify-center items-center "
         data-purpose="logo-container"
       >
         <div className="flex items-center space-x-2">
@@ -46,7 +46,7 @@ export const HeaderTopDesktop = () => {
               className="text-[#1e3a8a] text-xl font-black font-orbital italic"
               style={{ fontSize: "1.4rem" }}
             >
-              ORBITAL CHANNEL TV
+              ORBITALCHANNEL.TV
             </span>
             {/* <span className="text-[#7f1d1d] text-base font-bold font-orbital tracking-widest italic" style={{ fontSize: "1.1rem", marginTop: "-2px" }}>CHANNEL</span> */}
           </div>

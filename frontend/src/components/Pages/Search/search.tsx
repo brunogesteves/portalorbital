@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { useSearch } from "./useSearch";
 import Image from "next/image";
 import Link from "next/link";
+import { imageUrl } from "@/utils/api";
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
@@ -75,7 +76,7 @@ export default function SearchResults() {
                       <Image
                         alt={item.title}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                        src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${item.thumbnail}`}
+                        src={`${imageUrl}/${item.thumbnail}`}
                         width={640}
                         height={360}
                         loading="eager"
@@ -83,9 +84,6 @@ export default function SearchResults() {
                       />
                     </Link>
                     <div className="p-4 flex flex-col grow space-y-2">
-                      <span className="text-[#b91c1c] text-[10px] font-bold uppercase tracking-widest">
-                        {item.category?.name}
-                      </span>
                       <h2 className="text-white font-bold text-base leading-tight">
                         {item.title}
                       </h2>
@@ -140,8 +138,8 @@ export default function SearchResults() {
                   <div className="relative rounded-lg overflow-hidden">
                     <Image
                       alt={item.title}
-                      className="w-full aspect-[16/9] object-cover"
-                      src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${item.thumbnail}`}
+                      className="w-full aspect-video object-cover"
+                      src={`${imageUrl}/${item.thumbnail}`}
                       width={640}
                       height={360}
                       loading="eager"
@@ -149,9 +147,6 @@ export default function SearchResults() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <span className="text-[#c1121f] text-[10px] font-bold uppercase tracking-widest">
-                      {item.category?.name}
-                    </span>
                     <h3 className="text-xl font-bold leading-tight uppercase text-gray-900">
                       {item.title}
                     </h3>

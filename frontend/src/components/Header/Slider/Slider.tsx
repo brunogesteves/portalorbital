@@ -14,7 +14,7 @@ export default function Slider({ device }: SliderProps) {
 
   if (!data.slides || data.slides.length === 0) {
     return (
-      <div className="w-full aspect-video bg-gray-100 flex items-center justify-center rounded-2xl">
+      <div className="w-full h-60 aspect-video bg-gray-100 flex items-center justify-center rounded-2xl">
         <span className="text-gray-400">Carregando destaques...</span>
       </div>
     );
@@ -23,7 +23,7 @@ export default function Slider({ device }: SliderProps) {
   if (device === "desktop") {
     return (
       <section
-        className="relative w-full h-100 aspect-video bg-black overflow-hidden group"
+        className="relative w-full aspect-video bg-black overflow-hidden group"
         data-purpose="hero-slider"
       >
         <style>{`
@@ -153,7 +153,7 @@ export default function Slider({ device }: SliderProps) {
           opacity: 1 !important;
         }
       `}</style>
-      <div className="w-full aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-md relative">
+      <div className="w-full  aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-md relative">
         <SliderSlick
           {...data.mobileSettings}
           className="mobile-slider-slick h-full"

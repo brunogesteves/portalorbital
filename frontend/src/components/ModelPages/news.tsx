@@ -9,6 +9,7 @@ import {
   AudioPlayerDesktop,
   AudioPlayerMobile,
 } from "../AudioPlayer/AudioPlayer";
+import { imageUrl } from "@/utils/api";
 
 export default function NewsPage({ data }: NewsDataProps) {
   return (
@@ -40,7 +41,6 @@ export default function NewsPage({ data }: NewsDataProps) {
           >
             <div className="max-w-4xl mx-auto space-y-12">
               <article className="flex flex-col">
-                Headline
                 <h1 className="text-gray-900 font-bold text-3xl md:text-5xl leading-tight mb-8 first-letter:capitalize">
                   {data.title}
                 </h1>
@@ -48,7 +48,7 @@ export default function NewsPage({ data }: NewsDataProps) {
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                   <div className="flex flex-col">
                     <span className="text-gray-500 text-xs mb-1">
-                      {new Date(data.createdAt).toLocaleDateString("pt-BR")}
+                      {new Date(data?.createdAt).toLocaleDateString("pt-BR")}
                     </span>
                     <span className="text-blue-700 text-sm font-bold">
                       {data.author?.name}
@@ -86,7 +86,7 @@ export default function NewsPage({ data }: NewsDataProps) {
                     loading="eager"
                     unoptimized
                     className="object-cover aspect-video w-full"
-                    src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
+                    src={`${imageUrl}/${data.thumbnail}`}
                   />
                 </div>
                 <AudioPlayerDesktop content={data.content} />
@@ -192,11 +192,11 @@ export default function NewsPage({ data }: NewsDataProps) {
           </h1>
 
           <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-sm">
-            <span>{`${process.env.NEXT_PUBLIC_API_URL?.replace}${data.thumbnail}`}</span>
+
             <Image
               alt={data.title}
               className="w-full h-auto aspect-video object-cover"
-              src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${data.thumbnail}`}
+              src={`imageUrl}/${data.thumbnail}`}
               width={640}
               height={360}
               unoptimized

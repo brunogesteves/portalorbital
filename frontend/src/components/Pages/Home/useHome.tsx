@@ -50,10 +50,10 @@ export function useHome() {
         <div className="bg-[#111415] rounded-xl overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow">
           <Image
             alt={post.title}
-            className="w-full  aspect-video object-cover"
+            className="w-full aspect-video object-cover"
             src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-            width={100}
-            height={100}
+            width={10}
+            height={10}
             loading="eager"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             unoptimized
@@ -98,7 +98,7 @@ export function useHome() {
   //   );
   // };
 
-  const categoryModelDesktop = (info: AllContentProps, i: number) => {
+  const contentModelDesktop = (info: AllContentProps, i: number) => {
 
     return (
       <section className="mb-12" key={i}>
@@ -108,7 +108,7 @@ export function useHome() {
           </h2>
           <div className="h-px bg-gray-200 w-full"></div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {info?.posts.map((post) => (
             <Link key={post.id} href={post.slug}>
               <div className="relative group rounded-xl overflow-hidden aspect-4/3 bg-gray-100 cursor-pointer">
@@ -125,7 +125,7 @@ export function useHome() {
                   {/* <h3 className="text-white font-bold text-sm first-letter:capitalize">
                              {post.category?.name}
                            </h3> */}
-                  <h3 className="text-white font-bold text-sm first-letter:capitalize">
+                  <h3 className="text-white font-bold text-xl first-letter:capitalize">
                     {post.title}
                   </h3>
                 </div>
@@ -138,6 +138,6 @@ export function useHome() {
   }
   return {
     data: { content, loading },
-    methods: { geekCardsDesktop, categoryModelDesktop },
+    methods: { geekCardsDesktop, contentModelDesktop },
   };
 }

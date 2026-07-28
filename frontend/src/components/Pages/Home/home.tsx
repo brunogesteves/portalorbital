@@ -32,28 +32,12 @@ export default function Home() {
           <Slider device="desktop" />
           <section className="bg-white py-12" data-purpose="main-content-body">
             <div className="max-w-7xl mx-auto px-6">
-              {/* Featured Content */}
-              {/* <section className="mb-12">
-                <div className="flex items-center space-x-4 mb-6">
-                  <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    Destaques do Portal
-                  </h2>
-                  <div className="h-[1px] bg-gray-200 w-full"></div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {data.posts
-                    .slice(0, 3)
-                    .map((post) => methods.postCardDesktop(post))}
-                </div>
-              </section> */}
-
-              {/* Tecnologia with Events Embedded */}
               <div className="mb-4">
                 <div className="flex items-center space-x-4 mb-6">
                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    Tecnologia
+                    Destaques
                   </h2>
-                  <div className="h-[1px] bg-gray-200 w-full"></div>
+                  <div className="h-px bg-gray-200 w-full"></div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                   {/* Main Technology Icons */}
@@ -142,11 +126,10 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Mundo Geek with Social Embedded */}
               <div>
                 <div className="flex items-center space-x-4 mb-6">
                   <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    Mundo Geek
+                    Mais Destaques
                   </h2>
                   <div className="h-px bg-gray-200 w-full"></div>
                 </div>
@@ -218,7 +201,7 @@ export default function Home() {
               </section> */}
 
               {data.content.map((info, i) => {
-                return methods.categoryModelDesktop(info, i)
+                return methods.contentModelDesktop(info, i)
               })}
             </div>
           </section>

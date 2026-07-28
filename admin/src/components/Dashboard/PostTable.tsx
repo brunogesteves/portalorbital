@@ -16,6 +16,7 @@ import { PostProps, PostTableProps } from "@/Utils/types";
 import Image from "next/image";
 import { imageUrl } from "@/Utils/api";
 
+
 const PostTable = ({
   posts,
   currentUser,
@@ -94,14 +95,12 @@ const PostTable = ({
               <div className="hidden md:flex justify-center items-center gap-1.5">
                 <button
                   onClick={() => handleToggleStatus(post.id, post.status)}
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
-                    post.status ? "bg-green-600" : "bg-red-300"
-                  }`}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.status ? "bg-green-600" : "bg-red-300"
+                    }`}
                 >
                   <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
-                      post.status ? "translate-x-[18px]" : "translate-x-[3px]"
-                    }`}
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.status ? "translate-x-[18px]" : "translate-x-[3px]"
+                      }`}
                   />
                 </button>
                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider hidden md:inline">
@@ -116,18 +115,15 @@ const PostTable = ({
                     currentUser?.role === "ADM" &&
                     handleToggleSlide(post.id, post.slide)
                   }
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
-                    post.slide ? "bg-green-600" : "bg-red-300"
-                  } ${
-                    currentUser?.role !== "ADM"
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.slide ? "bg-green-600" : "bg-red-300"
+                    } ${currentUser?.role !== "ADM"
                       ? "opacity-50 cursor-not-allowed"
                       : "cursor-pointer"
-                  }`}
+                    }`}
                 >
                   <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
-                      post.slide ? "translate-x-[18px]" : "translate-x-[3px]"
-                    }`}
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.slide ? "translate-x-[18px]" : "translate-x-[3px]"
+                      }`}
                   />
                 </button>
                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
@@ -142,20 +138,17 @@ const PostTable = ({
                     currentUser?.role === "ADM" &&
                     handleToggleHighlight(post.id, post.highlight)
                   }
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
-                    post.highlight ? "bg-yellow-500" : "bg-gray-300"
-                  } ${
-                    currentUser?.role !== "ADM"
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.highlight ? "bg-yellow-500" : "bg-gray-300"
+                    } ${currentUser?.role !== "ADM"
                       ? "opacity-50 cursor-not-allowed"
                       : "cursor-pointer"
-                  }`}
+                    }`}
                 >
                   <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
-                      post.highlight
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.highlight
                         ? "translate-x-[18px]"
                         : "translate-x-[3px]"
-                    }`}
+                      }`}
                   />
                 </button>
                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
@@ -300,11 +293,10 @@ const PostTable = ({
                 </p>
                 <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
                   <span
-                    className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${
-                      mobilePostDetail.slide
+                    className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${mobilePostDetail.slide
                         ? "text-red-600 bg-red-50 border-red-100"
                         : "text-slate-400 bg-slate-50 border-slate-100"
-                    }`}
+                      }`}
                   >
                     {mobilePostDetail.slide ? "No slide" : "Fora do slide"}
                   </span>
@@ -339,11 +331,10 @@ const PostTable = ({
                 </p>
                 <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
                   <span
-                    className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${
-                      mobilePostDetail.highlight
+                    className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${mobilePostDetail.highlight
                         ? "text-yellow-600 bg-yellow-50 border-yellow-100"
                         : "text-slate-400 bg-slate-50 border-slate-100"
-                    }`}
+                      }`}
                   >
                     {mobilePostDetail.highlight
                       ? "Em destaque"

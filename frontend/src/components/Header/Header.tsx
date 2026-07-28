@@ -1,4 +1,4 @@
-import { HeaderProps } from "@/utils/types";
+
 
 import { HeaderTopDesktop, HeaderTopMobile } from "./Top/HeaderTop";
 import {
@@ -6,7 +6,7 @@ import {
   HeaderCategoriesMobile,
 } from "./Categories/HeaderCategories";
 
-export default function Header({ slug }: HeaderProps) {
+export default function Header({ slug }: { slug: string }) {
   return (
     <>
       <div className="hidden md:block w-full">
@@ -15,7 +15,7 @@ export default function Header({ slug }: HeaderProps) {
           data-purpose="site-header"
         >
           <HeaderTopDesktop />
-          <HeaderCategoriesDesktop slug={slug} />
+          <HeaderCategoriesDesktop />
         </header>
       </div>
       <div className="block md:hidden">

@@ -5,8 +5,6 @@ import prisma from "../lib/prisma";
 const { post: pst } = prisma;
 const { category: cat } = prisma;
 
-
-
 export const searchOneContent = async (req: any, res: Response) => {
   const { slug } = req.params;
   console.log("controller searchOneContent: ", slug);
@@ -15,9 +13,12 @@ export const searchOneContent = async (req: any, res: Response) => {
     where: {
       slug,
     },
-    include: {
-      posts: true,
+    select: {
+      name: true,
+      posts: true
     },
+
+
   });
 
   const newsContent = await pst.findFirst({

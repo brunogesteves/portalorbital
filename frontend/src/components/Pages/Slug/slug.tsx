@@ -1,7 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
 
-import { PostProps } from "@/utils/types";
 import { useSlug } from "./useSlug";
 import CategoryPage from "@/components/ModelPages/category";
 import NewsPage from "@/components/ModelPages/news";
@@ -9,24 +7,26 @@ import NotFoundPage from "@/components/ModelPages/notfound";
 
 import Loading from "@/components/Loading";
 
-export default function SlugPage() {
-  const params = useParams();
-  const slug = params.slug as string;
 
-  const { type, infoContent, loading } = useSlug(slug);
 
-  if (loading) {
+export default function SlugPage({ slug }: { slug: string }) {
+  // const params = useParams();
+  // const slug = params.slug as string;
+
+  const { data } = useSlug(slug);
+
+  if (data.loading) {
     return <Loading />;
   }
 
-  if (infoContent) {
-    if (type === "category") {
-      // return <CategoryPage data={infoContent as PostProps} />;
-      return <CategoryPage />;
+  if (data.infoContent) {
+    if (data.type === "category") {
+      return <CategoryPage name={data.infoContent.name} posts={data.infoContent.posts} />;
+      // return <CategoryPage slug={slug} />;
     }
 
-    if (type === "news") {
-      return <NewsPage data={infoContent as PostProps} />;
+    if (data.type === "news") {
+      return <NewsPage data={data.infoContent} />;
     }
   }
 

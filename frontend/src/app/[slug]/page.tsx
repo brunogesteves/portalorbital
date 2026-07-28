@@ -1,6 +1,7 @@
 import Loading from "@/components/Loading";
 import SlugPage from "@/components/Pages/Slug/slug";
 import { getSlugMetadata } from "@/utils/metadatas";
+import { SlugProps } from "@/utils/types";
 import { Suspense } from "react";
 
 export async function generateMetadata({
@@ -12,10 +13,12 @@ export async function generateMetadata({
   return getSlugMetadata(slug as string);
 }
 
-export default function Slug() {
+export default async function Slug({ params }: SlugProps) {
+  const { slug } = await params;
+
   return (
     <Suspense fallback={<Loading />}>
-      <SlugPage />
+      <SlugPage slug={slug} />
     </Suspense>
   );
 }

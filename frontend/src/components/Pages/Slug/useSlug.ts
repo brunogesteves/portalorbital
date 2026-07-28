@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 
 import { api } from "@/utils/api";
-import { PostProps } from "@/utils/types";
+import { CategoryContentProps, PostProps } from "@/utils/types";
 
 export function useSlug(slug: string) {
-  const [infoContent, setInfoContent] = useState<
-    PostProps | PostProps[] | null
-  >(null);
+  const [infoContent, setInfoContent] = useState<any>(null);
   const [type, setType] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true); // Bom para evitar telas em branco
 
   useEffect(() => {
     async function getData() {
+      console.log("retorn no useslug")
       setLoading(true);
       try {
         const res = await api.get(`/search/${slug}`);
-        console.log(res.data.type);
+        console.log("retorna da api");
         if (res.data.status) {
           setType(res.data.type);
           setInfoContent(res.data.content);
@@ -34,6 +33,7 @@ export function useSlug(slug: string) {
   }, [slug]);
 
   console.log("useSlug: ", type);
+  console.log("infoContent: ", infoContent);
 
-  return { type, infoContent, loading };
+  return { data: { type, infoContent, loading } };
 }

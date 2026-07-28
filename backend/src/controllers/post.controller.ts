@@ -35,7 +35,8 @@ export const allPosts = async (req: any, res: Response) => {
       where: {
         posts: {
           some: {
-            slide: false
+            slide: false,
+            highlight: false
           },
         },
       },
@@ -44,7 +45,7 @@ export const allPosts = async (req: any, res: Response) => {
           where: {
             slide: false
           },
-          take: 3,
+          take: 4,
           orderBy: {
             createdAt: "desc"
           },
@@ -140,7 +141,7 @@ export const getPostById = async (req: any, res: Response) => {
     }
 
     return res.json(uniquePost);
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: "Erro ao buscar post" });
   }
 };
@@ -321,8 +322,8 @@ export const uploadEditorImage = async (req: any, res: Response) => {
   if (!req.file) {
     return res.status(400).json({ message: "Nenhuma imagem enviada" });
   }
-  const url = `/images/${req.file.filename}`;
-  return res.json({ url });
+  // const url = `${req.file.filename}`;
+  return res.json(`${req.file.filename}`);
 };
 
 export const getImages = async (req: Request, res: Response) => {
@@ -334,7 +335,7 @@ export const getImages = async (req: Request, res: Response) => {
     const files = fs.readdirSync(uploadsDir);
     const images = files
       .filter((file) => /\.(jpg|jpeg|png|gif|webp)$/i.test(file))
-      .map((file) => `/images/${file}`);
+      .map((file) => `${file}`);
     return res.json(images);
   } catch (error) {
     console.error(error);

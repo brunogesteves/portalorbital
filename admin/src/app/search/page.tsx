@@ -101,7 +101,7 @@ function SearchResults() {
                           <div className="w-20 h-16 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border-2 border-white shadow-md">
                             {post.thumbnail ? (
                               <Image
-                                src={`${process.env.NEXT_PUBLIC_API_URL}/api/${post.thumbnail}`}
+                                src={`${process.env.NEXT_PUBLIC_API_URL}${post.thumbnail}`}
                                 alt={post.title}
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                               />

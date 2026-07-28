@@ -1,12 +1,11 @@
-export function slugify(text: string): string {
-  return text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '')
-    .replace(/-+/g, '-');
+export const slugify = (text: string) => {
+    return text
+        .toString()
+        .normalize("NFD")                  // Remove acentos
+        .replace(/[\u0300-\u036f]/g, "")   // Remove marcas de acentuação
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")      // Remove caracteres especiais
+        .replace(/\s+/g, "-")              // Espaços -> hífen
+        .replace(/-+/g, "-");              // Evita hífens duplicados
 }
-
-

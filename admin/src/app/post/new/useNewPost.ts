@@ -1,7 +1,7 @@
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+
 import { api } from "@/Utils/api";
 import { CategoryProps } from "@/Utils/types";
 import { PostFormValues, postSchema } from "@/Utils/schemas";

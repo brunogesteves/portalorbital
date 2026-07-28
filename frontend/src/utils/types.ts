@@ -6,9 +6,7 @@ export interface SlugProps {
   params: Promise<{ slug: string }>;
 }
 
-export interface HeaderProps {
-  slug: string;
-}
+
 
 export interface CategoryProps {
   id: string;
@@ -16,6 +14,14 @@ export interface CategoryProps {
   slug: string;
 }
 
+export interface CategoryContentProps {
+  name: string;
+  posts: PostProps[];
+}
+
+export interface CategoryDataProps {
+  data: PostProps[];
+}
 export interface AuthorProps {
   name: string, email: string, role: string
 }
@@ -36,19 +42,24 @@ export interface PostProps {
   thumbnail: string
   title: string
   author: AuthorProps
-  createdAt?: Date
+  createdAt: number
 
 }
 
 export interface NewsDataProps {
   data: PostProps;
 }
-export interface CategoryDataProps {
-  data: PostProps[];
-}
+
 
 export interface MobileSearchProps {
   searchTerm: string;
   setSearchTerm: (openMobileSearch: string) => void;
   setOpenMobileSearch: (openMobileSearch: boolean) => void;
 }
+
+export interface SlugProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
+
