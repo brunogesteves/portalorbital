@@ -15,16 +15,9 @@ export default function NewsPage({ data }: NewsDataProps) {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
       <Header slug={data.title as string} />
-
-      {/* ========================================================================= */}
-      {/* 💻 DESKTOP LAYOUT (md breakpoint and above)                              */}
-      {/* ========================================================================= */}
       <div className="hidden md:block text-gray-800 min-h-screen bg-white">
         <main className="w-full min-h-screen">
-          {/* ================================================================ */}
-          {/* 📢 ADSENSE ZONE — Desktop Top Leaderboard (728x90)              */}
-          {/* Coloque aqui o código do bloco de anúncio do Google AdSense     */}
-          {/* ================================================================ */}
+
           <div
             id="adsense-desktop-top"
             aria-label="Publicidade"
@@ -115,10 +108,6 @@ export default function NewsPage({ data }: NewsDataProps) {
           </section>
         </main>
       </div>
-
-      {/* ========================================================================= */}
-      {/* 📱 MOBILE LAYOUT (below md breakpoint)                                   */}
-      {/* ========================================================================= */}
       <div className="block md:hidden text-gray-800 min-h-screen bg-white flex flex-col ">
         <main
           className="p-4 bg-white overflow-y-auto no-scrollbar flex-1"
@@ -126,10 +115,6 @@ export default function NewsPage({ data }: NewsDataProps) {
         >
           {/* <Slider device="mobile" /> */}
 
-          {/* ================================================================ */}
-          {/* 📢 ADSENSE ZONE — Mobile Top Banner (320x50)                   */}
-          {/* Coloque aqui o código do bloco de anúncio do Google AdSense    */}
-          {/* ================================================================ */}
           <div
             id="adsense-mobile-top"
             aria-label="Publicidade"
@@ -190,13 +175,11 @@ export default function NewsPage({ data }: NewsDataProps) {
           <h1 className="text-4xl font-extrabold text-gray-900 leading-tight mb-3 first-letter:capitalize">
             {data.title}
           </h1>
-
           <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-sm">
-
             <Image
               alt={data.title}
               className="w-full h-auto aspect-video object-cover"
-              src={`imageUrl}/${data.thumbnail}`}
+              src={`${imageUrl}/${data.thumbnail}`}
               width={640}
               height={360}
               unoptimized
@@ -212,19 +195,13 @@ export default function NewsPage({ data }: NewsDataProps) {
           </div>
 
           <AudioPlayerMobile content={data.content} />
-
-          {/* ================================================================ */}
-          {/* 📢 ADSENSE ZONE — Mobile Mid Rectangle (300x250)               */}
-          {/* Inserido após a imagem de capa, antes do texto — alta CTR      */}
-          {/* ================================================================ */}
-          <div
+          {/* <div
             id="adsense-mobile-mid"
             aria-label="Publicidade"
             className="w-full flex justify-center items-center my-4 bg-gray-50"
             style={{ minHeight: "250px" }}
-          >
-            {/* ADSENSE RECTANGLE MOBILE 300x250 — cole o script aqui */}
-          </div>
+          />           */}
+
 
           {/* News Text Content */}
           <article className="prose prose-slate max-w-none">

@@ -122,9 +122,6 @@ export function useHome() {
                   unoptimized
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                  {/* <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                             {post.category?.name}
-                           </h3> */}
                   <h3 className="text-white font-bold text-xl first-letter:capitalize">
                     {post.title}
                   </h3>
@@ -136,8 +133,53 @@ export function useHome() {
       </section>
     )
   }
+
+  const contentModelMobile = (info: AllContentProps, i: number) => {
+    return (
+      <section key={i}>
+        <div className="mt-8 mb-4">
+          <div className="flex items-center gap-2 px-1">
+            <span
+              className="text-[#222] font-bold text-xs tracking-tight uppercase"
+              style={{ fontFamily: "sans-serif" }}
+            >
+              {info.name}
+
+            </span>
+            <div className="flex-1 h-px bg-linear-to-r from-[#999] to-[#ccc]"></div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          {info.posts.map((post, i) => {
+            return (
+              <Link href={post.slug} key={i} className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
+                <Image
+                  alt="Future Luxury Travel"
+                  className="w-full h-full object-cover"
+                  src={`${imageUrl}/${post.thumbnail}`}
+                  fill
+                  loading="eager"
+                  unoptimized
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+                  <p className="text-white font-bold text-xs leading-tight">
+                    ESTILO DE VIDA
+                  </p>
+                </div>
+              </Link>
+
+            )
+          })}
+
+          {/* Card 8 */}
+
+        </div>
+      </section>
+    )
+  }
   return {
     data: { content, loading },
-    methods: { geekCardsDesktop, contentModelDesktop },
+    methods: { geekCardsDesktop, contentModelDesktop, contentModelMobile },
   };
 }

@@ -9,7 +9,6 @@ import {
   FaFacebookF,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import Image from "next/image";
 
 
 
@@ -167,39 +166,6 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              {/* <section className="mb-12">
-                <div className="flex items-center space-x-4 mb-6 mt-10">
-                  <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    Categoria
-                  </h2>
-                  <div className="h-[1px] bg-gray-200 w-full"></div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {data.posts.slice(0, 3).map((post) => (
-                    <Link key={post.id} href={post.slug}>
-                      <div className="relative group rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 cursor-pointer">
-                        <Image
-                          alt={post.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${post.thumbnail}`}
-                          fill
-                          loading="eager"
-                          unoptimized
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                            {post.category?.name}
-                          </h3>
-                          <h3 className="text-white font-bold text-sm first-letter:capitalize">
-                            {post.title}
-                          </h3>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section> */}
-
               {data.content.map((info, i) => {
                 return methods.contentModelDesktop(info, i)
               })}
@@ -235,145 +201,9 @@ export default function Home() {
               </p>
             )
           )}
-
-          <section className="mt-8 mb-4">
-            <div className="flex items-center gap-2 px-1">
-              <span
-                className="text-[#222] font-bold text-xs tracking-tight uppercase"
-                style={{ fontFamily: "sans-serif" }}
-              >
-                Categoria
-              </span>
-              <div className="flex-1 h-[1px] bg-linear-to-r from-[#999] to-[#ccc]"></div>
-            </div>
-          </section>
-
-          <section className="grid grid-cols-2 gap-4 mt-4">
-            {/* Card 7 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <Image
-                alt="Future Luxury Travel"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb4YjwIlSMZwwdlhvIzyrxCF1MW4mcVvQZwwyZkM2YuvclqMYreDeYlbaOVKoFhm-XkVwO8J5rIllXEDcOyvPTb3rn2g3WBvprtpulnrdG4UYcx-6rWCg2f-QrZc5NIbeIiLhMvVz-Sq40qf0CzHa0HjVYSWhUfL7XEu1A9VUhSW4W6r6lHlHVyV3ce8l4i8qI9IOJ7XZFA_8AzfkWZ-QVcQPeEuGs9F9httfuUQsLlANYOtKYZsw-iMdct27vLXpPSyaFQcPrDb8"
-                fill
-                loading="eager"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  ESTILO DE VIDA
-                </p>
-              </div>
-            </div>
-            {/* Card 8 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <Image
-                alt="VR Gaming Revolution"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4VmLVTot1796_D0yo3vwF-kUDlBReKOi6Y5eHLvUoQuIlr1zWEugtX8uw4_l8FVPbGREwdriEXlFbccXA0TmEGCcRWxHTtPMHPQy4xtr10yYgy9JyTSDkgDv0riniiK7BC-gMO8ysHjwtaQmKyVezzxbVpQiT3GXe7ftJRwE1IHYKKgeea7_RsQQvUCkxrCtB2WDUTN9ddbwM-xysaQenV8yo20pTm6pwtbzuRnLO4jMZ1oj_1x0EXlVd_0TrWZwPUcwTUx6tEh0"
-                fill
-                unoptimized
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  ENTRETENIMENTO
-                </p>
-              </div>
-            </div>
-          </section>
-          <section className="mt-8 mb-4">
-            <div className="flex items-center gap-2 px-1">
-              <span
-                className="text-[#222] font-bold text-xs tracking-tight uppercase"
-                style={{ fontFamily: "sans-serif" }}
-              >
-                Categoria
-              </span>
-              <div className="flex-1 h-[1px] bg-linear-to-r from-[#999] to-[#ccc]"></div>
-            </div>
-          </section>
-
-          <section className="grid grid-cols-2 gap-4 mt-4">
-            {/* Card 7 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <Image
-                alt="Future Luxury Travel"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb4YjwIlSMZwwdlhvIzyrxCF1MW4mcVvQZwwyZkM2YuvclqMYreDeYlbaOVKoFhm-XkVwO8J5rIllXEDcOyvPTb3rn2g3WBvprtpulnrdG4UYcx-6rWCg2f-QrZc5NIbeIiLhMvVz-Sq40qf0CzHa0HjVYSWhUfL7XEu1A9VUhSW4W6r6lHlHVyV3ce8l4i8qI9IOJ7XZFA_8AzfkWZ-QVcQPeEuGs9F9httfuUQsLlANYOtKYZsw-iMdct27vLXpPSyaFQcPrDb8"
-                fill
-                loading="eager"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  ESTILO DE VIDA
-                </p>
-              </div>
-            </div>
-            {/* Card 8 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <Image
-                alt="VR Gaming Revolution"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4VmLVTot1796_D0yo3vwF-kUDlBReKOi6Y5eHLvUoQuIlr1zWEugtX8uw4_l8FVPbGREwdriEXlFbccXA0TmEGCcRWxHTtPMHPQy4xtr10yYgy9JyTSDkgDv0riniiK7BC-gMO8ysHjwtaQmKyVezzxbVpQiT3GXe7ftJRwE1IHYKKgeea7_RsQQvUCkxrCtB2WDUTN9ddbwM-xysaQenV8yo20pTm6pwtbzuRnLO4jMZ1oj_1x0EXlVd_0TrWZwPUcwTUx6tEh0"
-                fill
-                loading="eager"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  ENTRETENIMENTO
-                </p>
-              </div>
-            </div>
-          </section>
-          <section className="mt-8 mb-4">
-            <div className="flex items-center gap-2 px-1">
-              <span
-                className="text-[#222] font-bold text-xs tracking-tight uppercase"
-                style={{ fontFamily: "sans-serif" }}
-              >
-                Categoria
-              </span>
-              <div className="flex-1 h-[1px] bg-linear-to-r from-[#999] to-[#ccc]"></div>
-            </div>
-          </section>
-
-          <section className="grid grid-cols-2 gap-4 mt-4">
-            {/* Card 7 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <Image
-                alt="Future Luxury Travel"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb4YjwIlSMZwwdlhvIzyrxCF1MW4mcVvQZwwyZkM2YuvclqMYreDeYlbaOVKoFhm-XkVwO8J5rIllXEDcOyvPTb3rn2g3WBvprtpulnrdG4UYcx-6rWCg2f-QrZc5NIbeIiLhMvVz-Sq40qf0CzHa0HjVYSWhUfL7XEu1A9VUhSW4W6r6lHlHVyV3ce8l4i8qI9IOJ7XZFA_8AzfkWZ-QVcQPeEuGs9F9httfuUQsLlANYOtKYZsw-iMdct27vLXpPSyaFQcPrDb8"
-                fill
-                loading="eager"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  ESTILO DE VIDA
-                </p>
-              </div>
-            </div>
-            {/* Card 8 */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
-              <Image
-                alt="VR Gaming Revolution"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4VmLVTot1796_D0yo3vwF-kUDlBReKOi6Y5eHLvUoQuIlr1zWEugtX8uw4_l8FVPbGREwdriEXlFbccXA0TmEGCcRWxHTtPMHPQy4xtr10yYgy9JyTSDkgDv0riniiK7BC-gMO8ysHjwtaQmKyVezzxbVpQiT3GXe7ftJRwE1IHYKKgeea7_RsQQvUCkxrCtB2WDUTN9ddbwM-xysaQenV8yo20pTm6pwtbzuRnLO4jMZ1oj_1x0EXlVd_0TrWZwPUcwTUx6tEh0"
-                fill
-                loading="eager"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
-                <p className="text-white font-bold text-xs leading-tight">
-                  ENTRETENIMENTO
-                </p>
-              </div>
-            </div>
-          </section>
+          {data.content.map((info, i) => {
+            return methods.contentModelMobile(info, i)
+          })}
         </main>
       </div>
     </div>
