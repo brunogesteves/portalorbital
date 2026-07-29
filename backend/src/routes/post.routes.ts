@@ -24,6 +24,7 @@ const router = Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "../../public/images"));
+    console.log("chama api storage")
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -60,7 +61,7 @@ router.get("/allPosts", allPosts);
 router.get("/images", authenticate, getImages);
 router.get("/:id", authenticate, getPostById);
 router.post(
-  "/upload-image",
+  "/uploadImage",
   authenticate,
   upload.single("image"),
   uploadEditorImage,

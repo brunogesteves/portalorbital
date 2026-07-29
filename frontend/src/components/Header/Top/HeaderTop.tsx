@@ -34,10 +34,9 @@ export const HeaderTopDesktop = () => {
             <Image
               alt="Orbital Logo"
               src="/logo.png"
-              width={40}
-              height={40}
+              width={50}
+              height={50}
               loading="eager"
-              className="w-auto h-auto"
             />
           </Link>
 

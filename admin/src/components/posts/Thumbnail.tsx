@@ -1,4 +1,4 @@
-import { api } from "@/Utils/api";
+import { api, imageUrl } from "@/Utils/api";
 import { ThumbnailProps } from "@/Utils/types";
 import Image from "next/image";
 import { useState } from "react";
@@ -44,12 +44,14 @@ export const Thumbnail = ({
                 if (file) {
                   const formData = new FormData();
                   formData.append("image", file);
+                  console.log("chama front api upload image")
                   api
-                    .post("/posts/upload-image", formData)
+                    .post("/posts/uploadImage", formData)
                     .then((res) => {
                       setThumbnailUrl(res.data.url);
+                      console.log(`${imageUrl}/${res.data.url}`)
                       setPreview(
-                        `${process.env.NEXT_PUBLIC_API_URL}${res.data.url}`,
+                        `${imageUrl}/${res.data.url}`,
                       );
                       api
                         .get("/posts/images")

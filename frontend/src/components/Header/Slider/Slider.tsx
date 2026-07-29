@@ -23,7 +23,7 @@ export default function Slider({ device }: SliderProps) {
   if (device === "desktop") {
     return (
       <section
-        className="relative w-full aspect-video bg-black overflow-hidden group"
+        className="relative w-full aspect-video bg-black overflow-hidden group h-100"
         data-purpose="hero-slider"
       >
         <style>{`
@@ -75,7 +75,7 @@ export default function Slider({ device }: SliderProps) {
 
         <SliderSlick
           {...data.settings}
-          className="desktop-slider-slick h-100"
+          className="desktop-slider-slick"
         >
           {data.typedSlides.map((slide) => (
             <Link
@@ -83,7 +83,7 @@ export default function Slider({ device }: SliderProps) {
               key={slide.id}
               className="block w-full"
             >
-              <div className="relative w-full aspect-video overflow-hidden rounded-lg">
+              <div className="relative w-full aspect-video overflow-hidden rounded-lg h-fit">
                 <Image
                   alt={slide.title}
                   src={`${imageUrl}/${slide.thumbnail}`}
@@ -161,14 +161,14 @@ export default function Slider({ device }: SliderProps) {
           {data.typedSlides.map((slide) => (
             <Link href={`/${slide.slug}`} key={slide.id}>
               <div className="relative w-full h-full aspect-video outline-none">
-                {/* <Image
+                <Image
                   alt={slide.title}
-                  width={640}
-                  height={360}
+                  src={`${imageUrl}/${slide.thumbnail}`}
+                  fill
                   unoptimized
-                  className="absolute inset-0 w-full h-full object-cover"
-                  src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${slide.thumbnail}`}
-                /> */}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover"
+                />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 pb-8">
                   {/* <span className="bg-[#b91c1c] text-white text-[12px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider mb-2 inline-block">

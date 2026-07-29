@@ -13,14 +13,15 @@ import {
   FiLayout,
   FiDatabase,
   FiPlus,
+  FiX,
 } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-// import { useUIStore } from '@/store/useUIStore';
+import { useUIStore } from '@/store/useUIStore';
 
 const Sidebar = () => {
   const pathname = usePathname();
-  // const { isSidebarOpen } = useUIStore();
+  const { setIsSidebarOpen } = useUIStore();
   const [isCadastrosOpen, setIsCadastrosOpen] = useState(true);
 
   const menuItems = [
@@ -51,17 +52,24 @@ const Sidebar = () => {
 
   return (
     <motion.aside
-      initial={{ width: 0, x: -320 }}
-      animate={{ width: 320, x: 0 }}
-      exit={{ width: 0, x: -320 }}
+      initial={{ x: -320, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: -320, opacity: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="bg-[#1e293b] text-slate-300 flex flex-col h-full shadow-2xl z-50 border-r border-slate-700 overflow-hidden absolute md:relative top-0 left-0"
+      className="bg-[#1e293b] text-slate-300 flex flex-col h-full shadow-2xl z-50 border-r border-slate-700 overflow-hidden fixed top-0 left-0"
     >
       {/* Título do Painel */}
-      <div className="bg-[#0f172a] p-6 border-b border-slate-700">
+      <div className="bg-[#0f172a] p-6 border-b border-slate-700 flex items-center justify-between">
         <h1 className="text-xl font-bold text-white tracking-tight uppercase">
           Painel Administrativo
         </h1>
+        <button
+          onClick={() => setIsSidebarOpen(false)}
+          className="p-1.5 rounded-lg hover:bg-slate-700 transition-colors text-slate-400 hover:text-white"
+          aria-label="Fechar menu"
+        >
+          <FiX size={20} />
+        </button>
       </div>
 
       {/* Seção Bem-vindo */}

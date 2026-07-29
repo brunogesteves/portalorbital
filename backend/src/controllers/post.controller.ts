@@ -319,11 +319,13 @@ export const uploadEditorAudio = async (req: any, res: Response) => {
 };
 
 export const uploadEditorImage = async (req: any, res: Response) => {
+  console.log("chama upload image")
   if (!req.file) {
     return res.status(400).json({ message: "Nenhuma imagem enviada" });
   }
-  // const url = `${req.file.filename}`;
-  return res.json(`${req.file.filename}`);
+  const url = `${req.file.filename}`;
+  console.log(url)
+  return res.json({ url: `${url}` });
 };
 
 export const getImages = async (req: Request, res: Response) => {
