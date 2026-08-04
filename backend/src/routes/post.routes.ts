@@ -10,6 +10,7 @@ import {
   uploadEditorImage,
   uploadEditorAudio,
   getImages,
+  deleteImage,
   updatePostStatus,
   updatePostSlide,
   updatePostHighlight,
@@ -24,7 +25,7 @@ const router = Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "../../public/images"));
-    console.log("chama api storage")
+
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -82,6 +83,7 @@ router.put("/:id", authenticate, upload.single("thumbnail"), createUpdatePost);
 router.patch("/:id/status", authenticate, updatePostStatus);
 router.patch("/:id/slide", authenticate, updatePostSlide);
 router.patch("/:id/highlight", authenticate, updatePostHighlight);
+router.delete("/images/:filename", authenticate, deleteImage);
 router.delete("/:id", authenticate, deletePost);
 
 export default router;

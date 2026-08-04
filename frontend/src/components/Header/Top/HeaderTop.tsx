@@ -13,14 +13,14 @@ export const HeaderTopDesktop = () => {
   const { data, methods } = useHeaderTop();
   return (
     <div className="flex w-full px-5 py-2">
-      <div className="flex-none" data-purpose="navigation-trigger">
+      {/* <div className="flex-none" data-purpose="navigation-trigger">
         <button
           aria-label="Menu"
           className="text-gray-700 hover:text-black transition-colors flex items-center justify-center"
         >
           <FiMenu className="h-8 w-8 cursor-pointer" />
         </button>
-      </div>
+      </div> */}
       <div
         className="grow flex justify-center items-center "
         data-purpose="logo-container"
@@ -34,21 +34,21 @@ export const HeaderTopDesktop = () => {
             <Image
               alt="Orbital Logo"
               src="/logo.png"
-              width={50}
+              width={500}
               height={50}
               loading="eager"
             />
           </Link>
 
-          <div className="flex flex-col leading-none select-none">
+          {/* <div className="flex flex-col leading-none select-none">
             <span
               className="text-[#1e3a8a] text-xl font-black font-orbital italic"
               style={{ fontSize: "1.4rem" }}
             >
               ORBITALCHANNEL.TV
             </span>
-            {/* <span className="text-[#7f1d1d] text-base font-bold font-orbital tracking-widest italic" style={{ fontSize: "1.1rem", marginTop: "-2px" }}>CHANNEL</span> */}
-          </div>
+            <span className="text-[#7f1d1d] text-base font-bold font-orbital tracking-widest italic" style={{ fontSize: "1.1rem", marginTop: "-2px" }}>CHANNEL</span> 
+          </div> */}
         </div>
       </div>
 

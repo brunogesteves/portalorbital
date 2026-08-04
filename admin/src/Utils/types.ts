@@ -94,3 +94,11 @@ export interface StatsGridProps {
   lenghtActivePosts: number;
   lenghtSlides: number;
 }
+
+export interface LibraryModalProps {
+  existingImages: string[];
+  setPreview: (preview: string) => void;
+  setThumbnailUrl: (thumbnailUrl: string) => void;
+  setShowImageModal: (show: boolean) => void;
+  onDelete?: (filename: string) => Promise<void>;
+}

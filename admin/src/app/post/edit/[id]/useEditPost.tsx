@@ -83,6 +83,11 @@ export const useEditPost = () => {
 
   }, [id, reset]);
 
+  const onDeleteImage = async (filename: string) => {
+    await api.delete(`/posts/images/${filename}`);
+    setExistingImages((prev) => prev.filter((img) => img !== filename));
+  };
+
   const onSubmit = async (data: PostFormValues) => {
     setLoading(true);
     setSuccess(false);
@@ -132,6 +137,7 @@ export const useEditPost = () => {
       setPreview,
       setExistingImages,
       setShowWarningModal,
+      onDeleteImage,
       setValue,
       watch,
       reset,

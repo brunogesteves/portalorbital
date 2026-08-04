@@ -56,6 +56,11 @@ export const useNewPost = () => {
     fetchData()
   }, []);
 
+  const onDeleteImage = async (filename: string) => {
+    await api.delete(`/posts/images/${filename}`);
+    setExistingImages((prev) => prev.filter((img) => img !== filename));
+  };
+
   const onSubmit = async (data: PostFormValues) => {
     setLoading(true);
     setSuccess(false);
@@ -107,6 +112,7 @@ export const useNewPost = () => {
       setSuccess,
       setShowWarningModal,
       setWarningMessage,
+      onDeleteImage,
       onSubmit,
     },
   };

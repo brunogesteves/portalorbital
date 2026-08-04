@@ -7,7 +7,6 @@ const { category: cat } = prisma;
 
 export const searchOneContent = async (req: any, res: Response) => {
   const { slug } = req.params;
-  console.log("controller searchOneContent: ", slug);
 
   const categoryContent = await cat.findFirst({
     where: {
@@ -55,7 +54,6 @@ export const searchOneContent = async (req: any, res: Response) => {
 
 export const searchContent = async (req: any, res: Response) => {
   const { term } = req.query;
-  console.log("controller search: ", term);
   const postsResults = await pst.findMany({
     where: {
       OR: [

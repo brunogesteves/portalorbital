@@ -20,7 +20,6 @@ export const slidersImages = async (req: any, res: Response) => {
         title: true
       }
     })
-    // console.log(posts)
 
     return res.json(posts);
   } catch {
@@ -68,16 +67,14 @@ export const allPosts = async (req: any, res: Response) => {
         },
       },
     })
-    console.log(posts)
 
     return res.json(posts);
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: "Erro ao buscar posts" });
   }
 };
 
 export const getPosts = async (req: any, res: Response) => {
-  console.log("first")
   try {
     const { q } = req.query;
     const whereClause: any = {};
@@ -319,12 +316,12 @@ export const uploadEditorAudio = async (req: any, res: Response) => {
 };
 
 export const uploadEditorImage = async (req: any, res: Response) => {
-  console.log("chama upload image")
+
   if (!req.file) {
     return res.status(400).json({ message: "Nenhuma imagem enviada" });
   }
   const url = `${req.file.filename}`;
-  console.log(url)
+
   return res.json({ url: `${url}` });
 };
 
@@ -342,5 +339,56 @@ export const getImages = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erro ao listar imagens" });
+  }
+};
+
+export const deleteImage = async (req: Request, res: Response) => {
+  const filename = String(req.params.filename);
+
+  try {
+    // Verificar se a imagem é usada como thumbnail em algum post
+    const thumbnailUsage = await pst.findFirst({
+      where: {
+        OR: [
+          { thumbnail: filename },
+          { thumbnail: `/images/${filename}` },
+        ],
+      },
+      select: { id: true, title: true },
+    });
+
+    if (thumbnailUsage) {
+      return res.status(409).json({
+        message: `Imagem sendo usada como capa do post "${thumbnailUsage.title}"`,
+      });
+    }
+
+    // Verificar se a imagem é usada no conteúdo de algum post
+    const contentUsage = await pst.findFirst({
+      where: {
+        content: {
+          contains: filename,
+        },
+      },
+      select: { id: true, title: true },
+    });
+
+    if (contentUsage) {
+      return res.status(409).json({
+        message: `Imagem sendo usada no conteúdo do post "${contentUsage.title}"`,
+      });
+    }
+
+    // Deletar o arquivo do disco
+    const filePath = path.join(__dirname, "../../public/images", filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "Imagem não encontrada" });
+    }
+
+    fs.unlinkSync(filePath);
+    return res.json({ message: "Imagem excluída com sucesso" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erro ao excluir imagem" });
   }
 };

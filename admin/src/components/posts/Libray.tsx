@@ -1,20 +1,40 @@
-import { imageUrl } from "@/Utils/api";
+import { api, imageUrl } from "@/Utils/api";
 import Image from "next/image";
-import { FiX } from "react-icons/fi";
+import { useState } from "react";
+import { FiTrash2, FiX, FiLoader } from "react-icons/fi";
+import ModalMessage from "@/components/Dashboard/ModalMessage";
+import { LibraryModalProps } from "@/Utils/types";
 
-interface LibraryModalProps {
-  existingImages: string[];
-  setPreview: (preview: string) => void;
-  setThumbnailUrl: (thumbnailUrl: string) => void;
-  setShowImageModal: (show: boolean) => void;
-}
+
 
 export const LibraryModal = ({
   existingImages,
   setPreview,
   setThumbnailUrl,
   setShowImageModal,
+  onDelete,
 }: LibraryModalProps) => {
+  const [deletingImage, setDeletingImage] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const handleDelete = async (e: React.MouseEvent, filename: string) => {
+    e.stopPropagation();
+    if (!onDelete) return;
+
+    setDeletingImage(filename);
+    setDeleteError(null);
+
+    try {
+      await onDelete(filename);
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message || "Erro ao excluir imagem";
+      setDeleteError(message);
+    } finally {
+      setDeletingImage(null);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl w-full max-w-5xl max-h-[85vh] flex flex-col shadow-2xl animate-in zoom-in-95 duration-200">
@@ -35,6 +55,8 @@ export const LibraryModal = ({
           </button>
         </div>
 
+
+
         <div className="flex-1 overflow-y-auto p-8">
           {existingImages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-slate-300">
@@ -50,31 +72,52 @@ export const LibraryModal = ({
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {existingImages.map((img, i) => (
-                <div
-                  key={i}
-                  className="group relative aspect-video rounded-2xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-red-500 transition-all bg-slate-100 shadow-sm hover:shadow-lg"
-                  onClick={() => {
-                    setPreview(`${imageUrl}/${img}`);
-                    setThumbnailUrl(`${img}`);
-                    setShowImageModal(false);
-                  }}
-                >
-                  <Image
-                    src={`${imageUrl}/${img}`}
-                    alt={img}
-                    height={200}
-                    width={200}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    unoptimized
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
-                    <span className="text-white font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
-                      Selecionar
-                    </span>
+              {existingImages.map((img, i) => {
+                const isDeleting = deletingImage === img;
+                return (
+                  <div
+                    key={i}
+                    className={`group relative aspect-video rounded-2xl overflow-hidden border-2 transition-all bg-slate-100 shadow-sm hover:shadow-lg ${isDeleting
+                        ? "border-yellow-400 opacity-60"
+                        : "border-transparent hover:border-red-500 cursor-pointer"
+                      }`}
+                    onClick={() => {
+                      if (isDeleting) return;
+                      setPreview(`${imageUrl}/${img}`);
+                      setThumbnailUrl(`${img}`);
+                      setShowImageModal(false);
+                    }}
+                  >
+                    <Image
+                      src={`${imageUrl}/${img}`}
+                      alt={img}
+                      height={200}
+                      width={200}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
+                      {isDeleting ? (
+                        <FiLoader className="text-white animate-spin" size={24} />
+                      ) : (
+                        <span className="text-white font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                          Selecionar
+                        </span>
+                      )}
+                    </div>
+                    {/* Botão de excluir */}
+                    {onDelete && !isDeleting && (
+                      <button
+                        onClick={(e) => handleDelete(e, img)}
+                        className="absolute top-2 right-2 p-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10 shadow-lg"
+                        title="Excluir imagem"
+                      >
+                        <FiTrash2 size={14} />
+                      </button>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -88,6 +131,14 @@ export const LibraryModal = ({
           </button>
         </div>
       </div>
+      {deleteError && (
+        <ModalMessage
+          text={deleteError}
+          setShowModal={(show: boolean) => {
+            if (!show) setDeleteError(null);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -24,6 +24,7 @@ backend/prisma/migrations/
 *.log
 .DS_Store
 .vscode/
+.prettierrc
 
 .gitignore
 

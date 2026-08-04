@@ -198,6 +198,7 @@ export default function PostForm() {
           setPreview={methods.setPreview}
           setThumbnailUrl={(val) => methods.setValue("thumbnailUrl", val)}
           setShowImageModal={methods.setShowImageModal}
+          onDelete={methods.onDeleteImage}
         />
       )}
       {data.showWarningModal && (
