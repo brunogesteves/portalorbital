@@ -105,7 +105,7 @@ export const HeaderTopMobile = () => {
         </button>
         <div className="flex items-center justify-center flex-1 px-4">
           <div className="flex items-center gap-2">
-            <div className="flex-shrink-0" style={{ height: '40px', width: '40px' }}>
+            <div className="shrink-0" style={{ height: '40px', width: '40px' }}>
               <Image
                 alt="Orbital Channel Logo"
                 src="/logo.png"
