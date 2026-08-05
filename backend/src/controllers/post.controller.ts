@@ -8,7 +8,7 @@ const { post: pst } = prisma;
 const { category: cat } = prisma;
 
 
-export const slidersImages = async (req: any, res: Response) => {
+export const slidersPosts = async (req: any, res: Response) => {
   try {
     const posts = await pst.findMany({
       where: {
@@ -26,6 +26,28 @@ export const slidersImages = async (req: any, res: Response) => {
     return res.status(500).json({ message: "Erro ao buscar posts" });
   }
 };
+
+export const highlightPosts = async (req: any, res: Response) => {
+  try {
+    const posts = await pst.findMany({
+      where: {
+        highlight: true,
+
+      }, select: {
+        id: true,
+        thumbnail: true,
+        slug: true,
+        title: true
+      }
+    })
+
+    return res.json(posts);
+  } catch {
+    return res.status(500).json({ message: "Erro ao buscar posts" });
+  }
+};
+
+
 
 export const allPosts = async (req: any, res: Response) => {
 

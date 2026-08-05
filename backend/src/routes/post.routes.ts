@@ -14,8 +14,9 @@ import {
   updatePostStatus,
   updatePostSlide,
   updatePostHighlight,
-  slidersImages,
+  slidersPosts,
   allPosts,
+  highlightPosts
 } from "../controllers/post.controller";
 import { authenticate } from "../middlewares/auth.middleware";
 
@@ -57,7 +58,8 @@ const audioStorage = multer.diskStorage({
 const uploadAudio = multer({ storage: audioStorage });
 
 router.get("/", authenticate, getPosts);
-router.get("/allSlides", slidersImages);
+router.get("/allSlides", slidersPosts);
+router.get("/highlightPosts", highlightPosts);
 router.get("/allPosts", allPosts);
 router.get("/images", authenticate, getImages);
 router.get("/:id", authenticate, getPostById);

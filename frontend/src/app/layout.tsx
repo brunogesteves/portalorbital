@@ -1,9 +1,9 @@
 "use client";
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AnimatePresence, motion } from "framer-motion";
+
 import "./globals.css";
 import Sidebar from "@/components/SideBar/Sidebar";
-import { AnimatePresence, motion } from "framer-motion";
 import { useUIStore } from "@/store/useStore";
 import Footer from "@/components/Footer";
 
@@ -28,6 +28,9 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="icon" href="/logo.png" sizes="any" />
+      </head>
       <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 font-sans">
         <AnimatePresence>
           {isSidebarOpen && (

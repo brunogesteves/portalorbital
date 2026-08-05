@@ -7,7 +7,6 @@ export interface SlugProps {
 }
 
 
-
 export interface CategoryProps {
   id: string;
   name: string;
@@ -31,6 +30,14 @@ export interface AllContentProps {
   name: string;
   slug: string;
   posts: PostProps[]
+}
+
+export interface SliderHighlightsProps {
+  id: number,
+  thumbnail: string,
+  slug: string,
+  title: string
+
 }
 
 export interface PostProps {

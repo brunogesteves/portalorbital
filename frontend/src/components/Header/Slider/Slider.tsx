@@ -171,10 +171,7 @@ export default function Slider({ device }: SliderProps) {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 pb-8">
-                  {/* <span className="bg-[#b91c1c] text-white text-[12px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider mb-2 inline-block">
-                  Destaque
-                </span> */}
-                  <h3 className="text-white font-bold text-base leading-tight">
+                  <h3 className="text-white text-2xl font-bold leading-tight">
                     {slide.title}
                   </h3>
                 </div>

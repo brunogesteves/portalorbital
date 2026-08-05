@@ -22,38 +22,40 @@ export const HeaderTopDesktop = () => {
         </button>
       </div> */}
       <div
-        className="grow flex justify-center items-center "
+        className="grow flex justify-center items-center px-8"
         data-purpose="logo-container"
       >
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="h-10 w-auto object-contain"
+            className="flex-shrink-0"
             data-purpose="logo-icon"
           >
             <Image
               alt="Orbital Logo"
               src="/logo.png"
-              width={500}
-              height={50}
+              width={48}
+              height={48}
               loading="eager"
+              style={{ height: '48px', width: '48px', objectFit: 'contain' }}
             />
           </Link>
 
-          {/* <div className="flex flex-col leading-none select-none">
-            <span
-              className="text-[#1e3a8a] text-xl font-black font-orbital italic"
-              style={{ fontSize: "1.4rem" }}
-            >
-              ORBITALCHANNEL.TV
-            </span>
-            <span className="text-[#7f1d1d] text-base font-bold font-orbital tracking-widest italic" style={{ fontSize: "1.1rem", marginTop: "-2px" }}>CHANNEL</span> 
-          </div> */}
+          <div className="flex items-center leading-none select-none" style={{ height: '48px' }}>
+            <Image
+              alt="Orbital Logo"
+              src="/orbitaWritten.png"
+              width={240}
+              height={48}
+              loading="eager"
+              style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
+            />
+          </div>
         </div>
       </div>
 
       <div
-        className="flex-none flex items-center space-x-6"
+        className="flex-none flex items-center gap-6"
         data-purpose="header-utilities"
       >
         <div className="relative group" data-purpose="search-bar">
@@ -82,7 +84,7 @@ export const HeaderTopDesktop = () => {
               </div>
             </button> */}
       </div>
-    </div>
+    </div >
   );
 };
 
@@ -93,7 +95,7 @@ export const HeaderTopMobile = () => {
     <>
       <div className="flex items-center justify-between relative z-10 px-4 pb-2">
         <button
-          className="text-gray-700 hover:text-black flex items-center justify-center"
+          className="text-gray-700 hover:text-black flex items-center justify-center flex-shrink-0"
           aria-label="Abrir Menu"
         >
           <FiMenu
@@ -101,29 +103,32 @@ export const HeaderTopMobile = () => {
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           />
         </button>
-        <div className="flex flex-col items-center justify-center flex-1">
-          <div className="flex items-center">
-            <div className="relative w-10 h-10 mr-2 flex items-center justify-center">
+        <div className="flex items-center justify-center flex-1 px-4">
+          <div className="flex items-center gap-2">
+            <div className="flex-shrink-0" style={{ height: '40px', width: '40px' }}>
               <Image
                 alt="Orbital Channel Logo"
-                className="w-full h-auto max-h-full object-contain"
                 src="/logo.png"
                 width={40}
                 height={40}
                 loading="eager"
+                style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
               />
             </div>
-            {/* Logo Text */}
-            <div className="flex flex-col leading-tight">
-              <span className="text-[#0f3d70] font-bold text-lg tracking-wide uppercase">
-                Orbital Channel TV
-              </span>
-              {/* <span className="text-[#c1121f] font-bold text-sm tracking-widest uppercase mt-[-4px]">Channel</span> */}
+            <div className="flex items-center leading-none" style={{ height: '40px' }}>
+              <Image
+                alt="Orbital Logo"
+                src="/orbitaWritten.png"
+                width={160}
+                height={40}
+                loading="eager"
+                style={{ height: '20px', width: 'auto', objectFit: 'contain' }}
+              />
             </div>
           </div>
         </div>
         <button
-          className="text-gray-700 hover:text-black flex items-center justify-center"
+          className="text-gray-700 hover:text-black flex items-center justify-center flex-shrink-0"
           aria-label="Buscar"
         >
           <FiSearch

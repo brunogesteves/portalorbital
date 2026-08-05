@@ -15,6 +15,7 @@ export function useHeaderCategories() {
     }
     getCategories();
   }, []);
+
   return {
     data: {
       categories,

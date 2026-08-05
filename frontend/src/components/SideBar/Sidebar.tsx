@@ -5,10 +5,27 @@ import { MdClose } from "react-icons/md";
 import { motion } from "framer-motion";
 
 import { useUIStore } from "@/store/useStore";
+import { useEffect, useState } from "react";
+import { api } from "@/utils/api";
+import { CategoryProps } from "@/utils/types";
+import Link from "next/link";
 
 export default function Sidebar() {
 
   const { toggleSidebar } = useUIStore();
+  const [categories, setCategories] = useState<CategoryProps[]>([]);
+
+  useEffect(() => {
+    async function getCategories() {
+      try {
+        await api.get("/categories/front").then((res) => {
+          setCategories(res.data);
+        });
+      } catch { }
+    }
+    getCategories();
+  }, []);
+
 
 
   return (
@@ -39,12 +56,16 @@ export default function Sidebar() {
           </div>
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="px-4 space-y-2">
-              <li>
-                <a className="flex items-center px-4 py-3 nav-silver-text hover:bg-white/5 rounded-lg transition-colors group nav-active-glow" href="#">
-                  <span className="material-symbols-outlined mr-4 text-blue-400">memory</span>
-                  <span className="font-space font-bold tracking-widest text-sm">TECNOLOGIA</span>
-                </a>
-              </li>
+              {categories?.map((cat, i) => {
+                return (
+                  <li key={i}>
+                    <Link href={`/${cat.slug}`} className="flex items-center px-4 py-3 nav-silver-text hover:bg-white/5 rounded-lg transition-colors group nav-active-glow">
+                      <span className="font-space font-bold tracking-widest text-sm uppercase">{cat.name}</span>
+                    </Link>
+                  </li>
+                )
+              })}
+
 
             </ul>
           </nav>
