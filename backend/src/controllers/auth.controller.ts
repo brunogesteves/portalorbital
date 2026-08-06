@@ -62,5 +62,25 @@ export const me = async (req: any, res: Response) => {
   if (!req.user) {
     return res.status(401).json({ message: 'Não autenticado' });
   }
-  return res.json({ user: req.user });
+
+  try {
+    const user = await usr.findUnique({
+      where: { id: req.user.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    return res.json({ user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Erro ao buscar usuário' });
+  }
 };

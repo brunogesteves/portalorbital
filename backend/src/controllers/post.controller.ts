@@ -135,9 +135,8 @@ export const getPosts = async (req: any, res: Response) => {
       orderBy: { scheduledAt: "desc" },
     });
     return res.json(posts);
-  } catch (error: any) {
-    console.error("error posts", error?.message, error?.stack);
-    return res.status(500).json({ message: "Erro ao buscar posts", error: error?.message });
+  } catch {
+    return res.status(500).json({ message: "Erro ao buscar posts" });
   }
 };
 

@@ -4,6 +4,8 @@ interface UIState {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
   setIsSidebarOpen: (isOpen: boolean) => void;
+  username: string
+  setUsername: (name: string) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -11,4 +13,6 @@ export const useUIStore = create<UIState>((set) => ({
   toggleSidebar: () =>
     set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   setIsSidebarOpen: (isOpen: boolean) => set({ isSidebarOpen: isOpen }),
+  username: "",
+  setUsername: (name: string) => set({ username: name }),
 }));

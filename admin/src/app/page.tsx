@@ -9,6 +9,7 @@ import { usePage } from "@/components/UsePage";
 import ModalMessage from "@/components/Dashboard/ModalMessage";
 import { Suspense } from "react";
 
+
 function Home() {
   const { data, methods } = usePage();
 
@@ -67,6 +68,7 @@ function Home() {
 }
 
 export default function HomePage() {
+
   return (
     <Suspense fallback={<div className="flex flex-col items-center justify-center h-[60vh] gap-6">
       <div className="relative w-20 h-20">

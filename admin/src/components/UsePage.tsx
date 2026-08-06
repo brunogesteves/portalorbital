@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { api } from "@/Utils/api";
 import { useRouter } from "next/navigation";
-import { PostProps, CategoryProps, UserProps } from "@/Utils/types";
 import axios from "axios";
 
+
+
+import { api } from "@/Utils/api";
+import { PostProps, CategoryProps, UserProps } from "@/Utils/types";
+import { useUIStore } from '@/store/useUIStore';
+
 export const usePage = () => {
+    const { setUsername } = useUIStore();
     const [posts, setPosts] = useState<PostProps[]>([]);
     const [categories, setCategories] = useState<CategoryProps[]>([]);
     const [currentUser, setCurrentUser] = useState<UserProps | null>(null);
@@ -21,6 +26,7 @@ export const usePage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+
             try {
                 const [postsRes, catsRes, userRes] = await Promise.all([
                     api.get("/posts"),
@@ -30,6 +36,7 @@ export const usePage = () => {
                 setPosts(postsRes.data);
                 setCategories(catsRes.data);
                 setCurrentUser(userRes.data.user);
+                setUsername(userRes.data.user?.name)
             } catch (error: unknown) {
                 if (axios.isAxiosError(error) && error.response?.status === 401) {
                     router.push("/login");
@@ -41,6 +48,9 @@ export const usePage = () => {
 
         fetchData();
     }, []);
+
+    console.log(currentUser)
+
     const handleDelete = async () => {
         if (postToDelete === null) return;
         try {
@@ -122,6 +132,7 @@ export const usePage = () => {
             ),
         ),
     ).map((a) => JSON.parse(a));
+
     return {
         data: {
             posts,

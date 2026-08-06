@@ -34,9 +34,7 @@ const PostTable = ({
 
   return (
     <div>
-      {/* ========== ALL SCREENS: Compact rows ========== */}
       <div className="flex flex-col divide-y divide-slate-50">
-        {/* Header - hidden on mobile */}
         <div className="hidden md:grid grid-cols-[2fr_0.8fr_0.6fr_0.5fr_0.5fr_0.6fr_0.5fr] items-center gap-2 px-3 py-4 text-slate-400 uppercase text-[9px] font-black tracking-[2px]">
           <span>Notícia</span>
           <span className="text-center">Categoria</span>
@@ -53,7 +51,6 @@ const PostTable = ({
               key={post.id}
               className="grid grid-cols-1 md:grid-cols-[2fr_0.8fr_0.6fr_0.5fr_0.5fr_0.6fr_0.5fr] items-center gap-2 md:gap-2 px-3 py-3 md:py-4 hover:bg-slate-50/80 transition-all group"
             >
-              {/* Notícia / Autor */}
               <div
                 onClick={() => setMobilePostDetail(post)}
                 className="flex items-center gap-3 cursor-pointer group/item"
@@ -83,15 +80,11 @@ const PostTable = ({
                   </div>
                 </div>
               </div>
-
-              {/* Categoria */}
               <div className="hidden md:flex justify-center">
                 <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border border-slate-200">
                   {post.category?.name || "Geral"}
                 </span>
               </div>
-
-              {/* Status */}
               <div className="hidden md:flex justify-center items-center gap-1.5">
                 <button
                   onClick={() => handleToggleStatus(post.id, post.status)}
@@ -99,16 +92,18 @@ const PostTable = ({
                     }`}
                 >
                   <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.status ? "translate-x-[18px]" : "translate-x-[3px]"
-                      }`}
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow 
+                      ${post.status ? "translate-x-[18px]" : "translate-x-[3px]"}
+                      ${currentUser?.role !== "ADM"
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"}
+                      `}
                   />
                 </button>
                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider hidden md:inline">
                   {post.status ? "No Ar" : "Fora"}
                 </span>
               </div>
-
-              {/* Slide */}
               <div className="hidden md:flex justify-center items-center gap-1.5">
                 <button
                   onClick={() =>
@@ -130,8 +125,6 @@ const PostTable = ({
                   {post.slide ? "Sim" : "Não"}
                 </span>
               </div>
-
-              {/* Destaque */}
               <div className="hidden md:flex justify-center items-center gap-1.5">
                 <button
                   onClick={() =>
@@ -146,8 +139,8 @@ const PostTable = ({
                 >
                   <span
                     className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.highlight
-                        ? "translate-x-[18px]"
-                        : "translate-x-[3px]"
+                      ? "translate-x-[18px]"
+                      : "translate-x-[3px]"
                       }`}
                   />
                 </button>
@@ -180,7 +173,12 @@ const PostTable = ({
                     setPostToDelete(post.id);
                     setShowModal(true);
                   }}
-                  className="p-2.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-red-600 rounded-xl transition-all shadow-sm"
+                  className={`p-2.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-red-600 rounded-xl transition-all shadow-sm
+                    ${currentUser?.role !== "ADM"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                    }
+                    `}
                 >
                   <FiTrash2 size={14} />
                 </button>
@@ -294,8 +292,8 @@ const PostTable = ({
                 <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
                   <span
                     className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${mobilePostDetail.slide
-                        ? "text-red-600 bg-red-50 border-red-100"
-                        : "text-slate-400 bg-slate-50 border-slate-100"
+                      ? "text-red-600 bg-red-50 border-red-100"
+                      : "text-slate-400 bg-slate-50 border-slate-100"
                       }`}
                   >
                     {mobilePostDetail.slide ? "No slide" : "Fora do slide"}
@@ -332,8 +330,8 @@ const PostTable = ({
                 <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
                   <span
                     className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${mobilePostDetail.highlight
-                        ? "text-yellow-600 bg-yellow-50 border-yellow-100"
-                        : "text-slate-400 bg-slate-50 border-slate-100"
+                      ? "text-yellow-600 bg-yellow-50 border-yellow-100"
+                      : "text-slate-400 bg-slate-50 border-slate-100"
                       }`}
                   >
                     {mobilePostDetail.highlight

@@ -20,7 +20,6 @@ const PostFilters = ({
 
   return (
     <div className="p-4 md:p-8 border-b border-slate-50 bg-slate-50/30 flex flex-col gap-4">
-      {/* Linha de cima: título + selects */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div className="flex items-center gap-3">
           <h2 className="text-lg md:text-2xl font-black text-slate-900 tracking-tight">

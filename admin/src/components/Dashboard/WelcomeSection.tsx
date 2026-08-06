@@ -16,10 +16,10 @@ const WelcomeSection = () => {
             Portal
           </span>
         </h1>
-        <p className="text-slate-500 font-medium max-w-md text-sm md:text-base">
+        {/* <p className="text-slate-500 font-medium max-w-md text-sm md:text-base">
           Gerencie publicações, métricas e usuários em uma interface
           centralizada.
-        </p>
+        </p> */}
       </div>
       <Link
         href="/post/new"
