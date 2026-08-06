@@ -98,7 +98,7 @@ export const allPosts = async (req: any, res: Response) => {
 
 export const getPosts = async (req: any, res: Response) => {
   try {
-    const { q } = req.query;
+    const { q, page = "1", limit = "20", categoryId, authorId, type } = req.query;
     const whereClause: any = {};
 
     // Regra: PBR só vê os seus, ADM vê todos
@@ -113,8 +113,6 @@ export const getPosts = async (req: any, res: Response) => {
       ];
     }
 
-    const { categoryId, authorId } = req.query;
-
     if (categoryId) {
       whereClause.categoryId = Number(categoryId);
     }
@@ -124,17 +122,44 @@ export const getPosts = async (req: any, res: Response) => {
       whereClause.authorId = Number(authorId);
     }
 
-    const posts = await pst.findMany({
-      where: whereClause,
-      include: {
-        category: true,
-        author: {
-          select: { name: true, email: true, role: true },
+    // Filtro por tipo
+    if (type === "slide") {
+      whereClause.slide = true;
+    } else if (type === "status") {
+      whereClause.status = true;
+    } else if (type === "destaque") {
+      whereClause.highlight = true;
+    }
+
+    const pageNum = Math.max(1, Number(page));
+    const limitNum = Math.min(50, Math.max(1, Number(limit)));
+    const skip = (pageNum - 1) * limitNum;
+
+    const [posts, total] = await Promise.all([
+      pst.findMany({
+        where: whereClause,
+        include: {
+          category: true,
+          author: {
+            select: { name: true, email: true, role: true },
+          },
         },
+        orderBy: { scheduledAt: "desc" },
+        skip,
+        take: limitNum,
+      }),
+      pst.count({ where: whereClause }),
+    ]);
+
+    return res.json({
+      posts,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        totalPages: Math.ceil(total / limitNum),
       },
-      orderBy: { scheduledAt: "desc" },
     });
-    return res.json(posts);
   } catch {
     return res.status(500).json({ message: "Erro ao buscar posts" });
   }
@@ -411,5 +436,32 @@ export const deleteImage = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erro ao excluir imagem" });
+  }
+};
+
+export const getPostStats = async (req: any, res: Response) => {
+  try {
+    const whereClause: any = {};
+
+    // Regra: PBR só vê os seus, ADM vê todos
+    if (req.user.role === Role.PBR) {
+      whereClause.authorId = req.user.id;
+    }
+
+    const [totalPosts, totalHighlights, totalActivePosts, totalSlides] = await Promise.all([
+      pst.count({ where: whereClause }),
+      pst.count({ where: { ...whereClause, highlight: true } }),
+      pst.count({ where: { ...whereClause, status: true } }),
+      pst.count({ where: { ...whereClause, slide: true } }),
+    ]);
+
+    return res.json({
+      totalPosts,
+      totalHighlights,
+      totalActivePosts,
+      totalSlides,
+    });
+  } catch {
+    return res.status(500).json({ message: "Erro ao buscar estatísticas" });
   }
 };

@@ -1,12 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
-
 
 import { api } from "@/Utils/api";
 import { PostProps, CategoryProps, UserProps } from "@/Utils/types";
 import { useUIStore } from '@/store/useUIStore';
+
+interface Pagination {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
+interface PostStats {
+    totalPosts: number;
+    totalHighlights: number;
+    totalActivePosts: number;
+    totalSlides: number;
+}
 
 export const usePage = () => {
     const { setUsername } = useUIStore();
@@ -14,6 +26,7 @@ export const usePage = () => {
     const [categories, setCategories] = useState<CategoryProps[]>([]);
     const [currentUser, setCurrentUser] = useState<UserProps | null>(null);
     const [loading, setLoading] = useState(true);
+    const [fetching, setFetching] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [postToDelete, setPostToDelete] = useState<number | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -22,21 +35,77 @@ export const usePage = () => {
     const [selectedType, setSelectedType] = useState<string>("");
     const [showModalMessage, setShowModalMessage] = useState<boolean>(false);
     const [modalWarning, setModalWarning] = useState<string>("");
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 1,
+        limit: 10,
+        total: 0,
+        totalPages: 0,
+    });
+    const [stats, setStats] = useState<PostStats>({
+        totalPosts: 0,
+        totalHighlights: 0,
+        totalActivePosts: 0,
+        totalSlides: 0,
+    });
     const router = useRouter();
+    const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
+    const fetchPosts = useCallback(async (
+        page: number,
+        limit: number,
+        search?: string,
+        categoryId?: string,
+        authorId?: string,
+        type?: string,
+        isDebounced = false,
+    ) => {
+        if (isDebounced) setFetching(true);
+        try {
+            const params = new URLSearchParams();
+            params.set("page", String(page));
+            params.set("limit", String(limit));
+            if (search) params.set("q", search);
+            if (categoryId) params.set("categoryId", categoryId);
+            if (authorId) params.set("authorId", authorId);
+            if (type) params.set("type", type);
+
+            const postsRes = await api.get(`/posts?${params.toString()}`);
+            setPosts(postsRes.data.posts);
+            setPagination(postsRes.data.pagination);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                router.push("/login");
+            }
+        } finally {
+            if (isDebounced) setFetching(false);
+        }
+    }, [router]);
+
+    const fetchStats = useCallback(async () => {
+        try {
+            const statsRes = await api.get("/posts/stats");
+            setStats(statsRes.data);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                router.push("/login");
+            }
+        }
+    }, [router]);
 
     useEffect(() => {
         const fetchData = async () => {
-
             try {
-                const [postsRes, catsRes, userRes] = await Promise.all([
-                    api.get("/posts"),
+                const [catsRes, userRes] = await Promise.all([
                     api.get("/categories"),
                     api.get("/auth/me"),
                 ]);
-                setPosts(postsRes.data);
                 setCategories(catsRes.data);
                 setCurrentUser(userRes.data.user);
-                setUsername(userRes.data.user?.name)
+                setUsername(userRes.data.user?.name);
+                await Promise.all([
+                    fetchPosts(1, 10),
+                    fetchStats(),
+                ]);
             } catch (error: unknown) {
                 if (axios.isAxiosError(error) && error.response?.status === 401) {
                     router.push("/login");
@@ -49,13 +118,41 @@ export const usePage = () => {
         fetchData();
     }, []);
 
-    console.log(currentUser)
+    useEffect(() => {
+        if (!loading) {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+            debounceRef.current = setTimeout(() => {
+                fetchPosts(
+                    1,
+                    pagination.limit,
+                    searchTerm,
+                    selectedCategory,
+                    selectedAuthor,
+                    selectedType,
+                    true,
+                );
+            }, 300);
+        }
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+        };
+    }, [searchTerm, selectedCategory, selectedAuthor, selectedType]);
 
     const handleDelete = async () => {
         if (postToDelete === null) return;
         try {
             await api.delete(`/posts/${postToDelete}`);
-            setPosts(posts.filter((p) => p.id !== postToDelete));
+            await Promise.all([
+                fetchPosts(
+                    pagination.page,
+                    pagination.limit,
+                    searchTerm,
+                    selectedCategory,
+                    selectedAuthor,
+                    selectedType,
+                ),
+                fetchStats(),
+            ]);
             setShowModal(false);
         } catch {
             setShowModalMessage(true);
@@ -109,22 +206,6 @@ export const usePage = () => {
         }
     };
 
-    const filteredPosts = posts.filter((post) => {
-        const matchesSearch = post.title
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-        const matchesCategory =
-            selectedCategory === "" || post.categoryId === Number(selectedCategory);
-        const matchesAuthor =
-            selectedAuthor === "" || post.authorId === Number(selectedAuthor);
-        const matchesType =
-            selectedType === "" ||
-            (selectedType === "slide" && post.slide) ||
-            (selectedType === "status" && post.status) ||
-            (selectedType === "destaque" && post.highlight);
-        return matchesSearch && matchesCategory && matchesAuthor && matchesType;
-    });
-
     const uniqueAuthors = Array.from(
         new Set(
             posts.map((p) =>
@@ -133,23 +214,46 @@ export const usePage = () => {
         ),
     ).map((a) => JSON.parse(a));
 
+    const goToPage = (page: number) => {
+        fetchPosts(
+            page,
+            pagination.limit,
+            searchTerm,
+            selectedCategory,
+            selectedAuthor,
+            selectedType,
+        );
+    };
+
+    const setLimit = (limit: number) => {
+        fetchPosts(
+            1,
+            limit,
+            searchTerm,
+            selectedCategory,
+            selectedAuthor,
+            selectedType,
+        );
+    };
+
     return {
         data: {
             posts,
             categories,
             loading,
+            fetching,
             showModal,
             postToDelete,
             searchTerm,
             selectedCategory,
             selectedAuthor,
             selectedType,
-            filteredPosts,
             uniqueAuthors,
             currentUser,
             showModalMessage,
-            modalWarning
-
+            modalWarning,
+            pagination,
+            stats,
         },
         methods: {
             handleDelete,
@@ -163,7 +267,9 @@ export const usePage = () => {
             setSelectedType,
             setShowModal,
             setShowModalMessage,
-            setModalWarning
+            setModalWarning,
+            goToPage,
+            setLimit,
         },
     };
 };

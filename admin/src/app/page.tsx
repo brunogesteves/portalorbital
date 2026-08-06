@@ -18,13 +18,9 @@ function Home() {
       <WelcomeSection />
 
       <StatsGrid
-        lenghtHighliht={
-          new Set(data.posts.filter((p) => p.highlight == true)).size
-        }
-        lenghtActivePosts={
-          new Set(data.posts.filter((p) => p.status == true)).size
-        }
-        lenghtSlides={new Set(data.posts.filter((p) => p.slide == true)).size}
+        lenghtHighliht={data.stats.totalHighlights}
+        lenghtActivePosts={data.stats.totalActivePosts}
+        lenghtSlides={data.stats.totalSlides}
       />
 
       <div className="bg-white rounded-2xl md:rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
@@ -43,13 +39,17 @@ function Home() {
         />
 
         <PostTable
-          posts={data.filteredPosts}
+          posts={data.posts}
           currentUser={data.currentUser}
           handleToggleStatus={methods.handleToggleStatus}
           handleToggleSlide={methods.handleToggleSlide}
           handleToggleHighlight={methods.handleToggleHighlight}
           setPostToDelete={(id) => methods.setPostToDelete(id)}
           setShowModal={methods.setShowModal}
+          pagination={data.pagination}
+          goToPage={methods.goToPage}
+          setLimit={methods.setLimit}
+          fetching={data.fetching}
         />
       </div>
 

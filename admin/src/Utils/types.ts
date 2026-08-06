@@ -16,6 +16,13 @@ export interface CategoryProps {
   };
 }
 
+export interface PaginationProps {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 export interface PostTableProps {
   posts: PostProps[];
   currentUser: UserProps | null;
@@ -24,6 +31,10 @@ export interface PostTableProps {
   handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
   setPostToDelete: (id: number) => void;
   setShowModal: (show: boolean) => void;
+  pagination: PaginationProps;
+  goToPage: (page: number) => void;
+  setLimit: (limit: number) => void;
+  fetching: boolean;
 }
 
 export interface WarningModalProps {

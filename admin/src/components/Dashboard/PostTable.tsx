@@ -6,15 +6,12 @@ import {
   FiCalendar,
   FiEdit2,
   FiTrash2,
-  FiCheckCircle,
-  FiXCircle,
-  FiToggleRight,
-  FiToggleLeft,
-  FiX,
 } from "react-icons/fi";
 import { PostProps, PostTableProps } from "@/Utils/types";
 import Image from "next/image";
 import { imageUrl } from "@/Utils/api";
+import Pagination from "./Pagination";
+import MobilePostDetail from "./MobilePostDetail";
 
 
 const PostTable = ({
@@ -25,6 +22,10 @@ const PostTable = ({
   handleToggleHighlight,
   setPostToDelete,
   setShowModal,
+  pagination,
+  goToPage,
+  setLimit,
+  fetching,
 }: PostTableProps) => {
   const [mobilePostDetail, setMobilePostDetail] = useState<PostProps | null>(
     null,
@@ -33,7 +34,7 @@ const PostTable = ({
   const closeMobileModal = () => setMobilePostDetail(null);
 
   return (
-    <div>
+    <div className="relative">
       <div className="flex flex-col divide-y divide-slate-50">
         <div className="hidden md:grid grid-cols-[2fr_0.8fr_0.6fr_0.5fr_0.5fr_0.6fr_0.5fr] items-center gap-2 px-3 py-4 text-slate-400 uppercase text-[9px] font-black tracking-[2px]">
           <span>Notícia</span>
@@ -44,6 +45,19 @@ const PostTable = ({
           <span className="text-center">Data</span>
           <span className="text-center">Ações</span>
         </div>
+
+        {/* Loading overlay */}
+        {fetching && (
+          <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="relative w-10 h-10">
+                <div className="absolute inset-0 border-3 border-red-600/20 rounded-full"></div>
+                <div className="absolute inset-0 border-3 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Carregando...</p>
+            </div>
+          </div>
+        )}
 
         {posts.length > 0 ? (
           posts.map((post) => (
@@ -201,189 +215,25 @@ const PostTable = ({
           </div>
         )}
       </div>
-
-      {/* ========== Mobile Details Modal ========== */}
+      <Pagination
+        page={pagination.page}
+        limit={pagination.limit}
+        total={pagination.total}
+        totalPages={pagination.totalPages}
+        goToPage={goToPage}
+        setLimit={setLimit}
+      />
       {mobilePostDetail && (
-        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-4 md:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white w-full max-w-sm rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden animate-in slide-in-from-bottom-4 md:zoom-in-95 duration-300 max-h-[85vh] overflow-y-auto">
-            <div className="relative p-6 md:p-8 space-y-5">
-              <button
-                onClick={closeMobileModal}
-                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-full transition-colors"
-              >
-                <FiX size={20} />
-              </button>
-
-              <div className="space-y-2">
-                <span className="text-[10px] font-black uppercase tracking-[3px] text-red-600">
-                  Detalhes da Notícia
-                </span>
-                <h3 className="text-xl font-bold text-slate-800 leading-tight pr-8">
-                  {mobilePostDetail.title}
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                    Categoria
-                  </p>
-                  <span className="block w-fit bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase border border-slate-200">
-                    {mobilePostDetail.category?.name || "Geral"}
-                  </span>
-                </div>
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                    Data de Publicação
-                  </p>
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
-                    <FiCalendar className="text-red-600" />
-                    {new Date(mobilePostDetail.scheduledAt).toLocaleDateString(
-                      "pt-BR",
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                  Status
-                </p>
-                <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  {mobilePostDetail.status ? (
-                    <span className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 uppercase tracking-wider bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
-                      <FiCheckCircle /> No ar
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase tracking-wider bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
-                      <FiXCircle /> Fora do ar
-                    </span>
-                  )}
-
-                  {currentUser?.role === "ADM" && (
-                    <button
-                      onClick={() => {
-                        handleToggleStatus(
-                          mobilePostDetail.id,
-                          mobilePostDetail.status,
-                        );
-                        setMobilePostDetail({
-                          ...mobilePostDetail,
-                          status: !mobilePostDetail.status,
-                        });
-                      }}
-                      className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
-                    >
-                      {mobilePostDetail.status ? (
-                        <FiToggleRight size={18} />
-                      ) : (
-                        <FiToggleLeft size={18} />
-                      )}
-                      Alterar
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                  Slide
-                </p>
-                <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <span
-                    className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${mobilePostDetail.slide
-                      ? "text-red-600 bg-red-50 border-red-100"
-                      : "text-slate-400 bg-slate-50 border-slate-100"
-                      }`}
-                  >
-                    {mobilePostDetail.slide ? "No slide" : "Fora do slide"}
-                  </span>
-                  {currentUser?.role === "ADM" && (
-                    <button
-                      onClick={() => {
-                        handleToggleSlide(
-                          mobilePostDetail.id,
-                          mobilePostDetail.slide,
-                        );
-                        setMobilePostDetail({
-                          ...mobilePostDetail,
-                          slide: !mobilePostDetail.slide,
-                        });
-                      }}
-                      className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
-                    >
-                      {mobilePostDetail.slide ? (
-                        <FiToggleRight size={18} />
-                      ) : (
-                        <FiToggleLeft size={18} />
-                      )}
-                      Alterar
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                  Destaque
-                </p>
-                <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <span
-                    className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${mobilePostDetail.highlight
-                      ? "text-yellow-600 bg-yellow-50 border-yellow-100"
-                      : "text-slate-400 bg-slate-50 border-slate-100"
-                      }`}
-                  >
-                    {mobilePostDetail.highlight
-                      ? "Em destaque"
-                      : "Sem destaque"}
-                  </span>
-                  {currentUser?.role === "ADM" && (
-                    <button
-                      onClick={() => {
-                        handleToggleHighlight(
-                          mobilePostDetail.id,
-                          mobilePostDetail.highlight,
-                        );
-                        setMobilePostDetail({
-                          ...mobilePostDetail,
-                          highlight: !mobilePostDetail.highlight,
-                        });
-                      }}
-                      className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
-                    >
-                      {mobilePostDetail.highlight ? (
-                        <FiToggleRight size={18} />
-                      ) : (
-                        <FiToggleLeft size={18} />
-                      )}
-                      Alterar
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="pt-2 flex gap-3">
-                <Link
-                  href={`/post/edit/${mobilePostDetail.id}`}
-                  className="flex-1 flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
-                >
-                  <FiEdit2 size={16} /> Editar
-                </Link>
-                <button
-                  onClick={() => {
-                    setPostToDelete(mobilePostDetail.id);
-                    setShowModal(true);
-                    closeMobileModal();
-                  }}
-                  className="flex-1 flex items-center justify-center gap-2 py-4 bg-red-600 text-white rounded-2xl font-bold text-sm hover:bg-red-700 transition-all shadow-lg shadow-red-100"
-                >
-                  <FiTrash2 size={16} /> Excluir
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <MobilePostDetail
+          post={mobilePostDetail}
+          currentUser={currentUser}
+          onClose={closeMobileModal}
+          handleToggleStatus={handleToggleStatus}
+          handleToggleSlide={handleToggleSlide}
+          handleToggleHighlight={handleToggleHighlight}
+          setPostToDelete={setPostToDelete}
+          setShowModal={setShowModal}
+        />
       )}
     </div>
   );
