@@ -1,6 +1,6 @@
-import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { FiShare2 } from "react-icons/fi";
+// import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
+// import { FaXTwitter } from "react-icons/fa6";
+// import { FiShare2 } from "react-icons/fi";
 import Header from "@/components/Header/Header";
 
 import { NewsDataProps } from "@/utils/types";
@@ -10,6 +10,7 @@ import {
   AudioPlayerMobile,
 } from "../AudioPlayer/AudioPlayer";
 import { imageUrl } from "@/utils/api";
+import { ShareButton } from "../ShareButton";
 
 export default function NewsPage({ data }: NewsDataProps) {
   return (
@@ -17,17 +18,13 @@ export default function NewsPage({ data }: NewsDataProps) {
       <Header slug={data.title as string} />
       <div className="hidden md:block text-gray-800 min-h-screen bg-white">
         <main className="w-full min-h-screen">
-
           <div
             id="adsense-desktop-top"
             aria-label="Publicidade"
             className="w-full flex justify-center items-center py-3 bg-gray-50 border-y border-gray-100"
             style={{ minHeight: "90px" }}
           >
-            {/* ADSENSE LEADERBOARD 728x90 — cole o script aqui */}
           </div>
-
-          {/* Dedicated Article Reading Area */}
           <section
             className="bg-white py-12 px-6 md:px-16"
             data-purpose="article-reading-section"
@@ -47,27 +44,8 @@ export default function NewsPage({ data }: NewsDataProps) {
                       {data.author?.name}
                     </span>
                   </div>
-
-                  {/* Social Media Icons */}
                   <div className="flex space-x-4">
-                    <button
-                      aria-label="Facebook"
-                      className="text-gray-400 hover:text-blue-700 transition-colors"
-                    >
-                      <FaFacebookF className="w-5 h-5" />
-                    </button>
-                    <button
-                      aria-label="X (Twitter)"
-                      className="text-gray-400 hover:text-blue-700 transition-colors"
-                    >
-                      <FaXTwitter className="w-5 h-5" />
-                    </button>
-                    <button
-                      aria-label="Compartilhar"
-                      className="text-gray-400 hover:text-blue-700 transition-colors"
-                    >
-                      <FiShare2 className="w-5 h-5" />
-                    </button>
+                    <ShareButton url={data.slug} />
                   </div>
                 </div>
                 {/* Photo */}
@@ -91,18 +69,12 @@ export default function NewsPage({ data }: NewsDataProps) {
               </article>
 
               <div className="border-t border-gray-200"></div>
-
-              {/* ================================================================ */}
-              {/* 📢 ADSENSE ZONE — Desktop Mid Rectangle (336x280)              */}
-              {/* Coloque aqui o código do bloco de anúncio do Google AdSense    */}
-              {/* ================================================================ */}
               <div
                 id="adsense-desktop-mid"
                 aria-label="Publicidade"
                 className="w-full flex justify-center items-center py-4"
                 style={{ minHeight: "280px" }}
               >
-                {/* ADSENSE RECTANGLE 336x280 — cole o script aqui */}
               </div>
             </div>
           </section>
@@ -143,33 +115,8 @@ export default function NewsPage({ data }: NewsDataProps) {
               {data.author?.name}
             </p>
           </div>
-
-          {/* Social Media Share Icons */}
           <div className="flex justify-end items-end gap-3 mb-6">
-            <button
-              aria-label="WhatsApp"
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-[#25D366] text-white"
-            >
-              <FaWhatsapp className="text-sm" />
-            </button>
-            <button
-              aria-label="Facebook"
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-[#1877F2] text-white"
-            >
-              <FaFacebookF className="text-sm" />
-            </button>
-            <button
-              aria-label="X (Twitter)"
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-black text-white"
-            >
-              <FaXTwitter className="text-sm" />
-            </button>
-            <button
-              aria-label="Compartilhar"
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-200 text-gray-600"
-            >
-              <FiShare2 className="text-sm" />
-            </button>
+            <ShareButton url={data.slug} />
           </div>
 
           <h1 className="text-4xl font-extrabold text-gray-900 leading-tight mb-3 first-letter:capitalize">

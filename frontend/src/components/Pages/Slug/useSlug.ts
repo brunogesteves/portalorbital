@@ -4,20 +4,25 @@ import { api } from "@/utils/api";
 import { CategoryContentProps, PostProps } from "@/utils/types";
 
 export function useSlug(slug: string) {
-  const [infoContent, setInfoContent] = useState<any>(null);
+  const [categoryContent, setCategoryContent] = useState<CategoryContentProps | null>(null);
+  const [postContent, setPostContent] = useState<PostProps | null>(null);
   const [type, setType] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true); // Bom para evitar telas em branco
 
   useEffect(() => {
     async function getData() {
-      console.log("retorn no useslug")
       setLoading(true);
+
       try {
         const res = await api.get(`/search/${slug}`);
-        console.log("retorna da api");
+        console.log(res.data)
         if (res.data.status) {
           setType(res.data.type);
-          setInfoContent(res.data.content);
+          if (res.data.type == "category") {
+            setCategoryContent(res.data.content)
+          } else {
+            setPostContent(res.data.content)
+          }
         }
       } catch (error) {
         console.error(error);
@@ -32,8 +37,5 @@ export function useSlug(slug: string) {
     }
   }, [slug]);
 
-  console.log("useSlug: ", type);
-  console.log("infoContent: ", infoContent);
-
-  return { data: { type, infoContent, loading } };
+  return { data: { type, content: type == "category" ? categoryContent : postContent, loading } };
 }

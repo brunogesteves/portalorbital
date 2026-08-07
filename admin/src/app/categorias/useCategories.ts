@@ -17,7 +17,7 @@ export function useCategorias() {
     const fetchCategories = async () => {
       try {
         const response = await api.get("/categories");
-        console.log("API Response:", response.data);
+
         setCategories(response.data);
       } catch (error) {
         console.error("Erro ao buscar categorias:", error);

@@ -44,12 +44,11 @@ export const Thumbnail = ({
                 if (file) {
                   const formData = new FormData();
                   formData.append("image", file);
-                  console.log("chama front api upload image")
                   api
                     .post("/posts/uploadImage", formData)
                     .then((res) => {
                       setThumbnailUrl(res.data.url);
-                      console.log(`${imageUrl}/${res.data.url}`)
+
                       setPreview(
                         `${imageUrl}/${res.data.url}`,
                       );

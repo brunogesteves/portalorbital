@@ -11,8 +11,9 @@ import Image from "next/image";
 import { imageUrl } from "@/utils/api";
 import Link from "next/link";
 
-export default function CategoryPage({ name, posts }: CategoryContentProps) {
 
+export default function CategoryPage({ data }: { data: CategoryContentProps }) {
+  console.log(data)
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
@@ -24,7 +25,7 @@ export default function CategoryPage({ name, posts }: CategoryContentProps) {
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-center mb-4">
                 <h2 className="font-bold text-[#111415] uppercase tracking-wide text-4xl">
-                  {name}
+                  {data.name}
                 </h2>
               </div>
               <div>
@@ -36,7 +37,7 @@ export default function CategoryPage({ name, posts }: CategoryContentProps) {
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {posts.map((post, i) => (
+                    {data.posts.map((post, i) => (
                       <Link key={i} href={post.slug}>
                         <div className="bg-[#111415] rounded-xl overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow group">
                           <Image
@@ -72,12 +73,12 @@ export default function CategoryPage({ name, posts }: CategoryContentProps) {
           <section className="py-6 px-4 bg-white">
             <div className="max-w-7xl mx-auto flex justify-center">
               <h2 className="text-5xl font-bold text-gray-900 uppercase tracking-tighter text-center">
-                {name}
+                {data.name}
               </h2>
             </div>
           </section>
           <div className="space-y-8">
-            {posts.map((post, i) => (
+            {data.posts.map((post, i) => (
               <Link href={post.slug} key={i}>
                 <section className="relative group cursor-pointer">
                   <div className="relative overflow-hidden rounded-lg">
