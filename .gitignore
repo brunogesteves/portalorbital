@@ -19,12 +19,14 @@ secrets/
 backend/prisma/migrations/
 **/prisma/dev.db
 **/prisma/dev.db-journal
-
+.dockerignore
+Dockerfile
 # Logs and system
 *.log
 .DS_Store
 .vscode/
 .prettierrc
+start.sh
 
 .gitignore
 
