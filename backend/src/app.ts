@@ -10,10 +10,15 @@ import searchRoutes from "./routes/search.routes";
 const app = express();
 
 
+const corsOrigin = process.env.CORS_ORIGIN;
+const corsOrigins = !corsOrigin || corsOrigin === 'true'
+  ? true
+  : corsOrigin.split(',').map((o) => o.trim());
+
 app.use(
   cors({
-    origin: true, // Aceita QUALQUER origem (incluindo localhost e ngrok)
-    credentials: true, // Permite cookies/autenticação
+    origin: corsOrigins,
+    credentials: true,
   }),
 );
 

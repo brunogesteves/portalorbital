@@ -1,7 +1,7 @@
 
 
 export interface UserProps {
-  id: number;
+  // id: number;
   email: string;
   name: string;
   role: "ADM" | "PBR";
@@ -112,4 +112,18 @@ export interface LibraryModalProps {
   setThumbnailUrl: (thumbnailUrl: string) => void;
   setShowImageModal: (show: boolean) => void;
   onDelete?: (filename: string) => Promise<void>;
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface PostStats {
+  totalPosts: number;
+  totalHighlights: number;
+  totalActivePosts: number;
+  totalSlides: number;
 }

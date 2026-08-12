@@ -7,8 +7,11 @@ import { api } from "@/Utils/api";
 import { LoginFormValues, loginSchema } from "@/Utils/schemas";
 
 import axios from "axios";
+import { useUIStore } from "@/store/useUIStore";
 
 export default function useLogin() {
+  const { setUserData } = useUIStore();
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -29,14 +32,21 @@ export default function useLogin() {
     setLoading(true);
     setError("");
     try {
-      await api.post("auth/login", data);
-      router.push("/");
+      const user = await api.post("auth/login", data);
+      if (user.data.status) {
+        setUserData({
+          email: user.data.email,
+          name: user.data.name,
+          role: user.data.role,
+        })
+        router.push("/");
+      }
     } catch (err: unknown) {
       console.log(err);
       if (axios.isAxiosError(err)) {
         setError(
           err.response?.data?.message ??
-            "Credenciais inválidas ou o de conexão.",
+          "Credenciais inválidas ou o de conexão.",
         );
       } else {
         setError("Ocorreu um erro inesperado.");

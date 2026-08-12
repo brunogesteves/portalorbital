@@ -9,15 +9,23 @@ const nextConfig: NextConfig = {
         port: "3001",
         pathname: "/images/**",
       },
-    ],
-  },
-  async rewrites() {
-    return [
       {
-        source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+        protocol: "http",
+        hostname: "api.localhost",
+        port: "80",
+        pathname: "/images/**",
       },
-    ];
+      {
+        protocol: "http",
+        hostname: "api.localhost",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "/images/**",
+      },
+    ],
   },
 };
 

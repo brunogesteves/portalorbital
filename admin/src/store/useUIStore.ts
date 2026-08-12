@@ -1,11 +1,17 @@
+import { UserProps } from "@/Utils/types";
 import { create } from "zustand";
 
+// interface Userprops {
+//   email: string,
+//   name: string,
+//   role: string,
+// }
 interface UIState {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
   setIsSidebarOpen: (isOpen: boolean) => void;
-  username: string
-  setUsername: (name: string) => void;
+  userData: UserProps
+  setUserData: (content: UserProps) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -13,6 +19,16 @@ export const useUIStore = create<UIState>((set) => ({
   toggleSidebar: () =>
     set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   setIsSidebarOpen: (isOpen: boolean) => set({ isSidebarOpen: isOpen }),
-  username: "",
-  setUsername: (name: string) => set({ username: name }),
+  userData: {
+    email: "",
+    name: "",
+    role: "PBR",
+  },
+  setUserData: (content: UserProps) => set({
+    userData: {
+      email: content.name,
+      name: content.email,
+      role: content.role
+    }
+  }),
 }));

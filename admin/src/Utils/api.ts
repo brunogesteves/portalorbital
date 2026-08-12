@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+
 export const api = axios.create({
-  baseURL: "/api",
+  baseURL: `${API_BASE}/api`,
   withCredentials: true,
 });
 
-export const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/images`;
+export const imageUrl = `${API_BASE}/images`;

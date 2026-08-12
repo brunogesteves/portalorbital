@@ -13,6 +13,7 @@ export function useHome() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
     const fetchData = async () => {
       try {
         const [postsRes, highLightRes] = await Promise.all([
@@ -29,6 +30,7 @@ export function useHome() {
     };
 
     fetchData();
+
   }, []);
 
 

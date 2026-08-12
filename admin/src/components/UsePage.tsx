@@ -3,28 +3,15 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 import { api } from "@/Utils/api";
-import { PostProps, CategoryProps, UserProps } from "@/Utils/types";
+import { PostProps, CategoryProps, Pagination, PostStats } from "@/Utils/types";
 import { useUIStore } from '@/store/useUIStore';
 
-interface Pagination {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-}
 
-interface PostStats {
-    totalPosts: number;
-    totalHighlights: number;
-    totalActivePosts: number;
-    totalSlides: number;
-}
 
 export const usePage = () => {
-    const { setUsername } = useUIStore();
+    const { userData } = useUIStore();
     const [posts, setPosts] = useState<PostProps[]>([]);
     const [categories, setCategories] = useState<CategoryProps[]>([]);
-    const [currentUser, setCurrentUser] = useState<UserProps | null>(null);
     const [loading, setLoading] = useState(true);
     const [fetching, setFetching] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -95,17 +82,12 @@ export const usePage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [catsRes, userRes] = await Promise.all([
+                const [catsRes] = await Promise.all([
                     api.get("/categories"),
-                    api.get("/auth/me"),
-                ]);
-                setCategories(catsRes.data);
-                setCurrentUser(userRes.data.user);
-                setUsername(userRes.data.user?.name);
-                await Promise.all([
                     fetchPosts(1, 10),
                     fetchStats(),
                 ]);
+                setCategories(catsRes.data);
             } catch (error: unknown) {
                 if (axios.isAxiosError(error) && error.response?.status === 401) {
                     router.push("/login");
@@ -161,7 +143,7 @@ export const usePage = () => {
     };
 
     const handleToggleStatus = async (id: number, currentStatus: boolean) => {
-        if (currentUser?.role !== "ADM") return;
+        if (userData?.role !== "ADM") return;
         try {
             await api.patch(`/posts/${id}/status`, { status: !currentStatus });
             setPosts(
@@ -174,7 +156,7 @@ export const usePage = () => {
     };
 
     const handleToggleSlide = async (id: number, currentSlide: boolean) => {
-        if (currentUser?.role !== "ADM") return;
+        if (userData?.role !== "ADM") return;
         try {
             await api.patch(`/posts/${id}/slide`, { slide: !currentSlide });
             setPosts(
@@ -190,7 +172,7 @@ export const usePage = () => {
         id: number,
         currentHighlight: boolean,
     ) => {
-        if (currentUser?.role !== "ADM") return;
+        if (userData?.role !== "ADM") return;
         try {
             await api.patch(`/posts/${id}/highlight`, {
                 highlight: !currentHighlight,
@@ -249,7 +231,6 @@ export const usePage = () => {
             selectedAuthor,
             selectedType,
             uniqueAuthors,
-            currentUser,
             showModalMessage,
             modalWarning,
             pagination,

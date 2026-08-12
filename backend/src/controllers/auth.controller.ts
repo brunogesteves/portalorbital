@@ -33,15 +33,16 @@ export const login = async (req: Request, res: Response) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.COOKIE_SECURE === 'true',
       maxAge: 1 * 60 * 60 * 1000, // 1 hora
-      sameSite: 'strict',
+      sameSite: 'lax',
+      path: "/",
+      domain: process.env.COOKIE_DOMAIN || undefined,
     });
 
     return res.json({
-      message: 'Login bem-sucedido',
+      status: true,
       user: {
-        id: user.id,
         email: user.email,
         name: user.name,
         role: user.role,
@@ -54,33 +55,37 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const logout = (req: Request, res: Response) => {
-  res.clearCookie('token');
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.COOKIE_SECURE === 'true',
+    sameSite: 'lax',
+    path: "/",
+    domain: process.env.COOKIE_DOMAIN || undefined,
+  });
   return res.json({ message: 'Logout bem-sucedido' });
 };
+//   if (!req.user) {
+//     return res.status(401).json({ message: 'Não autenticado' });
+//   }
 
-export const me = async (req: any, res: Response) => {
-  if (!req.user) {
-    return res.status(401).json({ message: 'Não autenticado' });
-  }
+//   try {
+//     const user = await usr.findUnique({
+//       where: { id: req.user.id },
+//       select: {
+//         id: true,
+//         name: true,
+//         email: true,
+//         role: true,
+//       },
+//     });
 
-  try {
-    const user = await usr.findUnique({
-      where: { id: req.user.id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-      },
-    });
+//     if (!user) {
+//       return res.status(404).json({ message: 'Usuário não encontrado' });
+//     }
 
-    if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado' });
-    }
-
-    return res.json({ user });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Erro ao buscar usuário' });
-  }
-};
+//     return res.json({ user });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: 'Erro ao buscar usuário' });
+//   }
+// };
