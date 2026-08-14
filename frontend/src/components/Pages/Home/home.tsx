@@ -1,33 +1,17 @@
 "use client";
 
-
 import Slider from "@/components/Header/Slider/Slider";
-
 import { useHome } from "./useHome";
 import Header from "@/components/Header/Header";
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Orbital Channel",
-  "url": "https://orbitaltv.net",
-  "description": "Plataforma de conteúdo tecnológico inovadora trazendo o melhor em tecnologia mundial.",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://orbitaltv.net/search?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-};
+import JsonLD from "@/components/jsonLd";
 
 export default function Home() {
   const { data, methods } = useHome();
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLD description={"Home"} />
+
       <Header slug="Home" />
       <div className="hidden md:block text-gray-800 min-h-screen bg-white">
         <main className="w-full min-h-screen">

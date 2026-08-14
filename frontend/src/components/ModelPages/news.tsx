@@ -11,10 +11,12 @@ import {
 } from "../AudioPlayer/AudioPlayer";
 import { imageUrl } from "@/utils/api";
 import { ShareButton } from "../ShareButton";
+import JsonLD from "@/components/jsonLd";
 
 export default function NewsPage({ data }: NewsDataProps) {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
+      <JsonLD description={data.title} />
       <Header slug={data.title as string} />
       <div className="hidden md:block text-gray-800 min-h-screen bg-white">
         <main className="w-full min-h-screen">
@@ -34,7 +36,6 @@ export default function NewsPage({ data }: NewsDataProps) {
                 <h1 className="text-gray-900 font-bold text-3xl md:text-5xl leading-tight mb-8 first-letter:capitalize">
                   {data.title}
                 </h1>
-                {/* Header Info and Social Icons Row */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                   <div className="flex flex-col">
                     <span className="text-gray-500 text-xs mb-1">

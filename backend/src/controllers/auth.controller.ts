@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
+import { JwtPayload } from '../types';
 
 
 const { user: usr } = prisma;
@@ -42,11 +43,6 @@ export const login = async (req: Request, res: Response) => {
 
     return res.json({
       status: true,
-      user: {
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
     });
   } catch (error) {
     console.error(error);
@@ -64,28 +60,26 @@ export const logout = (req: Request, res: Response) => {
   });
   return res.json({ message: 'Logout bem-sucedido' });
 };
-//   if (!req.user) {
-//     return res.status(401).json({ message: 'Não autenticado' });
-//   }
 
-//   try {
-//     const user = await usr.findUnique({
-//       where: { id: req.user.id },
-//       select: {
-//         id: true,
-//         name: true,
-//         email: true,
-//         role: true,
-//       },
-//     });
+export const me = async (req: Request, res: Response) => {
+  try {
+    const { id } = (req as any).user as JwtPayload;
+    const user = await usr.findUnique({
+      where: { id },
+      select: {
+        email: true,
+        name: true,
+        role: true,
+      },
+    });
 
-//     if (!user) {
-//       return res.status(404).json({ message: 'Usuário não encontrado' });
-//     }
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
 
-//     return res.json({ user });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: 'Erro ao buscar usuário' });
-//   }
-// };
+    return res.json({ user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Erro no servidor' });
+  }
+};

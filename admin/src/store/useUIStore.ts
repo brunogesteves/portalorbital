@@ -26,8 +26,8 @@ export const useUIStore = create<UIState>((set) => ({
   },
   setUserData: (content: UserProps) => set({
     userData: {
-      email: content.name,
-      name: content.email,
+      email: content.email,
+      name: content.name,
       role: content.role
     }
   }),

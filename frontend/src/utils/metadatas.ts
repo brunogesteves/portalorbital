@@ -1,5 +1,25 @@
 import { Metadata } from "next";
 import { api } from "./api";
+export const metadataLayout: Metadata = {
+  metadataBase: new URL('https://www.orbitaltv.net'),
+
+  title: {
+    default: 'Orbital Channel',
+    template: '%s | Orbital Channel',
+  },
+  description: 'Notícias, informações e análises sobre os principais acontecimentos do Brasil e do mundo, com conteúdo atualizado, relevante e fácil de entender.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: 'Orbital Channel',
+    description: 'Notícias, informações e análises sobre os principais acontecimentos do Brasil e do mundo, com conteúdo atualizado, relevante e fácil de entender.',
+    type: 'website',
+    locale: 'pt_BR',
+    siteName: 'Orbital Channel',
+  },
+}
 
 export const metadataHome: Metadata = {
   title: "Orbital Channel - O mundo em suas mãos",

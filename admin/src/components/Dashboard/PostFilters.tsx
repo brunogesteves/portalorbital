@@ -41,7 +41,7 @@ const PostFilters = ({
             ))}
           </select>
 
-          {currentUser?.role === "ADM" && (
+          {currentUser === "ADM" && (
             <select
               value={selectedAuthor}
               onChange={(e) => setSelectedAuthor(e.target.value)}

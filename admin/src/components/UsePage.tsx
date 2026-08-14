@@ -9,7 +9,7 @@ import { useUIStore } from '@/store/useUIStore';
 
 
 export const usePage = () => {
-    const { userData } = useUIStore();
+    const { userData, setUserData } = useUIStore();
     const [posts, setPosts] = useState<PostProps[]>([]);
     const [categories, setCategories] = useState<CategoryProps[]>([]);
     const [loading, setLoading] = useState(true);
@@ -82,12 +82,18 @@ export const usePage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [catsRes] = await Promise.all([
+                const [catsRes, userRes] = await Promise.all([
                     api.get("/categories"),
+                    api.get("/auth/me",),
                     fetchPosts(1, 10),
                     fetchStats(),
                 ]);
                 setCategories(catsRes.data);
+                setUserData({
+                    email: userRes.data.user.email,
+                    name: userRes.data.user.name,
+                    role: userRes.data.user.role,
+                })
             } catch (error: unknown) {
                 if (axios.isAxiosError(error) && error.response?.status === 401) {
                     router.push("/login");
@@ -235,6 +241,7 @@ export const usePage = () => {
             modalWarning,
             pagination,
             stats,
+            userData
         },
         methods: {
             handleDelete,

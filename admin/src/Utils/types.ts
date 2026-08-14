@@ -1,10 +1,12 @@
 
 
+type RoleProps = "ADM" | "PBR";
+
 export interface UserProps {
   // id: number;
   email: string;
   name: string;
-  role: "ADM" | "PBR";
+  role: RoleProps
 }
 
 export interface CategoryProps {
@@ -25,7 +27,7 @@ export interface PaginationProps {
 
 export interface PostTableProps {
   posts: PostProps[];
-  currentUser: UserProps | null;
+  currentUser: RoleProps;
   handleToggleStatus: (id: number, currentStatus: boolean) => void;
   handleToggleSlide: (id: number, currentSlide: boolean) => void;
   handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
@@ -37,6 +39,16 @@ export interface PostTableProps {
   fetching: boolean;
 }
 
+export interface MobilePostDetailProps {
+  post: PostProps;
+  currentUser: RoleProps;
+  onClose: () => void;
+  handleToggleStatus: (id: number, currentStatus: boolean) => void;
+  handleToggleSlide: (id: number, currentSlide: boolean) => void;
+  handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
+  setPostToDelete: (id: number) => void;
+  setShowModal: (show: boolean) => void;
+}
 export interface WarningModalProps {
   message: string | undefined;
   setShowWarningModal: (show: boolean) => void;
@@ -85,7 +97,7 @@ export interface PostFiltersProps {
   selectedType: string;
   setSelectedType: (value: string) => void;
   categories: CategoryProps[];
-  currentUser: UserProps | null;
+  currentUser: RoleProps
   uniqueAuthors: { id: number; name: string }[];
 }
 

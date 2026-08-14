@@ -1,22 +1,24 @@
 "use client";
 
-// import { FaFacebookF } from "react-icons/fa";
-// import { FaXTwitter } from "react-icons/fa6";
-import { FiArrowRight } from "react-icons/fi";
-
-import HeroSlider from "@/components/Header/Slider/Slider";
-import Header from "../Header/Header";
-import { CategoryContentProps } from "@/utils/types";
 import Image from "next/image";
-import { imageUrl } from "@/utils/api";
 import Link from "next/link";
 
 
+import { FiArrowRight } from "react-icons/fi";
+import HeroSlider from "@/components/Header/Slider/Slider";
+import Header from "../Header/Header";
+import { CategoryContentProps } from "@/utils/types";
+import { imageUrl } from "@/utils/api";
+import JsonLD from "@/components/jsonLd";
+
+
+
 export default function CategoryPage({ data }: { data: CategoryContentProps }) {
-  console.log(data)
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
+      <JsonLD description={data.name} />
+
       <Header slug="" />
       <div className="hidden md:block text-gray-800 min-h-screen bg-white">
         <main className="w-full min-h-screen">

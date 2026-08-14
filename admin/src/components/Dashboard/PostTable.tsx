@@ -108,7 +108,7 @@ const PostTable = ({
                   <span
                     className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow 
                       ${post.status ? "translate-x-[18px]" : "translate-x-[3px]"}
-                      ${currentUser?.role !== "ADM"
+                      ${currentUser !== "ADM"
                         ? "opacity-50 cursor-not-allowed"
                         : "cursor-pointer"}
                       `}
@@ -121,11 +121,11 @@ const PostTable = ({
               <div className="hidden md:flex justify-center items-center gap-1.5">
                 <button
                   onClick={() =>
-                    currentUser?.role === "ADM" &&
+                    currentUser === "ADM" &&
                     handleToggleSlide(post.id, post.slide)
                   }
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.slide ? "bg-green-600" : "bg-red-300"
-                    } ${currentUser?.role !== "ADM"
+                    } ${currentUser !== "ADM"
                       ? "opacity-50 cursor-not-allowed"
                       : "cursor-pointer"
                     }`}
@@ -142,11 +142,11 @@ const PostTable = ({
               <div className="hidden md:flex justify-center items-center gap-1.5">
                 <button
                   onClick={() =>
-                    currentUser?.role === "ADM" &&
+                    currentUser === "ADM" &&
                     handleToggleHighlight(post.id, post.highlight)
                   }
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.highlight ? "bg-yellow-500" : "bg-gray-300"
-                    } ${currentUser?.role !== "ADM"
+                    } ${currentUser !== "ADM"
                       ? "opacity-50 cursor-not-allowed"
                       : "cursor-pointer"
                     }`}
@@ -188,7 +188,7 @@ const PostTable = ({
                     setShowModal(true);
                   }}
                   className={`p-2.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-red-600 rounded-xl transition-all shadow-sm
-                    ${currentUser?.role !== "ADM"
+                    ${currentUser !== "ADM"
                       ? "opacity-50 cursor-not-allowed"
                       : "cursor-pointer"
                     }

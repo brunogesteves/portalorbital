@@ -10,14 +10,12 @@ import searchRoutes from "./routes/search.routes";
 const app = express();
 
 
-const corsOrigin = process.env.CORS_ORIGIN;
-const corsOrigins = !corsOrigin || corsOrigin === 'true'
-  ? true
-  : corsOrigin.split(',').map((o) => o.trim());
+
 
 app.use(
   cors({
-    origin: corsOrigins,
+
+    origin: ["http://localhost", "http://admin.localhost"],
     credentials: true,
   }),
 );

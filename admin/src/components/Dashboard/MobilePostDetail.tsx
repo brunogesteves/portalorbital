@@ -9,18 +9,9 @@ import {
   FiToggleLeft,
   FiX,
 } from "react-icons/fi";
-import { PostProps, UserProps } from "@/Utils/types";
+import { MobilePostDetailProps } from "@/Utils/types";
 
-interface MobilePostDetailProps {
-  post: PostProps;
-  currentUser: UserProps | null;
-  onClose: () => void;
-  handleToggleStatus: (id: number, currentStatus: boolean) => void;
-  handleToggleSlide: (id: number, currentSlide: boolean) => void;
-  handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
-  setPostToDelete: (id: number) => void;
-  setShowModal: (show: boolean) => void;
-}
+
 
 const MobilePostDetail = ({
   post,
@@ -87,7 +78,7 @@ const MobilePostDetail = ({
                 </span>
               )}
 
-              {currentUser?.role === "ADM" && (
+              {currentUser === "ADM" && (
                 <button
                   onClick={() => {
                     handleToggleStatus(post.id, post.status);
@@ -111,15 +102,14 @@ const MobilePostDetail = ({
             </p>
             <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
               <span
-                className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${
-                  post.slide
-                    ? "text-red-600 bg-red-50 border-red-100"
-                    : "text-slate-400 bg-slate-50 border-slate-100"
-                }`}
+                className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${post.slide
+                  ? "text-red-600 bg-red-50 border-red-100"
+                  : "text-slate-400 bg-slate-50 border-slate-100"
+                  }`}
               >
                 {post.slide ? "No slide" : "Fora do slide"}
               </span>
-              {currentUser?.role === "ADM" && (
+              {currentUser === "ADM" && (
                 <button
                   onClick={() => {
                     handleToggleSlide(post.id, post.slide);
@@ -143,15 +133,14 @@ const MobilePostDetail = ({
             </p>
             <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
               <span
-                className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${
-                  post.highlight
-                    ? "text-yellow-600 bg-yellow-50 border-yellow-100"
-                    : "text-slate-400 bg-slate-50 border-slate-100"
-                }`}
+                className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border ${post.highlight
+                  ? "text-yellow-600 bg-yellow-50 border-yellow-100"
+                  : "text-slate-400 bg-slate-50 border-slate-100"
+                  }`}
               >
                 {post.highlight ? "Em destaque" : "Sem destaque"}
               </span>
-              {currentUser?.role === "ADM" && (
+              {currentUser === "ADM" && (
                 <button
                   onClick={() => {
                     handleToggleHighlight(post.id, post.highlight);

@@ -7,10 +7,9 @@ import { api } from "@/Utils/api";
 import { LoginFormValues, loginSchema } from "@/Utils/schemas";
 
 import axios from "axios";
-import { useUIStore } from "@/store/useUIStore";
 
 export default function useLogin() {
-  const { setUserData } = useUIStore();
+
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,11 +33,6 @@ export default function useLogin() {
     try {
       const user = await api.post("auth/login", data);
       if (user.data.status) {
-        setUserData({
-          email: user.data.email,
-          name: user.data.name,
-          role: user.data.role,
-        })
         router.push("/");
       }
     } catch (err: unknown) {

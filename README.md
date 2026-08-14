@@ -70,26 +70,30 @@ O **Portal Político** é uma plataforma completa de publicação de conteúdo t
 - Visualização de posts por categoria
 - Busca de conteúdo
 - Design responsivo (desktop/mobile)
-- SEO otimizado (meta tags, JSON-LD)
+- SEO otimizado (meta tags, JSON-LD, sitemap, robots.txt)
 - Animações suaves com Framer Motion
 
 ### 🔧 Backend (API)
-- Autenticação JWT (login/logout)
+- Autenticação JWT (login/logout) com cookies HttpOnly
+- Endpoint `/api/auth/me` para obter dados do usuário autenticado
 - CRUD completo de posts
 - Gerenciamento de categorias
 - Upload de imagens e áudios
 - Controle de status (ativo/inativo)
 - Controle de destaque e slider
-- Middleware de autorização por roles
+- Middleware de autenticação centralizado em `src/middleware/`
+- Tipos compartilhados em `src/types/`
 
 ### 👨‍💼 Admin (Painel)
-- Dashboard com estatísticas
+- Dashboard com estatísticas e sistema de avisos
 - Gerenciamento de posts (criar, editar, excluir)
 - Gerenciamento de categorias
 - Editor de conteúdo rico (SunEditor)
 - Upload de thumbnails
 - Filtros e busca
 - Controle de acesso por roles (ADM/PBR)
+- Gerenciamento de estado com Zustand (useUIStore)
+- Verificação de autenticação via endpoint `/auth/me`
 
 ---
 
@@ -126,6 +130,7 @@ O **Portal Político** é uma plataforma completa de publicação de conteúdo t
 | Zod | 4 | Validação |
 | SunEditor | 2.47 | Editor rico |
 | Lucide React | 0.468 | Ícones |
+| Zustand | 5 | Gerenciamento de estado |
 
 ---
 
@@ -212,6 +217,10 @@ PORT=4000
 # CORS
 FRONTEND_URL="http://localhost:3000"
 ADMIN_URL="http://localhost:3001"
+
+# Cookie Configuration
+COOKIE_SECURE=false
+COOKIE_DOMAIN=localhost
 ```
 
 ### Frontend (.env.local)
@@ -237,7 +246,12 @@ portalpolitico/
 ├── frontend/              # Frontend para leitores
 │   ├── src/
 │   │   ├── app/          # Rotas Next.js (App Router)
+│   │   │   ├── robots.ts        # Configuração robots.txt
+│   │   │   ├── sitemap.ts       # Geração dinâmica de sitemap
+│   │   │   └── layout.tsx       # Layout principal
 │   │   ├── components/   # Componentes React
+│   │   │   ├── jsonLd.tsx       # Componente JSON-LD para SEO
+│   │   │   └── ModelPages/      # Páginas de modelo
 │   │   ├── utils/        # Utilitários e API
 │   │   ├── store/        # Zustand store
 │   │   └── styles/       # Estilos globais
@@ -247,8 +261,18 @@ portalpolitico/
 ├── backend/               # API REST
 │   ├── src/
 │   │   ├── controllers/  # Lógica de negócio
+│   │   │   ├── auth.controller.ts    # Autenticação
+│   │   │   ├── post.controller.ts    # CRUD de posts
+│   │   │   └── category.controller.ts # Categorias
 │   │   ├── routes/       # Definição de rotas
-│   │   ├── middlewares/   # Middlewares (auth, etc)
+│   │   │   ├── auth.routes.ts
+│   │   │   ├── post.routes.ts
+│   │   │   ├── category.routes.ts
+│   │   │   └── search.routes.ts
+│   │   ├── middleware/    # Middlewares (auth)
+│   │   │   └── auth.middleware.ts    # Middleware de autenticação JWT
+│   │   ├── types/        # Tipos compartilhados
+│   │   │   └── index.ts             # JwtPayload e outros tipos
 │   │   └── lib/          # Utilitários (Prisma, etc)
 │   ├── prisma/
 │   │   ├── schema.prisma # Schema do banco
@@ -259,6 +283,11 @@ portalpolitico/
 │   ├── src/
 │   │   ├── app/          # Rotas Next.js
 │   │   ├── components/   # Componentes React
+│   │   │   ├── Dashboard/        # Componentes do dashboard
+│   │   │   ├── Header/           # Componentes do header
+│   │   │   └── UsePage.tsx       # Hook de dados da página
+│   │   ├── store/        # Zustand stores
+│   │   │   └── useUIStore.ts     # Estado global da UI
 │   │   └── Utils/        # Utilitários
 │   └── package.json
 │
@@ -274,7 +303,7 @@ portalpolitico/
 |--------|------|-----------|--------------|
 | POST | `/api/auth/login` | Login | ❌ |
 | POST | `/api/auth/logout` | Logout | ❌ |
-| GET | `/api/auth/me` | Usuário atual | ✅ |
+| GET | `/api/auth/me` | Obter dados do usuário atual | ✅ |
 
 ### Posts
 | Método | Rota | Descrição | Autenticação |
@@ -403,11 +432,41 @@ yarn start
 ## 🔒 Segurança
 
 - ✅ Senhas hasheadas com bcrypt
-- ✅ Tokens JWT com expiração
-- ✅ Cookies HttpOnly
+- ✅ Tokens JWT com expiração (1 hora)
+- ✅ Cookies HttpOnly com SameSite=Lax
+- ✅ Middleware de autenticação centralizado (`src/middleware/auth.middleware.ts`)
 - ✅ Validação de input
 - ✅ CORS configurado
 - ✅ Roles de acesso (ADM/PBR)
+- ✅ Headers de segurança via Nginx
+
+---
+
+## 🎯 SEO
+
+### Recursos de SEO Implementados
+
+- **Meta Tags**: Configuração completa no layout principal
+- **JSON-LD**: Dados estruturados para notícias
+- **Sitemap Dinâmico**: Gerado automaticamente em `/sitemap.xml`
+- **Robots.txt**: Configurado em `/robots.txt`
+- **Slugs**: URLs amigáveis para todos os posts
+- **Imagens Otimizadas**: Thumbnails para redes sociais
+
+### Componente JSON-LD
+
+```tsx
+import JsonLD from '@/components/jsonLd'
+
+// Uso em páginas
+<JsonLD description="Título do post" />
+```
+
+### Sitemap Dinâmico
+
+O sitemap é gerado automaticamente a partir dos posts do banco de dados, incluindo:
+- Página inicial com prioridade máxima (1.0)
+- Todos os posts com prioridade 0.8
 
 ---
 
@@ -453,18 +512,26 @@ yarn start
 }
 ```
 
+### JwtPayload (Tipos Backend)
+```typescript
+{
+  id: number
+  email: string
+  role: string
+}
+```
+
 ---
 
 ## 🤖 Agentes de IA
 
-Este projeto inclui uma pasta `.agent/agents` com 20 agentes especializados para auxiliar no desenvolvimento:
+Este projeto inclui uma pasta `.agent/agents` com agentes especializados para auxiliar no desenvolvimento:
 
 - **orchestrator** - Coordenação multi-agente
 - **frontend-specialist** - Especialista em React/Next.js
 - **backend-specialist** - Especialista em APIs
 - **security-auditor** - Auditoria de segurança
 - **test-engineer** - Engenheiro de testes
-- E mais...
 
 ---
 

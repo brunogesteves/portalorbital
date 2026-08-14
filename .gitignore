@@ -37,9 +37,11 @@ backend/test_db.ts
 backend/test_create_post.mjs
 backend/test_upload.mjs
 backend/test_upload.ts
+frontend/src/app/sitemap.ts
 
 # Prisma seed script
 backend/prisma/seed.ts
+frontend/SLIDER-SUGESTOES.md
 
 # User creation script
 backend/create_users.ts

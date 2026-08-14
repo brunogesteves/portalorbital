@@ -28,7 +28,7 @@ export const HeaderTopDesktop = () => {
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="flex-shrink-0"
+            className="shrink-0"
             data-purpose="logo-icon"
           >
             <Image
@@ -95,7 +95,7 @@ export const HeaderTopMobile = () => {
     <>
       <div className="flex items-center justify-between relative z-10 px-4 pb-2">
         <button
-          className="text-gray-700 hover:text-black flex items-center justify-center flex-shrink-0"
+          className="text-gray-700 hover:text-black flex items-center justify-center shrink-0"
           aria-label="Abrir Menu"
         >
           <FiMenu
@@ -128,7 +128,7 @@ export const HeaderTopMobile = () => {
           </div>
         </div>
         <button
-          className="text-gray-700 hover:text-black flex items-center justify-center flex-shrink-0"
+          className="text-gray-700 hover:text-black flex items-center justify-center shrink-0"
           aria-label="Buscar"
         >
           <FiSearch
@@ -138,7 +138,7 @@ export const HeaderTopMobile = () => {
         </button>
       </div>
 
-      <div className="w-full h-[1px] bg-[#999] relative z-10 mb-2"></div>
+      <div className="w-full h-px bg-[#999] relative z-10 mb-2"></div>
       {data.openMobileSearch && (
         <ModalSearchlMobile
           searchTerm={data.searchTerm}

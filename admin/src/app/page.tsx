@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 
 import WelcomeSection from "../components/Dashboard/WelcomeSection";
 import StatsGrid from "../components/Dashboard/StatsGrid";
@@ -7,7 +8,6 @@ import PostTable from "../components/Dashboard/PostTable";
 import DeleteModal from "../components/Dashboard/DeleteModal";
 import { usePage } from "@/components/UsePage";
 import ModalMessage from "@/components/Dashboard/ModalMessage";
-import { Suspense } from "react";
 
 
 function Home() {
@@ -21,6 +21,8 @@ function Home() {
         lenghtHighliht={data.stats.totalHighlights}
         lenghtActivePosts={data.stats.totalActivePosts}
         lenghtSlides={data.stats.totalSlides}
+        posts={data.posts}
+        categories={data.categories}
       />
 
       <div className="bg-white rounded-2xl md:rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
@@ -34,13 +36,13 @@ function Home() {
           selectedType={data.selectedType}
           setSelectedType={methods.setSelectedType}
           categories={data.categories}
-          currentUser={data.currentUser}
+          currentUser={data.userData.role}
           uniqueAuthors={data.uniqueAuthors}
         />
 
         <PostTable
           posts={data.posts}
-          currentUser={data.currentUser}
+          currentUser={data.userData.role}
           handleToggleStatus={methods.handleToggleStatus}
           handleToggleSlide={methods.handleToggleSlide}
           handleToggleHighlight={methods.handleToggleHighlight}
