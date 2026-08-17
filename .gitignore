@@ -19,8 +19,8 @@ secrets/
 backend/prisma/migrations/
 **/prisma/dev.db
 **/prisma/dev.db-journal
-.dockerignore
-Dockerfile
+# .dockerignore
+# Dockerfile
 # Logs and system
 *.log
 .DS_Store
