@@ -11,8 +11,7 @@ export const categories = [
 export const posts = [
   {
     id: 1,
-    title:
-      "Inteligência artificial acelera diagnósticos em hospitais brasileiros",
+    title: "Inteligência artificial acelera diagnósticos em hospitais brasileiros",
     slug: "inteligencia-artificial-acelera-diagnosticos-em-hospitais-brasileiros",
     thumbnail: "/p1.webp",
     content:
@@ -40,8 +39,7 @@ export const posts = [
   },
   {
     id: 3,
-    title:
-      "Pesquisa revela avanços no tratamento contra doenças cardiovasculares",
+    title: "Pesquisa revela avanços no tratamento contra doenças cardiovasculares",
     slug: "pesquisa-revela-avancos-no-tratamento-contra-doencas-cardiovasculares",
     thumbnail: "https://example.com/post-3.jpg",
     content:
@@ -125,8 +123,7 @@ export const posts = [
   },
   {
     id: 9,
-    title:
-      "Atleta brasileiro estabelece novo recorde em competição internacional",
+    title: "Atleta brasileiro estabelece novo recorde em competição internacional",
     slug: "atleta-brasileiro-estabelece-novo-recorde-em-competicao-internacional",
     thumbnail: "https://example.com/post-3.jpg",
     content:

@@ -1,4 +1,4 @@
-import { Response } from "express";
+import type { Response } from "express";
 
 import prisma from "../lib/prisma";
 
@@ -14,10 +14,8 @@ export const searchOneContent = async (req: any, res: Response) => {
     },
     select: {
       name: true,
-      posts: true
+      posts: true,
     },
-
-
   });
 
   const newsContent = await pst.findFirst({
@@ -47,9 +45,8 @@ export const searchOneContent = async (req: any, res: Response) => {
     });
   } else if (newsContent) {
     return res.json({ status: true, type: "news", content: newsContent });
-  } else {
-    return res.json({ status: false });
   }
+  return res.json({ status: false });
 };
 
 export const searchContent = async (req: any, res: Response) => {
@@ -81,9 +78,6 @@ export const searchContent = async (req: any, res: Response) => {
 
   return res.json({
     postsResults,
-    message:
-      postsResults.length === 0
-        ? "Nenhum resultado encontrado para: " + term
-        : null,
+    message: postsResults.length === 0 ? `Nenhum resultado encontrado para: ${term}` : null,
   });
 };

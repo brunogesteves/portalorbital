@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PrismaClient } from "@prisma/client";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 const prismaClientSingleton = () => {
   const dbUrl = process.env.DATABASE_URL;
@@ -8,7 +8,8 @@ const prismaClientSingleton = () => {
   }
 
   const url = new URL(dbUrl);
-  const isSsl = url.searchParams.get("ssl-mode") === "REQUIRED" || url.searchParams.get("ssl") === "true";
+  const isSsl =
+    url.searchParams.get("ssl-mode") === "REQUIRED" || url.searchParams.get("ssl") === "true";
 
   const adapter = new PrismaMariaDb({
     host: url.hostname,
@@ -22,7 +23,7 @@ const prismaClientSingleton = () => {
     connectionLimit: 20,
     keepAliveDelay: 60000,
   });
-  
+
   return new PrismaClient({ adapter });
 };
 
@@ -34,4 +35,4 @@ const prisma = globalThis.prisma ?? prismaClientSingleton();
 
 export default prisma;
 
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;

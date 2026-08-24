@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { JwtPayload } from '../types';
+import type { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import type { JwtPayload } from "../types";
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.cookies.token;
+  const { token } = req.cookies;
 
   if (!token) {
-    return res.status(401).json({ message: 'Não autenticado' });
+    return res.status(401).json({ message: "Não autenticado" });
   }
 
   try {
@@ -14,6 +14,6 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     (req as any).user = decoded;
     next();
   } catch {
-    return res.status(401).json({ message: 'Token inválido ou expirado' });
+    return res.status(401).json({ message: "Token inválido ou expirado" });
   }
 };

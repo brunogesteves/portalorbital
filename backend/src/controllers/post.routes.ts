@@ -17,7 +17,7 @@ import {
   slidersPosts,
   allPosts,
   highlightPosts,
-  getPostStats
+  getPostStats,
 } from "../controllers/post.controller";
 import { authenticate } from "../middlewares/auth.middleware";
 
@@ -27,10 +27,9 @@ const router = Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "../../public/images"));
-
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     cb(null, uniqueSuffix + path.extname(file.originalname));
   },
 });
@@ -65,24 +64,9 @@ router.get("/highlightPosts", highlightPosts);
 router.get("/allPosts", allPosts);
 router.get("/images", authenticate, getImages);
 router.get("/:id", authenticate, getPostById);
-router.post(
-  "/uploadImage",
-  authenticate,
-  upload.single("image"),
-  uploadEditorImage,
-);
-router.post(
-  "/upload-audio",
-  authenticate,
-  uploadAudio.single("audio"),
-  uploadEditorAudio,
-);
-router.post(
-  "/createpost",
-  authenticate,
-  upload.single("thumbnail"),
-  createUpdatePost,
-);
+router.post("/uploadImage", authenticate, upload.single("image"), uploadEditorImage);
+router.post("/upload-audio", authenticate, uploadAudio.single("audio"), uploadEditorAudio);
+router.post("/createpost", authenticate, upload.single("thumbnail"), createUpdatePost);
 router.put("/:id", authenticate, upload.single("thumbnail"), createUpdatePost);
 router.patch("/:id/status", authenticate, updatePostStatus);
 router.patch("/:id/slide", authenticate, updatePostSlide);

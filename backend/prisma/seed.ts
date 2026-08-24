@@ -6,9 +6,12 @@ import { categories, posts } from "./content";
 import dotenv from "dotenv";
 dotenv.config();
 
-const dbUrl = process.env.DATABASE_URL || "mysql://avnadmin:AVNS_IVPoafuBBXpXYm5Tv0P@mysql-14bfb7c3-orbchadb.k.aivencloud.com:26720/defaultdb?ssl-mode=REQUIRED";
+const dbUrl =
+  process.env.DATABASE_URL ||
+  "mysql://avnadmin:AVNS_IVPoafuBBXpXYm5Tv0P@mysql-14bfb7c3-orbchadb.k.aivencloud.com:26720/defaultdb?ssl-mode=REQUIRED";
 const url = new URL(dbUrl);
-const isSsl = url.searchParams.get("ssl-mode") === "REQUIRED" || url.searchParams.get("ssl") === "true";
+const isSsl =
+  url.searchParams.get("ssl-mode") === "REQUIRED" || url.searchParams.get("ssl") === "true";
 
 const adapter = new PrismaMariaDb({
   host: url.hostname,

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { Role } from "@prisma/client";
 import fs from "fs";
@@ -7,19 +7,18 @@ import { slugify } from "../lib/slug";
 const { post: pst } = prisma;
 const { category: cat } = prisma;
 
-
 export const slidersPosts = async (req: any, res: Response) => {
   try {
     const posts = await pst.findMany({
       where: {
         slide: true,
-
-      }, select: {
+      },
+      select: {
         thumbnail: true,
         slug: true,
-        title: true
-      }
-    })
+        title: true,
+      },
+    });
 
     return res.json(posts);
   } catch {
@@ -32,14 +31,14 @@ export const highlightPosts = async (req: any, res: Response) => {
     const posts = await pst.findMany({
       where: {
         highlight: true,
-
-      }, select: {
+      },
+      select: {
         id: true,
         thumbnail: true,
         slug: true,
-        title: true
-      }
-    })
+        title: true,
+      },
+    });
 
     return res.json(posts);
   } catch {
@@ -47,35 +46,32 @@ export const highlightPosts = async (req: any, res: Response) => {
   }
 };
 
-
-
 export const allPosts = async (req: any, res: Response) => {
-
   try {
     const posts = await cat.findMany({
       where: {
         posts: {
           some: {
             slide: false,
-            highlight: false
+            highlight: false,
           },
         },
       },
       include: {
         posts: {
           where: {
-            slide: false
+            slide: false,
           },
           take: 4,
           orderBy: {
-            createdAt: "desc"
+            createdAt: "desc",
           },
           omit: {
             createdAt: true,
             updatedAt: true,
             status: true,
             scheduledAt: true,
-            slide: true
+            slide: true,
           },
           include: {
             author: {
@@ -88,7 +84,7 @@ export const allPosts = async (req: any, res: Response) => {
           },
         },
       },
-    })
+    });
 
     return res.json(posts);
   } catch {
@@ -107,10 +103,7 @@ export const getPosts = async (req: any, res: Response) => {
     }
 
     if (q) {
-      whereClause.OR = [
-        { title: { contains: String(q) } },
-        { content: { contains: String(q) } },
-      ];
+      whereClause.OR = [{ title: { contains: String(q) } }, { content: { contains: String(q) } }];
     }
 
     if (categoryId) {
@@ -178,9 +171,7 @@ export const getPostById = async (req: any, res: Response) => {
 
     // Regra: PBR só vê os seus, ADM vê todos
     if (req.user.role !== Role.ADM && uniquePost.authorId !== req.user.id) {
-      return res
-        .status(403)
-        .json({ message: "Sem permissão para visualizar este post" });
+      return res.status(403).json({ message: "Sem permissão para visualizar este post" });
     }
 
     return res.json(uniquePost);
@@ -195,9 +186,7 @@ export const createUpdatePost = async (req: any, res: Response) => {
 
   try {
     const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
-    const thumbnail = req.file
-      ? `/images/${req.file.filename}`
-      : thumbnailUrl || null;
+    const thumbnail = req.file ? `/images/${req.file.filename}` : thumbnailUrl || null;
 
     const slug = slugify(title);
 
@@ -248,7 +237,9 @@ export const createUpdatePost = async (req: any, res: Response) => {
     });
     return res.status(201).json(upsertPost);
   } catch {
-    return res.status(500).json({ message: isEdit ? "Erro ao atualizar o post" : "Erro ao criar o post" });
+    return res
+      .status(500)
+      .json({ message: isEdit ? "Erro ao atualizar o post" : "Erro ao criar o post" });
   }
 };
 
@@ -258,9 +249,7 @@ export const updatePostSlide = async (req: any, res: Response) => {
 
   try {
     if (req.user.role !== Role.ADM) {
-      return res
-        .status(403)
-        .json({ message: "Apenas administradores podem alterar o slide" });
+      return res.status(403).json({ message: "Apenas administradores podem alterar o slide" });
     }
 
     if (typeof slide !== "boolean") {
@@ -284,9 +273,7 @@ export const updatePostHighlight = async (req: any, res: Response) => {
 
   try {
     if (req.user.role !== Role.ADM) {
-      return res
-        .status(403)
-        .json({ message: "Apenas administradores podem alterar o destaque" });
+      return res.status(403).json({ message: "Apenas administradores podem alterar o destaque" });
     }
 
     if (typeof highlight !== "boolean") {
@@ -310,13 +297,10 @@ export const deletePost = async (req: any, res: Response) => {
     const existingPost = await pst.findUnique({
       where: { id: Number(id) },
     });
-    if (!existingPost)
-      return res.status(404).json({ message: "Post não encontrado" });
+    if (!existingPost) return res.status(404).json({ message: "Post não encontrado" });
 
     if (req.user.role !== Role.ADM && existingPost.authorId !== req.user.id) {
-      return res
-        .status(403)
-        .json({ message: "Sem permissão para excluir este post" });
+      return res.status(403).json({ message: "Sem permissão para excluir este post" });
     }
 
     await pst.delete({ where: { id: Number(id) } });
@@ -333,9 +317,7 @@ export const updatePostStatus = async (req: any, res: Response) => {
   try {
     // Apenas ADM pode mudar status
     if (req.user.role !== Role.ADM) {
-      return res
-        .status(403)
-        .json({ message: "Apenas administradores podem mudar o status" });
+      return res.status(403).json({ message: "Apenas administradores podem mudar o status" });
     }
 
     if (typeof status !== "boolean") {
@@ -362,7 +344,6 @@ export const uploadEditorAudio = async (req: any, res: Response) => {
 };
 
 export const uploadEditorImage = async (req: any, res: Response) => {
-
   if (!req.file) {
     return res.status(400).json({ message: "Nenhuma imagem enviada" });
   }
@@ -395,10 +376,7 @@ export const deleteImage = async (req: Request, res: Response) => {
     // Verificar se a imagem é usada como thumbnail em algum post
     const thumbnailUsage = await pst.findFirst({
       where: {
-        OR: [
-          { thumbnail: filename },
-          { thumbnail: `/images/${filename}` },
-        ],
+        OR: [{ thumbnail: filename }, { thumbnail: `/images/${filename}` }],
       },
       select: { id: true, title: true },
     });

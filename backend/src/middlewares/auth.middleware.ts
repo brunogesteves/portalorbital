@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { Role } from '@prisma/client';
+import type { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import type { Role } from "@prisma/client";
 
 interface AuthRequest extends Request {
   user?: {
@@ -11,10 +11,10 @@ interface AuthRequest extends Request {
 }
 
 export const authenticate = (req: AuthRequest, res: Response, next: NextFunction) => {
-  const token = req.cookies.token;
+  const { token } = req.cookies;
 
   if (!token) {
-    return res.status(401).json({ message: 'Não autorizado' });
+    return res.status(401).json({ message: "Não autorizado" });
   }
 
   try {
@@ -22,15 +22,14 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Token inválido' });
+    return res.status(401).json({ message: "Token inválido" });
   }
 };
 
-export const authorize = (roles: Role[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authorize =
+  (roles: Role[]) => (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ message: 'Acesso negado' });
+      return res.status(403).json({ message: "Acesso negado" });
     }
     next();
   };
-};
