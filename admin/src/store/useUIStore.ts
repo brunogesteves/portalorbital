@@ -1,11 +1,6 @@
 import { UserProps } from "@/Utils/types";
 import { create } from "zustand";
 
-// interface Userprops {
-//   email: string,
-//   name: string,
-//   role: string,
-// }
 interface UIState {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;

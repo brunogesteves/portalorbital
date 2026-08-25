@@ -31,8 +31,8 @@ export default function useLogin() {
     setLoading(true);
     setError("");
     try {
-      const user = await api.post("auth/login", data);
-      if (user.data.status) {
+      const { data: result } = await api.post("auth/login", data);
+      if (result?.status) {
         router.push("/");
       }
     } catch (err: unknown) {

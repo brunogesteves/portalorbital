@@ -10,7 +10,7 @@ import {
 
 
 
-import useHeader from "./useHeader";
+import useHeader from "./Header.logic";
 import { useUIStore } from "@/store/useUIStore";
 
 const Header = () => {

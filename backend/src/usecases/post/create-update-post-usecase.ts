@@ -1,41 +1,48 @@
-import type { Request } from "express";
 import { PostRepository } from "../../repository/post/post-repository";
 import { slugify } from "../../lib/slug";
 import type { TitleExisting } from "../../entities/post/title-entity";
-
+import type { AuthRequest } from "../../types/auth-request";
 
 export class CreateUpdatePostUseCase {
-    public async execute(req: Request) {
+  public async execute(req: AuthRequest) {
+    if (!req.user) {
+      throw new Error("Não autenticado");
+    }
+    const { id } = req.params;
+    const isEdit = id && id !== "undefined" && id !== "null";
 
-        const { id } = req.params;
-        const isEdit = id && id !== "undefined" && id !== "null";
+    const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
+    const thumbnail = req.file ? `/images/${req.file.filename}` : thumbnailUrl || null;
 
+    const slug = slugify(title);
 
-        const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
-        const thumbnail = req.file ? `/images/${req.file.filename}` : thumbnailUrl || null;
+    const itensTitle = {
+      id,
+      title,
+      isEdit,
+    };
+    const postSettings = {
+      slug,
+      content,
+      categoryId,
+      scheduledAt,
+      thumbnail,
+      slide,
+      highlight,
+      authorId: req.user.id,
+    };
 
-        const slug = slugify(title);
+    const postRepository = new PostRepository();
+    const existingTitle = await postRepository.findTitle(itensTitle as TitleExisting);
 
-        const config = {
-            id, title, isEdit
-        }
-
-        const postRepository = new PostRepository();
-        const existingTitle = await postRepository.findTitle(config as TitleExisting);
-
-        if (!existingTitle) {
-            throw new Error("Já existe uma notícia com este título");
-        }
-
-        const result = await postRepository.createUpdatePost(content, config as TitleExisting);
-        if (!result) {
-
-            throw new Error(isEdit ? "Erro ao atualizar o post" : "Erro ao criar o post");
-        }
-        return result
-
-
-
+    if (!existingTitle) {
+      throw new Error("Já existe uma notícia com este título");
     }
 
+    const result = await postRepository.createUpdatePost(postSettings, itensTitle as TitleExisting);
+    if (!result) {
+      throw new Error(isEdit ? "Erro ao atualizar o post" : "Erro ao criar o post");
+    }
+    return result;
+  }
 }

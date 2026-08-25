@@ -1,14 +1,9 @@
 export class CreateCategories {
-    name: string;
-    slug: string;
+  name: string;
+  slug: string;
 
-    constructor(
-        name: string,
-        slug: string,
-    ) {
-
-        this.name = name;
-        this.slug = slug;
-
-    }
+  constructor(name: string, slug: string) {
+    this.name = name;
+    this.slug = slug;
+  }
 }

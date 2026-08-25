@@ -6,8 +6,6 @@ import { api } from "@/Utils/api";
 import { PostProps, CategoryProps, Pagination, PostStats } from "@/Utils/types";
 import { useUIStore } from '@/store/useUIStore';
 
-
-
 export const usePage = () => {
     const { userData, setUserData } = useUIStore();
     const [posts, setPosts] = useState<PostProps[]>([]);

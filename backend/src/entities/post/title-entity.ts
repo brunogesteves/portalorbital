@@ -1,17 +1,12 @@
-import type { Role } from "@prisma/client";
 
 export class TitleExisting {
-    id: string;
-    title: string;
-    isEdit: boolean | ""
+  id: string;
+  title: string;
+  isEdit: boolean | "";
 
-    constructor(
-        id: string,
-        title: string,
-        isEdit: boolean | "",
-    ) {
-        this.id = id;
-        this.title = title;
-        this.isEdit = isEdit;
-    }
+  constructor(id: string, title: string, isEdit: boolean | "") {
+    this.id = id;
+    this.title = title;
+    this.isEdit = isEdit;
+  }
 }

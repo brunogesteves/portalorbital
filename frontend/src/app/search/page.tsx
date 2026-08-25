@@ -1,5 +1,5 @@
 import Loading from "@/components/Loading";
-import SearchResults from "@/components/Pages/Search/search";
+import SearchResults from "@/View/Search/Search.view";
 import { metadataSearch } from "@/utils/metadatas";
 import { Suspense } from "react";
 

@@ -1,4 +1,3 @@
-
 import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import path from "path";
@@ -11,6 +10,14 @@ import { HighlightPostsPostUseCase } from "../usecases/post/highlight-post-useca
 import { AllPostsPostUseCase } from "../usecases/post/all-posts-usecase";
 import { AllImagesPostUseCase } from "../usecases/post/all-images-usecase";
 import { GetPostByIdUseCase } from "../usecases/post/get-post-byid-usecase";
+import { UploadEditorImageUseCase } from "../usecases/post/upload-editor-image-usecase";
+import { UploadEditorAudioUseCase } from "../usecases/post/upload-editor-audio-usecase";
+import { CreateUpdatePostUseCase } from "../usecases/post/create-update-post-usecase";
+import { UpdatePostStatusUseCase } from "../usecases/post/update-post-status-usecase";
+import { UpdatePostSlideUseCase } from "../usecases/post/update-post-slide-usecase";
+import { UpdatePostHighlightUseCase } from "../usecases/post/update-post-highlight-usecase";
+import { DeletePostUseCase } from "../usecases/post/delete-post-usecase";
+import { DeleteImageUseCase } from "../usecases/post/delete-image-usecase";
 
 const router = Router();
 
@@ -60,25 +67,25 @@ router.get("/", authenticate, async (req: Request, res: Response) => {
   res.json(result);
 });
 
-router.get("/allSlides", async (res: Response) => {
+router.get("/allSlides", async (req: Request, res: Response) => {
   const getPosts = new SliderPostUseCase();
   const result = await getPosts.execute();
   res.json(result);
 });
 
-router.get("/highlightPosts", async (res: Response) => {
+router.get("/highlightPosts", async (req: Request, res: Response) => {
   const getPosts = new HighlightPostsPostUseCase();
   const result = await getPosts.execute();
   res.json(result);
 });
 
-router.get("/allPosts", async (res: Response) => {
+router.get("/allPosts", async (req: Request, res: Response) => {
   const allPosts = new AllPostsPostUseCase();
   const result = await allPosts.execute();
   res.json(result);
 });
 
-router.get("/images", authenticate, async (res: Response) => {
+router.get("/images", authenticate, async (req: Request, res: Response) => {
   const allImages = new AllImagesPostUseCase();
   const result = await allImages.execute();
   res.json(result);
@@ -90,14 +97,78 @@ router.get("/:id", authenticate, async (req: Request, res: Response) => {
   res.json(result);
 });
 
-router.post("/uploadImage", authenticate, upload.single("image"), uploadEditorImage);
-router.post("/upload-audio", authenticate, uploadAudio.single("audio"), uploadEditorAudio);
-router.post("/createpost", authenticate, upload.single("thumbnail"), createUpdatePost);
-router.put("/:id", authenticate, upload.single("thumbnail"), createUpdatePost);
-router.patch("/:id/status", authenticate, updatePostStatus);
-router.patch("/:id/slide", authenticate, updatePostSlide);
-router.patch("/:id/highlight", authenticate, updatePostHighlight);
-router.delete("/images/:filename", authenticate, deleteImage);
-router.delete("/:id", authenticate, deletePost);
+router.post(
+  "/uploadImage",
+  authenticate,
+  upload.single("image"),
+  async (req: Request, res: Response) => {
+    const UploadEditor = new UploadEditorImageUseCase();
+    const result = await UploadEditor.execute(req);
+    res.json(result);
+  },
+);
+
+router.post(
+  "/upload-audio",
+  authenticate,
+  uploadAudio.single("audio"),
+  async (req: Request, res: Response) => {
+    const UploadEditor = new UploadEditorAudioUseCase();
+    const result = await UploadEditor.execute(req);
+    res.json(result);
+  },
+);
+
+router.post(
+  "/createpost",
+  authenticate,
+  upload.single("thumbnail"),
+  async (req: Request, res: Response) => {
+    const createUpdatePost = new CreateUpdatePostUseCase();
+    const result = await createUpdatePost.execute(req);
+    res.json(result);
+  },
+);
+
+router.put(
+  "/:id",
+  authenticate,
+  upload.single("thumbnail"),
+  async (req: Request, res: Response) => {
+    const createUpdatePost = new CreateUpdatePostUseCase();
+    const result = await createUpdatePost.execute(req);
+    res.json(result);
+  },
+);
+
+router.patch("/:id/status", authenticate, async (req: Request, res: Response) => {
+  const updatePostStatus = new UpdatePostStatusUseCase();
+  const result = await updatePostStatus.execute(req);
+  res.json(result);
+});
+
+router.patch("/:id/slide", authenticate, async (req: Request, res: Response) => {
+  const updatePostSlide = new UpdatePostSlideUseCase();
+  const result = await updatePostSlide.execute(req);
+  res.json(result);
+});
+
+router.patch("/:id/highlight", authenticate, async (req: Request, res: Response) => {
+  const updatePostSlide = new UpdatePostHighlightUseCase();
+  const result = await updatePostSlide.execute(req);
+  res.json(result);
+});
+
+router.delete("/images/:filename", authenticate, async (req: Request, res: Response) => {
+  const deleteImage = new DeleteImageUseCase();
+  const result = await deleteImage.execute(req);
+  res.json(result);
+});
+
+router.delete("/:id", authenticate, async (req: Request, res: Response) => {
+  const deletePost = new DeletePostUseCase();
+  const result = await deletePost.execute(req);
+  res.json(result);
+});
 
 export default router;

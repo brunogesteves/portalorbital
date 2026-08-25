@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
-import { useSearch } from "./useSearch";
+import { useSearch } from "./Search.logic";
 import Image from "next/image";
 import Link from "next/link";
 import { imageUrl } from "@/utils/api";

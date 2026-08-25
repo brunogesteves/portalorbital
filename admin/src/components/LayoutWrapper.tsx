@@ -4,7 +4,7 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useUIStore } from "@/store/useUIStore";
-import Header from "./Header/Header";
+import Header from "./Header/Header.view";
 import Sidebar from "./Sidebar";
 
 export default function LayoutWrapper({

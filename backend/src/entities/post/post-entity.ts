@@ -1,5 +1,4 @@
 export class PostContent {
-
     id: number;
     slug: string;
     createdAt: Date;
@@ -14,10 +13,7 @@ export class PostContent {
     categoryId: number;
     authorId: number;
 
-
     constructor(
-
-
         id: number,
         slug: string,
         createdAt: Date,
@@ -31,9 +27,7 @@ export class PostContent {
         highlight: boolean,
         categoryId: number,
         authorId: number,
-
     ) {
-
         this.id = id;
         this.slug = slug;
         this.createdAt = createdAt;
@@ -47,6 +41,5 @@ export class PostContent {
         this.highlight = highlight;
         this.categoryId = categoryId;
         this.authorId = authorId;
-
     }
 }

@@ -1,5 +1,5 @@
 import Loading from "@/components/Loading";
-import SlugPage from "@/components/Pages/Slug/slug";
+import SlugPage from "@/View/Slug/Slug.view";
 import { getSlugMetadata } from "@/utils/metadatas";
 import { SlugProps } from "@/utils/types";
 import { Suspense } from "react";

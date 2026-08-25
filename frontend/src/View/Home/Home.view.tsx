@@ -1,7 +1,7 @@
 "use client";
 
 import Slider from "@/components/Header/Slider/Slider";
-import { useHome } from "./useHome";
+import { useHome } from "./Home.logic";
 import Header from "@/components/Header/Header";
 import JsonLD from "@/components/jsonLd";
 

@@ -1,50 +1,76 @@
-
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../lib/prisma";
 import type { SearchContent } from "../../entities/search/search-entity";
 
 export class SearchRepository {
-    private prisma: PrismaClient;
+  private prisma = prisma;
 
-    constructor() {
-        this.prisma = new PrismaClient();
-    }
+  public async getContent(slug: string) {
+    const categoryContent = await this.prisma.category.findFirst({
+      where: {
+        slug,
+      },
+      select: {
+        name: true,
+        posts: true
+      },
 
 
-    public async searchTerm(term: string): Promise<SearchContent[]> {
+    });
+    if (categoryContent) return { item: "category", content: categoryContent }
 
-        const postsResults = await this.prisma.post.findMany({
-            where: {
-                OR: [
-                    {
-                        content: {
-                            contains: term,
-                        },
-                    },
-                    {
-                        title: {
-                            contains: term,
-                        },
-                    },
-                    {
-                        slug: {
-                            contains: term,
-                        },
-                    },
-                ],
+    const newsContent = await this.prisma.post.findFirst({
+      where: {
+        slug,
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        thumbnail: true,
+        createdAt: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    if (newsContent) return { item: "news", content: newsContent }
+  }
+
+  public async searchTerm(term: string): Promise<SearchContent[]> {
+    const postsResults = await this.prisma.post.findMany({
+      where: {
+        OR: [
+          {
+            content: {
+              contains: term,
             },
-            include: {
-                category: {
-                    select: {
-                        id: true,
-                        name: true,
-                        slug: true,
-                    }
-                },
+          },
+          {
+            title: {
+              contains: term,
             },
-        });
+          },
+          {
+            slug: {
+              contains: term,
+            },
+          },
+        ],
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
+    });
 
-        return postsResults
-
-    }
-
+    return postsResults;
+  }
 }

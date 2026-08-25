@@ -15,18 +15,13 @@ export function useSearch(term: string) {
       setIsLoading(false);
       return;
     }
-
     setIsLoading(true);
     setIsError(false);
 
     try {
+      console.log("term: ", term)
       const res = await api.get(`/search?term=${term.toLowerCase()}`);
-      const { postsResults, message } = res.data;
-      if (postsResults.length > 0) {
-        setSearchResults(postsResults);
-      } else {
-        setWarning(message);
-      }
+      setSearchResults(res.data);
     } catch {
       setIsError(true);
       setWarning("Erro interno");

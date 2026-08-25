@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { FiArrowRight } from "react-icons/fi";
 import HeroSlider from "@/components/Header/Slider/Slider";
-import Header from "../Header/Header";
+import Header from "@/components/Header/Header";
 import { CategoryContentProps } from "@/utils/types";
 import { imageUrl } from "@/utils/api";
 import JsonLD from "@/components/jsonLd";

@@ -9,20 +9,22 @@ const router = Router();
 
 router.post("/login", async (req: Request, res: Response) => {
   const login = new LoginUseCase();
-  const result = await login.execute(req);
+  const result = await login.execute(req, res);
   res.json(result);
 });
 
-router.post("/logout", async (res: Response) => {
+router.post("/logout", async (req: Request, res: Response) => {
   const logOut = new LogoutUseCase();
-  const result = await logOut.execute(res)
+  const result = await logOut.execute(res);
   res.json(result);
 });
 
-router.post("/me", authenticate, (req: Request, res: Response) => {
-  const me = new UserSettingsUseCase()
-  const result = me.execute(req);
-  res.json(result);
+router.get("/me", authenticate, async (req: Request, res: Response) => {
+
+  const userSettings = new UserSettingsUseCase();
+  const result = await userSettings.execute(req);
+  res.json({ user: result });
+
 });
 
 export default router;

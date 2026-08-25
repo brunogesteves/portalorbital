@@ -1,13 +1,9 @@
-import type { User } from '../../entities/user/user-entity';
-import { PrismaClient } from "@prisma/client";
-import type { UserSettings } from '../../entities/user/user-settings-entity';
+import type { User } from "../../entities/user/user-entity";
+import prisma from "../../lib/prisma";
+import type { UserSettings } from "../../entities/user/user-settings-entity";
 
 export class UserRepository {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  private prisma = prisma;
 
   public async findByEmail(email: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
@@ -26,6 +22,6 @@ export class UserRepository {
         role: true,
       },
     });
-    return user
+    return user;
   }
 }

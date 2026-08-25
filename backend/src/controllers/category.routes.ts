@@ -15,37 +15,34 @@ import { GetContentCategoryUseCase } from "../usecases/category/get-ContentCateg
 
 const router = Router();
 
-router.get("/", authenticate, async (res: Response) => {
+router.get("/", authenticate, async (req: Request, res: Response) => {
   const getCategories = new GetCategoriesUseCase();
-  const result = await getCategories.execute()
-  return res.json(result)
+  const result = await getCategories.execute();
+  return res.json(result);
 });
 
-router.get("/front", async (res: Response) => {
+router.get("/front", async (req: Request, res: Response) => {
   const getCategories = new GetFrontCategoriesUseCase();
-  const result = await getCategories.execute()
-  return res.json(result)
+  const result = await getCategories.execute();
+  return res.json(result);
 });
 
 router.get("/:category", async (req: Request, res: Response) => {
   const searchOneContent = new GetContentCategoryUseCase();
-  const result = await searchOneContent.execute(req)
-  return res.json(result)
+  const result = await searchOneContent.execute(req);
+  return res.json(result);
 });
 
 router.post("/", authenticate, authorize([Role.ADM]), async (req: Request, res: Response) => {
   const createCategory = new CreateCategorysUseCase();
-  const result = await createCategory.execute(req)
-  return res.json(result)
+  const result = await createCategory.execute(req);
+  return res.json(result);
 });
 
 router.delete("/:id", authenticate, authorize([Role.ADM]), async (req: Request, res: Response) => {
   const deleteCategory = new DeleteCategorysUseCase();
-  const result = await deleteCategory.execute(req)
-  return res.json(result)
+  const result = await deleteCategory.execute(req);
+  return res.json(result);
 });
-
-
-
 
 export default router;

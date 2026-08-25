@@ -1,7 +1,7 @@
 "use client";
 
 import { FiMail, FiLock, FiArrowRight, FiAlertCircle } from "react-icons/fi";
-import useLogin from "./useLogin";
+import useLogin from "./Login.logic";
 
 export default function Login() {
   const { data, methods } = useLogin();

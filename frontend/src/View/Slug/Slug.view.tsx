@@ -1,9 +1,9 @@
 "use client";
 
-import { useSlug } from "./useSlug";
-import CategoryPage from "@/components/ModelPages/category";
-import NewsPage from "@/components/ModelPages/news";
-import NotFoundPage from "@/components/ModelPages/notfound";
+import { useLogic } from "./Slug.logic";
+import CategoryPage from "./panels/category";
+import NewsPage from "./panels/news";
+import NotFoundPage from "./panels/notfound";
 
 import Loading from "@/components/Loading";
 import { CategoryContentProps, PostProps } from "@/utils/types";
@@ -11,10 +11,9 @@ import { CategoryContentProps, PostProps } from "@/utils/types";
 
 
 export default function SlugPage({ slug }: { slug: string }) {
-  // const params = useParams();
-  // const slug = params.slug as string;
 
-  const { data } = useSlug(slug);
+
+  const { data } = useLogic(slug);
 
   if (data.loading) {
     return <Loading />;

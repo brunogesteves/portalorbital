@@ -1,6 +1,3 @@
-// import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
-// import { FaXTwitter } from "react-icons/fa6";
-// import { FiShare2 } from "react-icons/fi";
 import Header from "@/components/Header/Header";
 
 import { NewsDataProps } from "@/utils/types";
@@ -8,9 +5,9 @@ import Image from "next/image";
 import {
   AudioPlayerDesktop,
   AudioPlayerMobile,
-} from "../AudioPlayer/AudioPlayer";
+} from "@/components/AudioPlayer/AudioPlayer";
 import { imageUrl } from "@/utils/api";
-import { ShareButton } from "../ShareButton";
+import { ShareButton } from "@/components/ShareButton";
 import JsonLD from "@/components/jsonLd";
 
 export default function NewsPage({ data }: NewsDataProps) {

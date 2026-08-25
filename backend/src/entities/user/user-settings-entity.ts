@@ -5,18 +5,11 @@ export class UserSettings {
   role: Role;
   email: string;
 
-
-  constructor(
-    name: string | null,
-    email: string,
-    role: Role,
-
-  ) {
+  constructor(name: string | null, email: string, role: Role) {
     this.name = name;
 
     this.email = email;
 
     this.role = role;
-
   }
 }

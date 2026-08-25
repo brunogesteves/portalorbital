@@ -5,12 +5,12 @@ import { api } from "@/Utils/api";
 import { useUIStore } from "@/store/useUIStore";
 
 const useHeader = () => {
+  const { toggleSidebar, userData } = useUIStore();
   const [time, setTime] = useState(new Date());
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-  const { toggleSidebar } = useUIStore();
 
   useEffect(() => {
     setMounted(true);

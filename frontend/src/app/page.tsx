@@ -1,6 +1,6 @@
 import { metadataHome } from "@/utils/metadatas";
 import { Suspense } from "react";
-import Home from "../components/Pages/Home/home";
+import Home from "../View/Home/Home.view";
 import Loading from "@/components/Loading";
 
 export const metadata = metadataHome;

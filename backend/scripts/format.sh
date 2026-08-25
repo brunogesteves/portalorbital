@@ -8,23 +8,17 @@ npx prettier --write .
 # Remove linhas vazias no início e fim do arquivo
 find src prisma -name "*.ts" -o -name "*.js" | while read -r file; do
   awk '
-    # Pular linhas vazias no início
-    !NF && !started { next }
-    NF { started=1 }
-    # Guardar linhas para detectar múltiplas vazias
-    { lines[NR] = $0 }
-  ' "$file" > /dev/null 2>&1
-  
-  # Método mais simples: usar awk para manter apenas 1 linha vazia consecutiva
-  awk '
-    BEGIN { prev_empty = 0 }
-    /^$/ { 
-      if (prev_empty) next
-      prev_empty = 1
-      print
+    BEGIN { blank_count = 0; started = 0 }
+    /^$/ {
+      blank_count++
+      if (blank_count <= 1 && started) print
       next
     }
-    { prev_empty = 0; print }
+    {
+      if (!started) started = 1
+      blank_count = 0
+      print
+    }
   ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
 done
 

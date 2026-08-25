@@ -42,6 +42,6 @@ frontend/src/app/sitemap.ts
 # Prisma seed script
 backend/prisma/seed.ts
 frontend/SLIDER-SUGESTOES.md
-
+frontend/src/app/sitemap.ts
 # User creation script
 backend/create_users.ts
