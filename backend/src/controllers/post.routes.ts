@@ -1,25 +1,16 @@
-import { Router } from "express";
+
+import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import {
-  getPosts,
-  getPostById,
-  createUpdatePost,
-  deletePost,
-  uploadEditorImage,
-  uploadEditorAudio,
-  getImages,
-  deleteImage,
-  updatePostStatus,
-  updatePostSlide,
-  updatePostHighlight,
-  slidersPosts,
-  allPosts,
-  highlightPosts,
-  getPostStats,
-} from "../controllers/post.controller";
 import { authenticate } from "../middlewares/auth.middleware";
+import { GetPostStatsUseCase } from "../usecases/post/get-post-stats-usecase";
+import { GetPostUseCase } from "../usecases/post/get-post-usecase";
+import { SliderPostUseCase } from "../usecases/post/slider-post-usecase";
+import { HighlightPostsPostUseCase } from "../usecases/post/highlight-post-usecase";
+import { AllPostsPostUseCase } from "../usecases/post/all-posts-usecase";
+import { AllImagesPostUseCase } from "../usecases/post/all-images-usecase";
+import { GetPostByIdUseCase } from "../usecases/post/get-post-byid-usecase";
 
 const router = Router();
 
@@ -57,13 +48,48 @@ const audioStorage = multer.diskStorage({
 
 const uploadAudio = multer({ storage: audioStorage });
 
-router.get("/stats", authenticate, getPostStats);
-router.get("/", authenticate, getPosts);
-router.get("/allSlides", slidersPosts);
-router.get("/highlightPosts", highlightPosts);
-router.get("/allPosts", allPosts);
-router.get("/images", authenticate, getImages);
-router.get("/:id", authenticate, getPostById);
+router.get("/stats", authenticate, async (req: Request, res: Response) => {
+  const getStats = new GetPostStatsUseCase();
+  const result = await getStats.execute(req);
+  res.json(result);
+});
+
+router.get("/", authenticate, async (req: Request, res: Response) => {
+  const getPosts = new GetPostUseCase();
+  const result = await getPosts.execute(req);
+  res.json(result);
+});
+
+router.get("/allSlides", async (res: Response) => {
+  const getPosts = new SliderPostUseCase();
+  const result = await getPosts.execute();
+  res.json(result);
+});
+
+router.get("/highlightPosts", async (res: Response) => {
+  const getPosts = new HighlightPostsPostUseCase();
+  const result = await getPosts.execute();
+  res.json(result);
+});
+
+router.get("/allPosts", async (res: Response) => {
+  const allPosts = new AllPostsPostUseCase();
+  const result = await allPosts.execute();
+  res.json(result);
+});
+
+router.get("/images", authenticate, async (res: Response) => {
+  const allImages = new AllImagesPostUseCase();
+  const result = await allImages.execute();
+  res.json(result);
+});
+
+router.get("/:id", authenticate, async (req: Request, res: Response) => {
+  const getPostById = new GetPostByIdUseCase();
+  const result = await getPostById.execute(req);
+  res.json(result);
+});
+
 router.post("/uploadImage", authenticate, upload.single("image"), uploadEditorImage);
 router.post("/upload-audio", authenticate, uploadAudio.single("audio"), uploadEditorAudio);
 router.post("/createpost", authenticate, upload.single("thumbnail"), createUpdatePost);
