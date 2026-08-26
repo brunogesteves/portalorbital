@@ -32,6 +32,8 @@ export default function useLogin() {
     setError("");
     try {
       const { data: result } = await api.post("auth/login", data);
+
+      console.log(result)
       if (result?.status) {
         router.push("/");
       }

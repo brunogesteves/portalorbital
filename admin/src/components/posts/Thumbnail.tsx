@@ -2,7 +2,7 @@ import { api, imageUrl } from "@/Utils/api";
 import { ThumbnailProps } from "@/Utils/types";
 import Image from "next/image";
 import { useState } from "react";
-import ModalMessage from "../Dashboard/ModalMessage";
+import ModalMessage from "../ModalMessage";
 
 export const Thumbnail = ({
   preview,

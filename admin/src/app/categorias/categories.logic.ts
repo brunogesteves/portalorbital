@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { api } from "@/Utils/api";
 import { CategoryProps } from "@/Utils/types";
 
-export function useCategorias() {
+export function useLogicCategory() {
   const [categories, setCategories] = useState<CategoryProps[]>([]);
   const [newName, setNewName] = useState("");
   const [error, setError] = useState("");

@@ -1,10 +1,4 @@
 import { Router, type Request, type Response } from "express";
-// import {
-//   getCategories,
-//   createCategory,
-//   deleteCategory,
-//   frontCategories,
-// } from "../controllers/category.controller";
 import { authenticate, authorize } from "../middlewares/auth.middleware";
 import { Role } from "@prisma/client";
 import { GetFrontCategoriesUseCase } from "../usecases/category/get-front-categories-usecase";

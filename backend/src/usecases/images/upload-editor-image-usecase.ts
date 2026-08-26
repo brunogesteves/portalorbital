@@ -5,8 +5,8 @@ export class UploadEditorImageUseCase {
     if (!req.file) {
       throw new Error("Nenhuma imagem enviada");
     }
-    const url = `${req.file.filename}`;
+    const url = req.file.filename;
 
-    return { url: `${url}` };
+    return { url };
   }
 }

@@ -10,6 +10,9 @@ export default tseslint.config(
   {
     rules: {
       // Estilo e formatação (auto-fixable)
+      "no-trailing-spaces": "warn",
+      "padded-blocks": ["warn", "never"],
+      "no-multiple-empty-lines": ["warn", { max: 1, maxEOF: 0 }],
       curly: ["error", "multi-line"],
       eqeqeq: ["error", "always", { null: "ignore" }],
       "no-var": "error",

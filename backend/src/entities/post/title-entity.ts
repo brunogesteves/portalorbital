@@ -2,11 +2,11 @@
 export class TitleExisting {
   id: string;
   title: string;
-  isEdit: boolean | "";
+  action: string;
 
-  constructor(id: string, title: string, isEdit: boolean | "") {
+  constructor(id: string, title: string, action: string | "") {
     this.id = id;
     this.title = title;
-    this.isEdit = isEdit;
+    this.action = action;
   }
 }

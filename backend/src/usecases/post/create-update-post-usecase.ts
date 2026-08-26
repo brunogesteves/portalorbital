@@ -9,9 +9,7 @@ export class CreateUpdatePostUseCase {
       throw new Error("Não autenticado");
     }
     const { id } = req.params;
-    const isEdit = id && id !== "undefined" && id !== "null";
-
-    const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight } = req.body;
+    const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight, action } = req.body;
     const thumbnail = req.file ? `/images/${req.file.filename}` : thumbnailUrl || null;
 
     const slug = slugify(title);
@@ -19,7 +17,7 @@ export class CreateUpdatePostUseCase {
     const itensTitle = {
       id,
       title,
-      isEdit,
+      action,
     };
     const postSettings = {
       slug,
@@ -33,15 +31,18 @@ export class CreateUpdatePostUseCase {
     };
 
     const postRepository = new PostRepository();
-    const existingTitle = await postRepository.findTitle(itensTitle as TitleExisting);
+    if (action === "createPost") {
+      const existingTitle = await postRepository.findTitle(itensTitle as TitleExisting);
 
-    if (!existingTitle) {
-      throw new Error("Já existe uma notícia com este título");
+      if (!existingTitle) {
+        throw new Error("Já existe uma notícia com este título");
+      }
     }
+
 
     const result = await postRepository.createUpdatePost(postSettings, itensTitle as TitleExisting);
     if (!result) {
-      throw new Error(isEdit ? "Erro ao atualizar o post" : "Erro ao criar o post");
+      throw new Error(action === "editPost" ? "Erro ao atualizar o post" : "Erro ao criar o post");
     }
     return result;
   }

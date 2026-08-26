@@ -1,39 +1,48 @@
 import { api, imageUrl } from "@/Utils/api";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiTrash2, FiX, FiLoader } from "react-icons/fi";
-import ModalMessage from "@/components/Dashboard/ModalMessage";
+import ModalMessage from "@/components/ModalMessage";
 import { LibraryModalProps } from "@/Utils/types";
 
 
 
 export const LibraryModal = ({
   existingImages,
+  setExistingImages,
   setPreview,
   setThumbnailUrl,
   setShowImageModal,
-  onDelete,
+
 }: LibraryModalProps) => {
   const [deletingImage, setDeletingImage] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const handleDelete = async (e: React.MouseEvent, filename: string) => {
-    e.stopPropagation();
-    if (!onDelete) return;
+
+
+  const handleDelete = async (filename: string) => {
+
+
+    // setExistingImages("asas");
 
     setDeletingImage(filename);
     setDeleteError(null);
 
     try {
-      await onDelete(filename);
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.message || "Erro ao excluir imagem";
-      setDeleteError(message);
+
+      const res = await api.delete(`/images/${filename}`)
+      if (res) setExistingImages(filename)
+    } catch {
+      //toast(erro na tentativa de apagar a foto)
+
+
     } finally {
-      setDeletingImage(null);
+      // setDeletingImage(null);
+      // setShowWarningModal(true);
+      // setWarningMessage(message ?? "");
     }
   };
+
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] backdrop-blur-sm p-4">
@@ -78,8 +87,8 @@ export const LibraryModal = ({
                   <div
                     key={i}
                     className={`group relative aspect-video rounded-2xl overflow-hidden border-2 transition-all bg-slate-100 shadow-sm hover:shadow-lg ${isDeleting
-                        ? "border-yellow-400 opacity-60"
-                        : "border-transparent hover:border-red-500 cursor-pointer"
+                      ? "border-yellow-400 opacity-60"
+                      : "border-transparent hover:border-red-500 cursor-pointer"
                       }`}
                     onClick={() => {
                       if (isDeleting) return;
@@ -105,16 +114,14 @@ export const LibraryModal = ({
                         </span>
                       )}
                     </div>
-                    {/* Botão de excluir */}
-                    {onDelete && !isDeleting && (
-                      <button
-                        onClick={(e) => handleDelete(e, img)}
-                        className="absolute top-2 right-2 p-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10 shadow-lg"
-                        title="Excluir imagem"
-                      >
-                        <FiTrash2 size={14} />
-                      </button>
-                    )}
+                    <button
+                      onClick={(e) => handleDelete(img)}
+                      className="absolute top-2 right-2 p-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10 shadow-lg"
+                      title="Excluir imagem"
+                    >
+                      <FiTrash2 size={14} />
+                    </button>
+
                   </div>
                 );
               })}

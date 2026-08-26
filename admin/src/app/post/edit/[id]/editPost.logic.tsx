@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 
 import { api, imageUrl } from "@/Utils/api";
 import { CategoryProps } from "@/Utils/types";
 import { PostFormValues, postSchema } from "@/Utils/schemas";
-import { AxiosError } from "axios";
 
-export const useEditPost = () => {
+export const useLogicPost = () => {
   const router = useRouter();
   const params = useParams();
   const id = params.id;
@@ -53,7 +53,7 @@ export const useEditPost = () => {
         try {
           const [cats, images, post] = await Promise.all([
             api.get("/categories"),
-            api.get("/posts/images"),
+            api.get("/images"),
             api.get(`/posts/${id}`)
           ])
           setCategories(cats.data);
@@ -83,11 +83,6 @@ export const useEditPost = () => {
 
   }, [id, reset]);
 
-  const onDeleteImage = async (filename: string) => {
-    await api.delete(`/posts/images/${filename}`);
-    setExistingImages((prev) => prev.filter((img) => img !== filename));
-  };
-
   const onSubmit = async (data: PostFormValues) => {
     setLoading(true);
     setSuccess(false);
@@ -100,6 +95,7 @@ export const useEditPost = () => {
     if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);
     formData.append("slide", String(data.slide));
     formData.append("highlight", String(data.highlight));
+    formData.append("action", "editPost");
 
     try {
       await api.put(`/posts/${id}`, formData);
@@ -137,7 +133,6 @@ export const useEditPost = () => {
       setPreview,
       setExistingImages,
       setShowWarningModal,
-      onDeleteImage,
       setValue,
       watch,
       reset,

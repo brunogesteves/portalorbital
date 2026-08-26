@@ -120,10 +120,10 @@ export interface StatsGridProps {
 
 export interface LibraryModalProps {
   existingImages: string[];
+  setExistingImages: (image: string) => void;
   setPreview: (preview: string) => void;
   setThumbnailUrl: (thumbnailUrl: string) => void;
   setShowImageModal: (show: boolean) => void;
-  onDelete?: (filename: string) => Promise<void>;
 }
 
 export interface Pagination {

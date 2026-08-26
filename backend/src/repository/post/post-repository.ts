@@ -138,22 +138,22 @@ export class PostRepository {
   }
 
   public async findTitle(itensTitle: TitleExisting) {
-    const { isEdit, id, title } = itensTitle;
+    const { action, id, title } = itensTitle;
 
     const existingTitle = await this.prisma.post.findFirst({
       where: {
         title,
-        ...(isEdit && { id: { not: Number(id) } }),
+        ...(action && { id: { not: Number(id) } }),
       },
     });
     return existingTitle;
   }
 
   public async createUpdatePost(postSettings: CreateUpdatePost, itensTitle: TitleExisting) {
-    const { isEdit, id, title } = itensTitle;
+    const { action, id, title } = itensTitle;
     const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } = postSettings;
     const upsertPost = await this.prisma.post.upsert({
-      where: { id: isEdit ? Number(id) : 0 },
+      where: { id: action === "editPost" ? Number(id) : 0 },
       update: {
         title,
         slug,
@@ -200,25 +200,6 @@ export class PostRepository {
     });
 
     return post;
-  }
-
-  public async veriricationImage(filename: string) {
-    const thumbnailhasbeenUsed = await this.prisma.post.findFirst({
-      where: {
-        OR: [{ thumbnail: filename }, { thumbnail: `/images/${filename}` }],
-      },
-      select: { id: true, title: true },
-    });
-
-    const contentUsage = await this.prisma.post.findFirst({
-      where: {
-        content: {
-          contains: filename,
-        },
-      },
-      select: { id: true, title: true },
-    });
-    return thumbnailhasbeenUsed || contentUsage;
   }
 
   public async deletePost(id: string) {

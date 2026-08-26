@@ -8,7 +8,7 @@ import { PostFormValues, postSchema } from "@/Utils/schemas";
 import { useState, useEffect } from "react";
 import { AxiosError } from "axios";
 
-export const useNewPost = () => {
+export const useLogicNewPost = () => {
   const router = useRouter();
   const [preview, setPreview] = useState("");
   const [categories, setCategories] = useState<CategoryProps[]>([]);
