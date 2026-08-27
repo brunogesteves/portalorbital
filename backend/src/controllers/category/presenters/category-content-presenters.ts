@@ -1,4 +1,4 @@
-import type { PostContent } from "../post/post-entity";
+import type { PostContent } from "../../post/presenters/post-entity";
 
 export class GetCategoryContent {
   name: string;

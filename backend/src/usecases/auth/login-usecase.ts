@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { UserRepository } from "../../repository/user/user-repository";
 
 export class LoginUseCase {
+  
   public async execute(req: Request, res: Response): Promise<{ status: boolean }> {
     const { email, password } = req.body;
 

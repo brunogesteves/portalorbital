@@ -3,35 +3,30 @@
 import { LibraryModal } from "@/components/posts/LibrayModal";
 import { Thumbnail } from "@/components/posts/Thumbnail";
 import { Editor } from "@/components/posts/Editor";
-import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
+import { FiAlertCircle } from "react-icons/fi";
 import { Suspense } from "react";
 
 import WarningModal from "@/components/Dashboard/WarningModal";
 import { useLogicNewPost } from "./newPost.logic";
 import Loading from "@/components/Loading";
+import Toast from "@/components/Toast";
+import Calendar from "@/components/Calendar";
 
 export default function PostForm() {
   const { data, methods } = useLogicNewPost();
 
   return (
     <Suspense fallback={<Loading />}>
-
       <div className="max-w-5xl mx-auto pb-10 px-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-              Criar Nova Notícia
+              Criar Nova Noticia
             </h1>
             <p className="text-gray-500 font-medium">
               Preencha os detalhes para publicar no portal.
             </p>
           </div>
-
-          {data.success && (
-            <div className="bg-green-50 text-green-700 px-4 py-2 rounded-lg flex items-center gap-2 font-bold animate-bounce">
-              <FiCheckCircle /> Salvo com sucesso! Redirecionando...
-            </div>
-          )}
         </div>
 
         <form
@@ -40,17 +35,16 @@ export default function PostForm() {
         >
           <div className="bg-white p-6 md:p-8 rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Título e Categoria */}
               <div className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-sm font-black text-gray-700 ml-1">
-                    Título da Notícia
+                    Titulo da Noticia
                   </label>
                   <input
                     {...methods.register("title")}
                     type="text"
                     className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${data.errors.title ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
-                    placeholder="Ex: Nova reforma política é aprovada no congresso"
+                    placeholder="Ex: Nova reforma politica e aprovada no congresso"
                   />
                   {data.errors.title && (
                     <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
@@ -90,12 +84,12 @@ export default function PostForm() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-black text-gray-700 ml-1">
-                      Data de Publicação
+                      Data de Publicacao
                     </label>
-                    <input
-                      {...methods.register("scheduledAt")}
-                      type="datetime-local"
-                      className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${data.errors.scheduledAt ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
+                    <Calendar
+                      value={methods.watch("scheduledAt")}
+                      onChange={(val) => methods.setValue("scheduledAt", val)}
+                      error={!!data.errors.scheduledAt}
                     />
                     {data.errors.scheduledAt && (
                       <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
@@ -107,7 +101,6 @@ export default function PostForm() {
                 </div>
               </div>
 
-              {/* Thumbnail */}
               <div className="space-y-2">
                 <label className="text-sm font-black text-gray-700 ml-1 text-center block md:text-left">
                   Imagem de Capa (Thumbnail)
@@ -119,6 +112,11 @@ export default function PostForm() {
                   setPreview={methods.setPreview}
                   setExistingImages={methods.setExistingImages}
                 />
+                {data.errors.thumbnailUrl && (
+                  <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
+                    <FiAlertCircle size={12} /> {data.errors.thumbnailUrl.message}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -130,12 +128,10 @@ export default function PostForm() {
                 <button
                   type="button"
                   onClick={() => methods.setValue("slide", !methods.watch("slide"))}
-                  className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${methods.watch("slide") ? "bg-red-600" : "bg-gray-300"
-                    }`}
+                  className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${methods.watch("slide") ? "bg-red-600" : "bg-gray-300"}`}
                 >
                   <span
-                    className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${methods.watch("slide") ? "translate-x-6" : "translate-x-1"
-                      }`}
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${methods.watch("slide") ? "translate-x-6" : "translate-x-1"}`}
                   />
                 </button>
               </div>
@@ -147,12 +143,10 @@ export default function PostForm() {
                 <button
                   type="button"
                   onClick={() => methods.setValue("highlight", !methods.watch("highlight"))}
-                  className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${methods.watch("highlight") ? "bg-red-600" : "bg-gray-300"
-                    }`}
+                  className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${methods.watch("highlight") ? "bg-red-600" : "bg-gray-300"}`}
                 >
                   <span
-                    className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${methods.watch("highlight") ? "translate-x-6" : "translate-x-1"
-                      }`}
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${methods.watch("highlight") ? "translate-x-6" : "translate-x-1"}`}
                   />
                 </button>
               </div>
@@ -160,7 +154,7 @@ export default function PostForm() {
 
             <div className="mt-8 space-y-2">
               <label className="text-sm font-black text-gray-700 ml-1">
-                Conteúdo da Notícia
+                Conteudo da Noticia
               </label>
               <div
                 className={`rounded-3xl overflow-hidden border-2 transition-all ${data.errors.content ? "border-red-200" : "border-gray-100"}`}
@@ -188,28 +182,34 @@ export default function PostForm() {
                 {data.loading ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
-                  "Publicar Notícia"
+                  "Publicar Noticia"
                 )}
               </button>
             </div>
           </div>
         </form>
 
-        {/* Modal de Biblioteca de Imagens */}
         {data.showImageModal && (
           <LibraryModal
             existingImages={data.existingImages}
+            imagesInUse={data.imagesInUse}
             setPreview={methods.setPreview}
             setThumbnailUrl={(val) => methods.setValue("thumbnailUrl", val)}
             setShowImageModal={methods.setShowImageModal}
             setExistingImages={(filename: string) => methods.setExistingImages((prev) => prev.filter((img) => img !== filename))}
-
           />
         )}
         {data.showWarningModal && (
           <WarningModal
             message={data.warningMessage}
             setShowWarningModal={methods.setShowWarningModal}
+          />
+        )}
+        {data.showToast && (
+          <Toast
+            message="Post Criado"
+            type="success"
+            onClose={() => methods.setShowToast(false)}
           />
         )}
       </div>

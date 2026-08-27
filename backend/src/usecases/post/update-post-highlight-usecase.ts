@@ -2,6 +2,7 @@ import type { Request } from "express";
 import { PostRepository } from "../../repository/post/post-repository";
 
 export class UpdatePostHighlightUseCase {
+  
   public async execute(req: Request) {
     const { highlight } = req.body;
 

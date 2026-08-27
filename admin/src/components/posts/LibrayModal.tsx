@@ -1,48 +1,44 @@
 import { api, imageUrl } from "@/Utils/api";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiTrash2, FiX, FiLoader } from "react-icons/fi";
-import ModalMessage from "@/components/ModalMessage";
+import Toast from "@/components/Toast";
 import { LibraryModalProps } from "@/Utils/types";
-
-
 
 export const LibraryModal = ({
   existingImages,
+  imagesInUse,
   setExistingImages,
   setPreview,
   setThumbnailUrl,
   setShowImageModal,
-
 }: LibraryModalProps) => {
   const [deletingImage, setDeletingImage] = useState<string | null>(null);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
-
-
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleDelete = async (filename: string) => {
-
-
-    // setExistingImages("asas");
-
     setDeletingImage(filename);
-    setDeleteError(null);
 
     try {
+      const res = await api.delete(`/images/${filename}`);
+      const message = res.data;
 
-      const res = await api.delete(`/images/${filename}`)
-      if (res) setExistingImages(filename)
+      if (typeof message === "string" && message.includes("sendo usada")) {
+        setToastMessage(message);
+        setShowToast(true);
+      } else {
+        setExistingImages(filename);
+        setToastMessage("Imagem Apagada");
+        setShowToast(true);
+      }
     } catch {
-      //toast(erro na tentativa de apagar a foto)
-
-
+      setToastMessage("Erro ao excluir a imagem");
+      setShowToast(true);
     } finally {
-      // setDeletingImage(null);
-      // setShowWarningModal(true);
-      // setWarningMessage(message ?? "");
+      setDeletingImage(null);
     }
   };
-
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] backdrop-blur-sm p-4">
@@ -64,8 +60,6 @@ export const LibraryModal = ({
           </button>
         </div>
 
-
-
         <div className="flex-1 overflow-y-auto p-8">
           {existingImages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-slate-300">
@@ -83,6 +77,7 @@ export const LibraryModal = ({
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {existingImages.map((img, i) => {
                 const isDeleting = deletingImage === img;
+                const isInUse = imagesInUse.includes(img);
                 return (
                   <div
                     key={i}
@@ -91,7 +86,7 @@ export const LibraryModal = ({
                       : "border-transparent hover:border-red-500 cursor-pointer"
                       }`}
                     onClick={() => {
-                      if (isDeleting) return;
+                      if (isDeleting || isInUse) return;
                       setPreview(`${imageUrl}/${img}`);
                       setThumbnailUrl(`${img}`);
                       setShowImageModal(false);
@@ -114,14 +109,23 @@ export const LibraryModal = ({
                         </span>
                       )}
                     </div>
-                    <button
-                      onClick={(e) => handleDelete(img)}
-                      className="absolute top-2 right-2 p-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10 shadow-lg"
-                      title="Excluir imagem"
-                    >
-                      <FiTrash2 size={14} />
-                    </button>
-
+                    {!isInUse && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(img);
+                        }}
+                        className="absolute top-2 right-2 p-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10 shadow-lg"
+                        title="Excluir imagem"
+                      >
+                        <FiTrash2 size={14} />
+                      </button>
+                    )}
+                    {isInUse && (
+                      <div className="absolute top-2 right-2 px-2 py-1 bg-blue-600/90 text-white text-[10px] font-bold rounded-lg z-10 shadow-lg">
+                        Em uso
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -138,11 +142,13 @@ export const LibraryModal = ({
           </button>
         </div>
       </div>
-      {deleteError && (
-        <ModalMessage
-          text={deleteError}
-          setShowModal={(show: boolean) => {
-            if (!show) setDeleteError(null);
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastMessage.includes("sendo usada") ? "warning" : "success"}
+          onClose={() => {
+            setShowToast(false);
+            setToastMessage("");
           }}
         />
       )}

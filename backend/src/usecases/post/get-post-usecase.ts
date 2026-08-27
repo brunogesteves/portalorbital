@@ -3,6 +3,7 @@ import { PostRepository } from "../../repository/post/post-repository";
 import type { AuthRequest } from "../../types/auth-request";
 
 export class GetPostUseCase {
+  
   public async execute(req: AuthRequest) {
     if (!req.user) {
       throw new Error("Não autenticado");

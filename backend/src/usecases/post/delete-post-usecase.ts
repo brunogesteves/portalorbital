@@ -1,8 +1,8 @@
 import type { Request } from "express";
 import { PostRepository } from "../../repository/post/post-repository";
 
-
 export class DeletePostUseCase {
+  
   public async execute(req: Request) {
     const { id } = req.params;
     const postRepository = new PostRepository();

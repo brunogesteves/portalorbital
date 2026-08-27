@@ -24,7 +24,8 @@ backend/prisma/migrations/
 # Logs and system
 *.log
 .DS_Store
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .prettierrc
 start.sh
 
@@ -43,6 +44,7 @@ frontend/src/app/sitemap.ts
 backend/prisma/seed.ts
 frontend/SLIDER-SUGESTOES.md
 frontend/src/app/sitemap.ts
-.agent
+.agent/
+.continue/
 # User creation script
 backend/create_users.ts

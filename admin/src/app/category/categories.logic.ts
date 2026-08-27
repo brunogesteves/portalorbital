@@ -33,15 +33,13 @@ export function useLogicCategory() {
     e.preventDefault();
     setError("");
     if (!newName.trim()) return;
-
-    // 1. Validar se há caracteres especiais no nome da categoria
+    
     const regex = /^[a-zA-Z0-9\s-À-ÿ]+$/;
     if (!regex.test(newName)) {
       setError("Caracteres especiais (como ?, !, @, etc.) não são permitidos.");
       return;
     }
-
-    // Criar a slug sem acentuação e com hífens nos espaços
+    
     const slug = newName
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")

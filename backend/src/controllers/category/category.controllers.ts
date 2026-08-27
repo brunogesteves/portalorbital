@@ -1,11 +1,11 @@
 import { Router, type Request, type Response } from "express";
-import { authenticate, authorize } from "../middlewares/auth.middleware";
+import { authenticate, authorize } from "../../middlewares/auth.middleware";
 import { Role } from "@prisma/client";
-import { GetFrontCategoriesUseCase } from "../usecases/category/get-front-categories-usecase";
-import { GetCategoriesUseCase } from "../usecases/category/get-categories-usecase";
-import { CreateCategorysUseCase } from "../usecases/category/create-category-usecase";
-import { DeleteCategorysUseCase } from "../usecases/category/delete-category-usecase";
-import { GetContentCategoryUseCase } from "../usecases/category/get-ContentCategory-usecase";
+import { GetFrontCategoriesUseCase } from "../../usecases/category/get-front-categories-usecase";
+import { GetCategoriesUseCase } from "../../usecases/category/get-categories-usecase";
+import { CreateCategorysUseCase } from "../../usecases/category/create-category-usecase";
+import { DeleteCategorysUseCase } from "../../usecases/category/delete-category-usecase";
+import { GetContentCategoryUseCase } from "../../usecases/category/get-ContentCategory-usecase";
 
 const router = Router();
 

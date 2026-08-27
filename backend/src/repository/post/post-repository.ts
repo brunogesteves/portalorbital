@@ -1,10 +1,10 @@
-import type { CreateUpdatePost } from "../../entities/post/create-update-entity";
-import type { TitleExisting } from "../../entities/post/title-entity";
+import type { CreateUpdatePost } from "../../controllers/post/presenters/create-update-entity";
+import type { TitleExisting } from "../../controllers/post/presenters/title-presenters";
 import type { Request } from "express";
-import type { GetPosts } from "../../entities/post/get-post-entity";
-import type { GetSlides } from "../../entities/post/get-slide-entity";
-import type { GetHighlight } from "../../entities/post/get-highlight-entity";
-import type { AllPostsFront } from "../../entities/post/all-posts-entity";
+import type { GetPosts } from "../../controllers/post/presenters/get-post-entity";
+import type { GetSlides } from "../../controllers/post/presenters/get-slide-entity";
+import type { GetHighlight } from "../../controllers/post/presenters/get-highlight-entity";
+import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-entity";
 import prisma from "../../lib/prisma";
 
 export class PostRepository {
@@ -143,7 +143,7 @@ export class PostRepository {
     const existingTitle = await this.prisma.post.findFirst({
       where: {
         title,
-        ...(action && { id: { not: Number(id) } }),
+        ...(action === "editPost" && id ? { id: { not: Number(id) } } : {}),
       },
     });
     return existingTitle;

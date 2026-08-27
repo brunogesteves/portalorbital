@@ -1,19 +1,17 @@
 import { Router, type Request, type Response } from "express";
-import { authenticate } from "../middlewares/auth.middleware";
-import { GetPostStatsUseCase } from "../usecases/post/get-post-stats-usecase";
-import { GetPostUseCase } from "../usecases/post/get-post-usecase";
-import { SliderPostUseCase } from "../usecases/post/slider-post-usecase";
-import { HighlightPostsPostUseCase } from "../usecases/post/highlight-post-usecase";
-import { AllPostsPostUseCase } from "../usecases/post/all-posts-usecase";
-
-import { GetPostByIdUseCase } from "../usecases/post/get-post-byid-usecase";
-
-import { CreateUpdatePostUseCase } from "../usecases/post/create-update-post-usecase";
-import { UpdatePostStatusUseCase } from "../usecases/post/update-post-status-usecase";
-import { UpdatePostSlideUseCase } from "../usecases/post/update-post-slide-usecase";
-import { UpdatePostHighlightUseCase } from "../usecases/post/update-post-highlight-usecase";
-import { DeletePostUseCase } from "../usecases/post/delete-post-usecase";
-import { uploadImage } from "../lib/storage";
+import { authenticate } from "../../middlewares/auth.middleware";
+import { GetPostStatsUseCase } from "../../usecases/post/get-post-stats-usecase";
+import { GetPostUseCase } from "../../usecases/post/get-post-usecase";
+import { SliderPostUseCase } from "../../usecases/post/slider-post-usecase";
+import { HighlightPostsPostUseCase } from "../../usecases/post/highlight-post-usecase";
+import { AllPostsPostUseCase } from "../../usecases/post/all-posts-usecase";
+import { GetPostByIdUseCase } from "../../usecases/post/get-post-byid-usecase";
+import { UpsertPostUseCase } from "../../usecases/post/upsert-post-usecase";
+import { UpdatePostStatusUseCase } from "../../usecases/post/update-post-status-usecase";
+import { UpdatePostSlideUseCase } from "../../usecases/post/update-post-slide-usecase";
+import { UpdatePostHighlightUseCase } from "../../usecases/post/update-post-highlight-usecase";
+import { DeletePostUseCase } from "../../usecases/post/delete-post-usecase";
+import { uploadImage } from "../../lib/storage";
 
 const router = Router();
 
@@ -58,9 +56,14 @@ router.post(
   authenticate,
   uploadImage.single("thumbnail"),
   async (req: Request, res: Response) => {
-    const createUpdatePost = new CreateUpdatePostUseCase();
-    const result = await createUpdatePost.execute(req);
-    res.json(result);
+    try {
+      const createUpdatePost = new UpsertPostUseCase();
+      const result = await createUpdatePost.execute(req);
+      res.json(result);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Erro ao criar post";
+      res.status(400).json({ message });
+    }
   },
 );
 
@@ -69,9 +72,14 @@ router.put(
   authenticate,
   uploadImage.single("thumbnail"),
   async (req: Request, res: Response) => {
-    const createUpdatePost = new CreateUpdatePostUseCase();
-    const result = await createUpdatePost.execute(req);
-    res.json(result);
+    try {
+      const createUpdatePost = new UpsertPostUseCase();
+      const result = await createUpdatePost.execute(req);
+      res.json(result);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Erro ao atualizar post";
+      res.status(400).json({ message });
+    }
   },
 );
 

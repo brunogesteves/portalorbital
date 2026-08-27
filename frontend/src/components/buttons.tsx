@@ -1,8 +1,5 @@
-interface ButtonBlueProps {
-  text: string;
-  onClick?: () => void;
-  disabled?: boolean;
-}
+import { ButtonBlueProps } from "@/utils/types";
+
 
 export const ButtonBlue = ({ text, onClick, disabled }: ButtonBlueProps) => (
   <button
@@ -13,3 +10,5 @@ export const ButtonBlue = ({ text, onClick, disabled }: ButtonBlueProps) => (
     {text}
   </button>
 );
+
+

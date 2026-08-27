@@ -4,6 +4,7 @@ import { authenticate } from "../middlewares/auth.middleware";
 import { DeleteImageUseCase } from "../usecases/images/delete-image-usecase";
 import { UploadEditorImageUseCase } from "../usecases/images/upload-editor-image-usecase";
 import { AllImagesPostUseCase } from "../usecases/images/all-images-usecase";
+import { GetImagesInUseUseCase } from "../usecases/images/get-images-in-use-usecase";
 import { uploadImage } from "../lib/storage";
 
 const router = Router();
@@ -12,6 +13,12 @@ router.get("/", authenticate, async (req: Request, res: Response) => {
   console.log("first: ",)
   const allImages = new AllImagesPostUseCase();
   const result = await allImages.execute();
+  res.json(result);
+});
+
+router.get("/in-use", authenticate, async (req: Request, res: Response) => {
+  const getImagesInUse = new GetImagesInUseUseCase();
+  const result = await getImagesInUse.execute();
   res.json(result);
 });
 

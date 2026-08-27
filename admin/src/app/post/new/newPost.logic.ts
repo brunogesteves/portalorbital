@@ -14,8 +14,10 @@ export const useLogicNewPost = () => {
   const [categories, setCategories] = useState<CategoryProps[]>([]);
   const [showImageModal, setShowImageModal] = useState(false);
   const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [imagesInUse, setImagesInUse] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
   const {
@@ -41,19 +43,21 @@ export const useLogicNewPost = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [cats, images] = await Promise.all([
+        const [cats, images, inUse] = await Promise.all([
           api.get("/categories"),
-          api.get("/posts/images")
-        ])
-        setCategories(cats.data)
-        setExistingImages(images.data)
+          api.get("/images"),
+          api.get("/images/in-use"),
+        ]);
+        setCategories(cats.data);
+        setExistingImages(images.data);
+        setImagesInUse(inUse.data);
       } catch {
         setWarningMessage("Erro ao carregar os dados");
         setShowWarningModal(true);
       }
-    }
+    };
 
-    fetchData()
+    fetchData();
   }, []);
 
   const onDeleteImage = async (filename: string) => {
@@ -73,11 +77,14 @@ export const useLogicNewPost = () => {
     if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);
     formData.append("slide", String(data.slide));
     formData.append("highlight", String(data.highlight));
+    formData.append("action", "createPost");
 
     try {
-      await api.post("/posts/createpost", formData);
+      const response = await api.post("/posts/createpost", formData);
       setSuccess(true);
-      setTimeout(() => router.push("/"), 1500);
+      setShowToast(true);
+      const postId = response.data.id;
+      setTimeout(() => router.push(`/post/edit/${postId}`), 1500);
     } catch (error: unknown) {
       const err = error as AxiosError<{ message: string }>;
       const message = err.response?.data.message
@@ -93,8 +100,10 @@ export const useLogicNewPost = () => {
       categories,
       showImageModal,
       existingImages,
+      imagesInUse,
       loading,
       success,
+      showToast,
       showWarningModal,
       warningMessage,
       errors,
@@ -110,6 +119,7 @@ export const useLogicNewPost = () => {
       setExistingImages,
       setLoading,
       setSuccess,
+      setShowToast,
       setShowWarningModal,
       setWarningMessage,
       onDeleteImage,

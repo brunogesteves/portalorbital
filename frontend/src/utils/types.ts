@@ -70,3 +70,9 @@ export interface SlugProps {
   }>;
 }
 
+
+export interface ButtonBlueProps {
+  text: string;
+  onClick?: () => void;
+  disabled?: boolean;
+}

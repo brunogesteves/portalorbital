@@ -1,44 +1,40 @@
-import type { GetCategories } from "../category/get-category-entity";
-
-export class SearchContent {
-  category: GetCategories;
+export class PostEntity {
   id: number;
-  slug: string;
-  createdAt: Date;
   title: string;
-  thumbnail: string | null;
+  slug: string;
+  thumbnail: string;
   content: string;
   scheduledAt: Date;
+  createdAt: Date;
   updatedAt: Date;
   status: boolean;
   slide: boolean;
   highlight: boolean;
   categoryId: number;
   authorId: number;
+
   constructor(
-    category: GetCategories,
     id: number,
-    slug: string,
-    createdAt: Date,
     title: string,
-    thumbnail: string | null,
+    slug: string,
+    thumbnail: string,
     content: string,
     scheduledAt: Date,
+    createdAt: Date,
     updatedAt: Date,
     status: boolean,
     slide: boolean,
     highlight: boolean,
     categoryId: number,
-    authorId: number,
+    authorId: number
   ) {
-    this.category = category;
     this.id = id;
-    this.slug = slug;
-    this.createdAt = createdAt;
     this.title = title;
+    this.slug = slug;
     this.thumbnail = thumbnail;
     this.content = content;
     this.scheduledAt = scheduledAt;
+    this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.status = status;
     this.slide = slide;

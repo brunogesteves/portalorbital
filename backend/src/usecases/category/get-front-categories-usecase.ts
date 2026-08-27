@@ -1,5 +1,6 @@
-import type { GetCategories } from "../../entities/category/get-category-entity";
 import { CategoryRepository } from "../../repository/category/category-repository";
+import type { GetCategories } from "../../controllers/category/presenters/get-category-presenters";
+
 
 export class GetFrontCategoriesUseCase {
   public async execute(): Promise<GetCategories[]> {

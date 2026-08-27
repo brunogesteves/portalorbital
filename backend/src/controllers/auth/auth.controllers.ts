@@ -1,9 +1,9 @@
 import { Router, type Request, type Response } from "express";
 
-import { LoginUseCase } from "../usecases/auth/login-usecase";
-import { LogoutUseCase } from "../usecases/auth/logout-usecase";
-import { authenticate } from "../middlewares/auth.middleware";
-import { UserSettingsUseCase } from "../usecases/auth/user-usecase";
+import { LoginUseCase } from "../../usecases/auth/login-usecase";
+import { LogoutUseCase } from "../../usecases/auth/logout-usecase";
+import { authenticate } from "../../middlewares/auth.middleware";
+import { UserSettingsUseCase } from "../../usecases/auth/user-usecase";
 
 const router = Router();
 

@@ -20,8 +20,10 @@ export const useLogicPost = () => {
 
   const [showImageModal, setShowImageModal] = useState(false);
   const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [imagesInUse, setImagesInUse] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
 
@@ -51,13 +53,15 @@ export const useLogicPost = () => {
 
       if (id) {
         try {
-          const [cats, images, post] = await Promise.all([
+          const [cats, images, post, inUse] = await Promise.all([
             api.get("/categories"),
             api.get("/images"),
-            api.get(`/posts/${id}`)
-          ])
+            api.get(`/posts/${id}`),
+            api.get("/images/in-use"),
+          ]);
           setCategories(cats.data);
           setExistingImages(images.data);
+          setImagesInUse(inUse.data);
           reset({
             title: post.data.title,
             content: post.data.content,
@@ -66,19 +70,17 @@ export const useLogicPost = () => {
             thumbnailUrl: post.data.thumbnail || "",
             slide: post.data.slide ?? false,
             highlight: post.data.highlight ?? false,
-          })
+          });
 
           if (post.data.thumbnail) {
             setPreview(`${imageUrl}/${post.data.thumbnail}`);
           }
-
-
         } catch {
           setShowWarningModal(true);
           setWarningMessage("Erro ao carregar os dados");
         }
       }
-    }
+    };
     fetchData();
 
   }, [id, reset]);
@@ -100,7 +102,7 @@ export const useLogicPost = () => {
     try {
       await api.put(`/posts/${id}`, formData);
       setSuccess(true);
-      setTimeout(() => router.push("/"), 1500);
+      setShowToast(true);
     } catch (error) {
 
       const err = error as AxiosError<{ message: string }>;
@@ -119,8 +121,10 @@ export const useLogicPost = () => {
       categories,
       showImageModal,
       existingImages,
+      imagesInUse,
       loading,
       success,
+      showToast,
       showWarningModal,
       warningMessage,
       formState: {
@@ -133,12 +137,12 @@ export const useLogicPost = () => {
       setPreview,
       setExistingImages,
       setShowWarningModal,
+      setShowToast,
       setValue,
       watch,
       reset,
       handleSubmit,
       register,
-
     },
   };
 }

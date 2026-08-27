@@ -4,6 +4,7 @@ import fs from "fs";
 import { ImageRepository } from "../../repository/image/image-repository";
 
 export class DeleteImageUseCase {
+  
   public async execute(req: Request) {
     const { filename } = req.params;
 

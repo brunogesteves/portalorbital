@@ -1,9 +1,10 @@
 import { PostRepository } from "../../repository/post/post-repository";
 import { slugify } from "../../lib/slug";
-import type { TitleExisting } from "../../entities/post/title-entity";
+import type { TitleExisting } from "../../controllers/post/presenters/title-presenters";
 import type { AuthRequest } from "../../types/auth-request";
 
-export class CreateUpdatePostUseCase {
+export class UpsertPostUseCase {
+
   public async execute(req: AuthRequest) {
     if (!req.user) {
       throw new Error("Não autenticado");
@@ -34,11 +35,10 @@ export class CreateUpdatePostUseCase {
     if (action === "createPost") {
       const existingTitle = await postRepository.findTitle(itensTitle as TitleExisting);
 
-      if (!existingTitle) {
+      if (existingTitle) {
         throw new Error("Já existe uma notícia com este título");
       }
     }
-
 
     const result = await postRepository.createUpdatePost(postSettings, itensTitle as TitleExisting);
     if (!result) {

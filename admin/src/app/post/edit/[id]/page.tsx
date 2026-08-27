@@ -1,7 +1,7 @@
 "use client";
 
 
-import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
+import { FiAlertCircle } from "react-icons/fi";
 import { Suspense } from "react";
 
 import { LibraryModal } from "@/components/posts/LibrayModal";
@@ -10,9 +10,13 @@ import { Editor } from "@/components/posts/Editor";
 import { useLogicPost } from "@/app/post/edit/[id]/editPost.logic";
 import ModalMessage from "@/components/ModalMessage";
 import Loading from "@/components/Loading";
+import Toast from "@/components/Toast";
+import Calendar from "@/components/Calendar";
+import { useRouter } from "next/navigation";
 
 function EditPost() {
   const { data, methods } = useLogicPost();
+  const router = useRouter();
 
   return (
     <Suspense fallback={<Loading />}>
@@ -26,12 +30,13 @@ function EditPost() {
               Atualize as informações do post abaixo.
             </p>
           </div>
-
-          {data.success && (
-            <div className="bg-green-50 text-green-700 px-4 py-2 rounded-lg flex items-center gap-2 font-bold animate-bounce">
-              <FiCheckCircle /> Alterações salvas! Redirecionando...
-            </div>
-          )}
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="bg-gray-100 text-gray-700 px-6 py-3 rounded-2xl font-bold hover:bg-gray-200 transition-all"
+          >
+            ← Voltar
+          </button>
         </div>
 
         <form
@@ -47,7 +52,6 @@ function EditPost() {
                   </label>
                   <input
                     {...methods.register("title")}
-                    disabled
                     type="text"
                     className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${data.formState.errors.title ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
                     placeholder="Ex: Nova reforma política é aprovada no congresso"
@@ -93,10 +97,10 @@ function EditPost() {
                     <label className="text-sm font-black text-gray-700 ml-1">
                       Data de Publicação
                     </label>
-                    <input
-                      {...methods.register("scheduledAt")}
-                      type="datetime-local"
-                      className={`w-full border-2 rounded-2xl px-5 py-4 outline-none transition-all font-semibold ${data.formState.errors.scheduledAt ? "border-red-200 focus:border-red-500 bg-red-50/30" : "border-gray-100 focus:border-red-600 focus:bg-white bg-gray-50/50"}`}
+                    <Calendar
+                      value={methods.watch("scheduledAt")}
+                      onChange={(val) => methods.setValue("scheduledAt", val)}
+                      error={!!data.formState.errors.scheduledAt}
                     />
                     {data.formState.errors.scheduledAt && (
                       <span className="text-xs font-bold text-red-500 ml-1 flex items-center gap-1">
@@ -198,15 +202,22 @@ function EditPost() {
         {data.showImageModal && (
           <LibraryModal
             existingImages={data.existingImages}
+            imagesInUse={data.imagesInUse}
             setExistingImages={(filename: string) => methods.setExistingImages((prev) => prev.filter((img) => img !== filename))}
             setPreview={methods.setPreview}
             setThumbnailUrl={(val) => methods.setValue("thumbnailUrl", val)}
             setShowImageModal={methods.setShowImageModal}
-
           />
         )}
         {data.showWarningModal && (
           <ModalMessage text={data.warningMessage} setShowModal={(e: boolean) => methods.setShowWarningModal(e)} />
+        )}
+        {data.showToast && (
+          <Toast
+            message="Post Atualizado"
+            type="success"
+            onClose={() => methods.setShowToast(false)}
+          />
         )}
       </div>
     </Suspense>

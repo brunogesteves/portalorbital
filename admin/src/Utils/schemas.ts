@@ -28,7 +28,7 @@ export const postSchema = z.object({
     .min(20, "O conteúdo está muito curto"),
   categoryId: z.string().min(1, "Selecione uma categoria"),
   scheduledAt: z.string().min(1, "A data de publicação é obrigatória"),
-  thumbnailUrl: z.string(),
+  thumbnailUrl: z.string().min(1, "Selecione uma imagem de capa"),
   slide: z.boolean(),
   highlight: z.boolean(),
 });

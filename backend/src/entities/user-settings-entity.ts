@@ -1,6 +1,7 @@
 import type { Role } from "@prisma/client";
 
 export class UserSettings {
+  
   name: string | null;
   role: Role;
   email: string;

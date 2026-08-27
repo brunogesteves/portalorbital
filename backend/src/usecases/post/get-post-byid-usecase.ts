@@ -3,6 +3,7 @@ import { Role } from "@prisma/client";
 import type { AuthRequest } from "../../types/auth-request";
 
 export class GetPostByIdUseCase {
+  
   public async execute(req: AuthRequest) {
     if (!req.user) {
       throw new Error("Não autenticado");

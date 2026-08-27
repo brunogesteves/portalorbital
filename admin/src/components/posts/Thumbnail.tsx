@@ -45,21 +45,16 @@ export const Thumbnail = ({
                   const formData = new FormData();
                   formData.append("image", file);
                   api
-                    .post("/posts/uploadImage", formData)
+                    .post("/images/uploadImage", formData)
                     .then((res) => {
                       setThumbnailUrl(res.data.url);
-
-                      setPreview(
-                        `${imageUrl}/${res.data.url}`,
-                      );
-                      api
-                        .get("/posts/images")
-                        .then((r) => setExistingImages(r.data));
+                      setPreview(`${imageUrl}/${res.data.url}`);
+                      api.get("/images").then((r) => setExistingImages(r.data));
                     })
                     .catch(() => {
-                      setShowModalMessage(true)
+                      setModalWarning("Erro ao fazer upload da capa");
+                      setShowModalMessage(true);
                     });
-                  setModalWarning("Erro ao fazer upload da capa");
                 }
               }}
             />

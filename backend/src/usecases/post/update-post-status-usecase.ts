@@ -2,6 +2,7 @@ import type { Request } from "express";
 import { PostRepository } from "../../repository/post/post-repository";
 
 export class UpdatePostStatusUseCase {
+  
   public async execute(req: Request) {
     const { status } = req.body;
 

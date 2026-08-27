@@ -120,6 +120,7 @@ export interface StatsGridProps {
 
 export interface LibraryModalProps {
   existingImages: string[];
+  imagesInUse: string[];
   setExistingImages: (image: string) => void;
   setPreview: (preview: string) => void;
   setThumbnailUrl: (thumbnailUrl: string) => void;
@@ -138,4 +139,11 @@ export interface PostStats {
   totalHighlights: number;
   totalActivePosts: number;
   totalSlides: number;
+}
+
+export interface ToastProps {
+  message: string;
+  type?: "success" | "error" ;
+  onClose: () => void;
+  duration?: number;
 }

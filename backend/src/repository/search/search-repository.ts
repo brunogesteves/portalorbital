@@ -1,5 +1,5 @@
 import prisma from "../../lib/prisma";
-import type { SearchContent } from "../../entities/search/search-entity";
+import type { SearchContent } from "../../controllers/search/presenters/search-presenters";
 
 export class SearchRepository {
   private prisma = prisma;

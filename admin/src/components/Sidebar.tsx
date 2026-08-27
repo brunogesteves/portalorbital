@@ -11,8 +11,7 @@ import {
   FiChevronDown,
   FiSearch,
   FiLayout,
-  FiDatabase,
-  FiPlus,
+  FiDatabase,  
   FiX,
 } from "react-icons/fi";
 import { usePathname } from "next/navigation";
@@ -42,7 +41,7 @@ const Sidebar = () => {
           ],
         },
 
-        { name: "Categorias", href: "/categorias", icon: FiLayers },
+        { name: "Categorias", href: "/category", icon: FiLayers },
         { name: "Procurar", href: "/search", icon: FiSearch },
         { name: "Publishers", href: "/publishers", icon: FiUsers },
         { name: "Anúncios", href: "/ads", icon: FiLayout },

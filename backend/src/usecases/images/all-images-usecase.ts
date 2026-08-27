@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 export class AllImagesPostUseCase {
+  
   public async execute() {
     const uploadsDir = path.join(__dirname, "../../../public/images");
     if (!fs.existsSync(uploadsDir)) {

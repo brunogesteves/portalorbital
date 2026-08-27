@@ -1,9 +1,9 @@
 // import type { Category } from "@prisma/client";
 import type { Request } from "express";
 import prisma from "../../lib/prisma";
-import type { CreateCategories } from "../../entities/category/create-category-entity";
-import type { GetCategories } from "../../entities/category/get-category-entity";
-import type { GetCategoryContent } from "../../entities/category/category-content-entity";
+import type { CreateCategories } from "../../controllers/category/presenters/create-category-presenters";
+import type { GetCategories } from "../../controllers/category/presenters/get-category-presenters";
+import type { GetCategoryContent } from "../../controllers/category/presenters/category-content-presenters";
 
 export class CategoryRepository {
   private prisma = prisma;

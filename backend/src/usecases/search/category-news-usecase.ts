@@ -1,8 +1,9 @@
 import type { Request } from "express";
 import { SearchRepository } from "../../repository/search/search-repository";
-// import type { SearchContent } from "../../entities/search/search-entity";
+
 
 export class NewSCategoryUseCase {
+  
   public async execute(req: Request) {
     const { slug } = req.params;
     const searchRepository = new SearchRepository();
