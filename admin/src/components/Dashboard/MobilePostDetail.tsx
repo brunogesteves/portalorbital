@@ -17,9 +17,10 @@ const MobilePostDetail = ({
   post,
   currentUser,
   onClose,
-  handleToggleStatus,
-  handleToggleSlide,
-  handleToggleHighlight,
+  // handleToggleStatus,
+  // handleToggleSlide,
+  // handleToggleHighlight,
+  handleUpdateStatus,
   setPostToDelete,
   setShowModal,
 }: MobilePostDetailProps) => {
@@ -81,7 +82,7 @@ const MobilePostDetail = ({
               {currentUser === "ADM" && (
                 <button
                   onClick={() => {
-                    handleToggleStatus(post.id, post.status);
+                    handleUpdateStatus(post.id, post.status, "status");
                   }}
                   className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
                 >
@@ -112,7 +113,7 @@ const MobilePostDetail = ({
               {currentUser === "ADM" && (
                 <button
                   onClick={() => {
-                    handleToggleSlide(post.id, post.slide);
+                    handleUpdateStatus(post.id, post.slide, "slide");
                   }}
                   className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
                 >
@@ -143,7 +144,7 @@ const MobilePostDetail = ({
               {currentUser === "ADM" && (
                 <button
                   onClick={() => {
-                    handleToggleHighlight(post.id, post.highlight);
+                    handleUpdateStatus(post.id, post.highlight, "highlight");
                   }}
                   className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
                 >

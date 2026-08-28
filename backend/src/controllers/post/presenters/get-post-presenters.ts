@@ -1,4 +1,4 @@
-import type { PostContent } from "./post-entity";
+import type { PostContent } from "./post-presenters";
 
 export class GetPosts {
   posts: PostContent[];

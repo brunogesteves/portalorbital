@@ -1,6 +1,6 @@
 "use client";
 
-import { useLogic } from "./Slug.logic";
+import { useLogicSlug } from "./Slug.logic";
 import CategoryPage from "./panels/category";
 import NewsPage from "./panels/news";
 import NotFoundPage from "./panels/notfound";
@@ -13,7 +13,7 @@ import { CategoryContentProps, PostProps } from "@/utils/types";
 export default function SlugPage({ slug }: { slug: string }) {
 
 
-  const { data } = useLogic(slug);
+  const { data } = useLogicSlug(slug);
 
   if (data.loading) {
     return <Loading />;

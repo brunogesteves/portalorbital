@@ -2,7 +2,8 @@ import { PostRepository } from "../../repository/post/post-repository";
 import { slugify } from "../../lib/slug";
 import type { TitleExisting } from "../../controllers/post/presenters/title-presenters";
 import type { AuthRequest } from "../../types/auth-request";
-
+import type { Request } from "express";
+import { UpsertPostEntity } from "../../entities/upsert-post-entity";
 export class UpsertPostUseCase {
 
   public async execute(req: AuthRequest) {
@@ -10,8 +11,8 @@ export class UpsertPostUseCase {
       throw new Error("Não autenticado");
     }
     const { id } = req.params;
-    const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight, action } = req.body;
-    const thumbnail = req.file ? `/images/${req.file.filename}` : thumbnailUrl || null;
+    const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight, action } = req.body ;
+    const thumbnail = req.file  ? `/images/${req.file.filename}` : thumbnailUrl || null;
 
     const slug = slugify(title);
 
@@ -20,15 +21,8 @@ export class UpsertPostUseCase {
       title,
       action,
     };
-    const postSettings = {
-      slug,
-      content,
-      categoryId,
-      scheduledAt,
-      thumbnail,
-      slide,
-      highlight,
-      authorId: req.user.id,
+    const upsertPostSettings = {
+
     };
 
     const postRepository = new PostRepository();
@@ -39,8 +33,17 @@ export class UpsertPostUseCase {
         throw new Error("Já existe uma notícia com este título");
       }
     }
-
-    const result = await postRepository.createUpdatePost(postSettings, itensTitle as TitleExisting);
+  const upsertEntity = new UpsertPostEntity(
+    slug,
+    content,
+    categoryId,
+    scheduledAt,
+    thumbnail,
+    slide,
+    highlight,
+   req.user.id,
+  )
+    const result = await postRepository.upsertPost(upsertEntity, itensTitle as TitleExisting);
     if (!result) {
       throw new Error(action === "editPost" ? "Erro ao atualizar o post" : "Erro ao criar o post");
     }

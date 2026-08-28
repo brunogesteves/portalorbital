@@ -1,11 +1,14 @@
-import type { User } from "../../controllers/auth/presenters/user-presenters";
+import type { UserPresenter } from "../../controllers/user/presenters/user-presenters";
 import prisma from "../../lib/prisma";
-import type { UserSettings } from "../../entities/user-settings-entity";
+
+import type { AuthEntity } from "../../entities/auth-entity";
+import type { UserSettingsPresenter } from "../../controllers/user/presenters/user-settings-presenters";
 
 export class UserRepository {
   private prisma = prisma;
 
-  public async findByEmail(email: string): Promise<User | null> {
+  public async findByEmail(data:AuthEntity): Promise<UserSettingsPresenter | null> {
+    const {email} = data
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -13,7 +16,7 @@ export class UserRepository {
     return user;
   }
 
-  public async getUserSettings(id: number): Promise<UserSettings | null> {
+  public async getUserSettings(id: number): Promise<UserPresenter | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: {

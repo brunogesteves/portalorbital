@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: "api.localhost",
+        hostname: "admin.localhost",
         pathname: "/images/**",
       },
       {

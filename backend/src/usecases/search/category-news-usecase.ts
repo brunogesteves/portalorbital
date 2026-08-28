@@ -1,15 +1,12 @@
 import type { Request } from "express";
 import { SearchRepository } from "../../repository/search/search-repository";
 
-
 export class NewSCategoryUseCase {
-  
+
   public async execute(req: Request) {
     const { slug } = req.params;
     const searchRepository = new SearchRepository();
-
     const result = await searchRepository.getContent(slug as string);
-    console.log("item: ", result?.item)
 
     if (result?.item === "news") {
       return {

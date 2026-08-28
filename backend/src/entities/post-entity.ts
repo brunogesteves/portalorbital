@@ -12,6 +12,7 @@ export class PostEntity {
   highlight: boolean;
   categoryId: number;
   authorId: number;
+  field:"status" | "slide" | "highlight"
 
   constructor(
     id: number,
@@ -26,7 +27,8 @@ export class PostEntity {
     slide: boolean,
     highlight: boolean,
     categoryId: number,
-    authorId: number
+    authorId: number,
+    field: "status" | "slide" | "highlight"
   ) {
     this.id = id;
     this.title = title;
@@ -41,5 +43,25 @@ export class PostEntity {
     this.highlight = highlight;
     this.categoryId = categoryId;
     this.authorId = authorId;
+    this.field=field;
   }
+static fromStatus(data: Pick<PostEntity, 'id' | 'status'| "field">): PostEntity {
+    return new PostEntity(
+      data.id ,
+      "" ,
+      "" ,
+      "" ,
+      "" ,
+      new Date() ,
+      new Date() ,
+      new Date() ,
+      data.status ,
+    false ,
+    false,
+    0 ,
+    0 ,
+    "status"
+    );
+  }
+
 }

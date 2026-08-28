@@ -14,7 +14,6 @@ export class SearchRepository {
         posts: true
       },
 
-
     });
     if (categoryContent) return { item: "category", content: categoryContent }
 

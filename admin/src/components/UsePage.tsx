@@ -20,6 +20,8 @@ export const usePage = () => {
     const [selectedType, setSelectedType] = useState<string>("");
     const [showModalMessage, setShowModalMessage] = useState<boolean>(false);
     const [modalWarning, setModalWarning] = useState<string>("");
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
     const [pagination, setPagination] = useState<Pagination>({
         page: 1,
         limit: 10,
@@ -140,57 +142,28 @@ export const usePage = () => {
                 fetchStats(),
             ]);
             setShowModal(false);
+            setToastMessage("Notícia apagada");
+            setShowToast(true);
         } catch {
             setShowModalMessage(true);
             setModalWarning("Erro ao excluir post");
         }
     };
 
-    const handleToggleStatus = async (id: number, currentStatus: boolean) => {
-        if (userData?.role !== "ADM") return;
-        try {
-            await api.patch(`/posts/${id}/status`, { status: !currentStatus });
+    
+const handleUpdateStatus = async (id:number, currentSlide:boolean, field:string)=>{
+    if (userData?.role !== "ADM") return;
+try {
+            await api.patch(`/posts/${id}/changeStatus`, { status: !currentSlide, field  });
             setPosts(
-                posts.map((p) => (p.id === id ? { ...p, status: !currentStatus } : p)),
-            );
-        } catch {
-            setShowModalMessage(true);
-            setModalWarning("Erro ao atualizar status");
-        }
-    };
-
-    const handleToggleSlide = async (id: number, currentSlide: boolean) => {
-        if (userData?.role !== "ADM") return;
-        try {
-            await api.patch(`/posts/${id}/slide`, { slide: !currentSlide });
-            setPosts(
-                posts.map((p) => (p.id === id ? { ...p, slide: !currentSlide } : p)),
+                posts.map((p) => (p.id === id ? { ...p, [field]: !currentSlide } : p)),
             );
         } catch {
             setShowModalMessage(true);
             setModalWarning("Erro ao atualizar slide");
         }
-    };
 
-    const handleToggleHighlight = async (
-        id: number,
-        currentHighlight: boolean,
-    ) => {
-        if (userData?.role !== "ADM") return;
-        try {
-            await api.patch(`/posts/${id}/highlight`, {
-                highlight: !currentHighlight,
-            });
-            setPosts(
-                posts.map((p) =>
-                    p.id === id ? { ...p, highlight: !currentHighlight } : p,
-                ),
-            );
-        } catch {
-            setShowModalMessage(true);
-            setModalWarning("Erro ao atualizar destaque");
-        }
-    };
+}
 
     const uniqueAuthors = Array.from(
         new Set(
@@ -237,15 +210,18 @@ export const usePage = () => {
             uniqueAuthors,
             showModalMessage,
             modalWarning,
+            showToast,
+            toastMessage,
             pagination,
             stats,
             userData
         },
         methods: {
             handleDelete,
-            handleToggleStatus,
-            handleToggleSlide,
-            handleToggleHighlight,
+            // handleToggleStatus,
+            // handleToggleSlide,
+            // handleToggleHighlight,
+            handleUpdateStatus,
             setPostToDelete,
             setSearchTerm,
             setSelectedCategory,
@@ -254,6 +230,7 @@ export const usePage = () => {
             setShowModal,
             setShowModalMessage,
             setModalWarning,
+            setShowToast,
             goToPage,
             setLimit,
         },

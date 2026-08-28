@@ -29,33 +29,30 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Barra de Busca */}
+      
       <div className="flex-1 max-w-xl px-3 md:px-10 hidden sm:block">
         <div className="relative group">
-          {/* <input
+          <input
             type="text"
             placeholder="Search for..."
             value={data.searchQuery}
             onChange={(e) => methods.setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && methods.handleSearch()}
             className="w-full bg-white text-slate-800 rounded-lg px-5 py-2.5 pr-12 outline-none focus:ring-2 focus:ring-red-600 transition-all text-sm font-medium"
-          /> */}
+          />
           <div
             onClick={methods.handleSearch}
             className="absolute right-0 top-0 h-full px-4 flex items-center bg-slate-100 rounded-r-lg border-l border-slate-200 text-slate-500 cursor-pointer hover:bg-slate-200 transition-colors"
           >
-            {/* <FiSearch size={18} /> */}
+            <FiSearch size={18} />
           </div>
         </div>
-      </div>
-
-      {/* Perfil do Usuário e Logout */}
+      </div>      
       <div className="flex items-center gap-3 md:gap-8">
-        {/* Relógio Minimalista */}
-        <div className="hidden lg:block text-slate-400 font-mono text-sm tracking-widest">
-          {data.mounted
-            ? data.time.toLocaleTimeString("pt-BR", { hour12: false })
-            : "--:--:--"}
+        <div className="hidden lg:block text-slate-400 font-mono text-sm tracking-widest">          
+          {userData.name?
+             data.time.toLocaleTimeString("pt-BR", { hour12: false }):""
+          }
         </div>
 
         <div className="flex items-center gap-2 md:gap-3 cursor-pointer group hover:bg-slate-800 p-1.5 md:p-2 rounded-lg transition-colors">

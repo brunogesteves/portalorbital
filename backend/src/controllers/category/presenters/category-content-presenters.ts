@@ -1,6 +1,6 @@
-import type { PostContent } from "../../post/presenters/post-entity";
+import type { PostContent } from "../../post/presenters/post-presenters";
 
-export class GetCategoryContent {
+export class GetCategoryContentPresenter {
   name: string;
   posts: PostContent[];
 

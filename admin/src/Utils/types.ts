@@ -28,9 +28,10 @@ export interface PaginationProps {
 export interface PostTableProps {
   posts: PostProps[];
   currentUser: RoleProps;
-  handleToggleStatus: (id: number, currentStatus: boolean) => void;
-  handleToggleSlide: (id: number, currentSlide: boolean) => void;
-  handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
+  // handleToggleStatus: (id: number, currentStatus: boolean) => void;
+  // handleToggleSlide: (id: number, currentSlide: boolean) => void;
+  // handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
+  handleUpdateStatus:(id: number, currentStatus: boolean, field:string) => void;
   setPostToDelete: (id: number) => void;
   setShowModal: (show: boolean) => void;
   pagination: PaginationProps;
@@ -43,9 +44,10 @@ export interface MobilePostDetailProps {
   post: PostProps;
   currentUser: RoleProps;
   onClose: () => void;
-  handleToggleStatus: (id: number, currentStatus: boolean) => void;
-  handleToggleSlide: (id: number, currentSlide: boolean) => void;
-  handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
+  // handleToggleStatus: (id: number, currentStatus: boolean) => void;
+  // handleToggleSlide: (id: number, currentSlide: boolean) => void;
+  // handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
+  handleUpdateStatus: (id: number, currentstatus: boolean, field:string) => void;
   setPostToDelete: (id: number) => void;
   setShowModal: (show: boolean) => void;
 }

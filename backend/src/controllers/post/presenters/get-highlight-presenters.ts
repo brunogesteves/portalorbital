@@ -1,4 +1,4 @@
-export class GetHighlight {
+export class GetHighlightPresenter {
   id: number;
   title: string;
   slug: string;

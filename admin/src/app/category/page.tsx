@@ -5,6 +5,7 @@ import { useLogicCategory } from "./categories.logic";
 import { FiPlus, FiTrash2, FiAlertCircle } from "react-icons/fi";
 import ModalMessage from "@/components/ModalMessage";
 import Loading from "@/components/Loading";
+import Toast from "@/components/Toast";
 
 function Categories() {
   const { data, methods } = useLogicCategory();
@@ -133,6 +134,12 @@ function Categories() {
         )}
         {data.showModalMessage && (
           <ModalMessage text={data.modalWarning} setShowModal={(e: boolean) => methods.setShowModalMessage(e)} />
+        )}
+        {data.showToast && (
+          <Toast
+            message={data.toastMessage}
+            onClose={() => methods.setShowToast(false)}
+          />
         )}
       </div>
     </Suspense>

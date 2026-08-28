@@ -1,4 +1,4 @@
-export class GetCategories {
+export class GetCategoriesPresenter {
   name: string;
   id: number;
   slug: string;

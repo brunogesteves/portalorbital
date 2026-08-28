@@ -1,14 +1,15 @@
-import { CategoryEntity } from './../../entities/category-entity';
 import type { Request } from "express";
+
+import { CategoryEntity } from './../../entities/category-entity';
 import { CategoryRepository } from "../../repository/category/category-repository";
-import type { GetCategories } from "../../controllers/category/presenters/get-category-presenters";
+import type { GetCategoriesPresenter } from "../../controllers/category/presenters/get-category-presenters";
 
 export class CreateCategorysUseCase {
 
-  public async execute(req: Request): Promise<GetCategories> {
+  public async execute(req: Request): Promise<GetCategoriesPresenter> {
 
     const {name, slug} = req.body
-    const categoryEntity = new CategoryEntity(name, slug)
+    const categoryEntity= CategoryEntity.fromCreate({name, slug})
     const createCategoryRepository = new CategoryRepository();
     const result = await createCategoryRepository.create(categoryEntity);
     return result;

@@ -12,6 +12,8 @@ export function useLogicCategory() {
     useState<CategoryProps | null>(null);
   const [showModalMessage, setShowModalMessage] = useState(false);
   const [modalWarning, setModalWarning] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -53,6 +55,8 @@ export function useLogicCategory() {
       const response = await api.post("/categories", { name: newName, slug });
       setCategories([...categories, response.data]);
       setNewName("");
+      setToastMessage("Categoria criada com sucesso");
+      setShowToast(true);
     } catch {
       const message = "Erro ao criar categoria";
       setError(message);
@@ -71,6 +75,8 @@ export function useLogicCategory() {
       setCategories(categories.filter((c) => c.id !== categoryToDelete.id));
       setShowDeleteModal(false);
       setCategoryToDelete(null);
+      setToastMessage("Categoria excluída com sucesso");
+      setShowToast(true);
     } catch {
       setShowModalMessage(true);
       setModalWarning("Erro ao excluir categoria");
@@ -86,7 +92,9 @@ export function useLogicCategory() {
       showDeleteModal,
       categoryToDelete,
       showModalMessage,
-      modalWarning
+      modalWarning,
+      showToast,
+      toastMessage
     },
     methods: {
       setNewName,
@@ -96,7 +104,9 @@ export function useLogicCategory() {
       handleDeleteClick,
       confirmDelete,
       setShowModalMessage,
-      setModalWarning
+      setModalWarning,
+      setShowToast,
+      setToastMessage
     },
   };
 }

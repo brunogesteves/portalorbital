@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/utils/api";
 import { CategoryContentProps, PostProps } from "@/utils/types";
 
-export function useLogic(slug: string) {
+export function useLogicSlug(slug: string) {
   const [categoryContent, setCategoryContent] = useState<CategoryContentProps | null>(null);
   const [postContent, setPostContent] = useState<PostProps | null>(null);
   const [type, setType] = useState<string>("");
@@ -14,8 +14,7 @@ export function useLogic(slug: string) {
       setLoading(true);
 
       try {
-        const res = await api.get(`/search/${slug}`);
-        console.log("res.data: ", res.data)
+        const res = await api.get(`/search/${slug}`);        
         if (res.data.status) {
           setType(res.data.type);
           if (res.data.type == "category") {

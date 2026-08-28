@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { api } from "@/Utils/api";
 import { useUIStore } from "@/store/useUIStore";
 
 const useHeader = () => {
-  const { toggleSidebar, userData } = useUIStore();
+  const { toggleSidebar } = useUIStore();
   const [time, setTime] = useState(new Date());
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
 
-  useEffect(() => {
-    setMounted(true);
+  useEffect(() => { 
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);

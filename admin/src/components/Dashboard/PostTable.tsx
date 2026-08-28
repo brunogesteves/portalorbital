@@ -16,10 +16,8 @@ import MobilePostDetail from "./MobilePostDetail";
 
 const PostTable = ({
   posts,
-  currentUser,
-  handleToggleStatus,
-  handleToggleSlide,
-  handleToggleHighlight,
+  currentUser,  
+  handleUpdateStatus,
   setPostToDelete,
   setShowModal,
   pagination,
@@ -101,7 +99,7 @@ const PostTable = ({
               </div>
               <div className="hidden md:flex justify-center items-center gap-1.5">
                 <button
-                  onClick={() => handleToggleStatus(post.id, post.status)}
+                  onClick={() => handleUpdateStatus(post.id, post.status, "status")}
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.status ? "bg-green-600" : "bg-red-300"
                     }`}
                 >
@@ -122,7 +120,7 @@ const PostTable = ({
                 <button
                   onClick={() =>
                     currentUser === "ADM" &&
-                    handleToggleSlide(post.id, post.slide)
+                    handleUpdateStatus(post.id, post.slide, "slide")
                   }
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.slide ? "bg-green-600" : "bg-red-300"
                     } ${currentUser !== "ADM"
@@ -143,7 +141,7 @@ const PostTable = ({
                 <button
                   onClick={() =>
                     currentUser === "ADM" &&
-                    handleToggleHighlight(post.id, post.highlight)
+                    handleUpdateStatus(post.id, post.highlight, "highlight")
                   }
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.highlight ? "bg-yellow-500" : "bg-gray-300"
                     } ${currentUser !== "ADM"
@@ -228,9 +226,10 @@ const PostTable = ({
           post={mobilePostDetail}
           currentUser={currentUser}
           onClose={closeMobileModal}
-          handleToggleStatus={handleToggleStatus}
-          handleToggleSlide={handleToggleSlide}
-          handleToggleHighlight={handleToggleHighlight}
+          // handleToggleStatus={handleToggleStatus}
+          // handleToggleSlide={handleToggleSlide}
+          // handleToggleHighlight={handleToggleHighlight}
+          handleUpdateStatus={handleUpdateStatus}
           setPostToDelete={setPostToDelete}
           setShowModal={setShowModal}
         />

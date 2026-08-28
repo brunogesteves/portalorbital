@@ -5,11 +5,9 @@ import { GetPostUseCase } from "../../usecases/post/get-post-usecase";
 import { SliderPostUseCase } from "../../usecases/post/slider-post-usecase";
 import { HighlightPostsPostUseCase } from "../../usecases/post/highlight-post-usecase";
 import { AllPostsPostUseCase } from "../../usecases/post/all-posts-usecase";
-import { GetPostByIdUseCase } from "../../usecases/post/get-post-byid-usecase";
+import { GetPostByIdUseCase } from "../../usecases/post/get-post-by-id-usecase";
 import { UpsertPostUseCase } from "../../usecases/post/upsert-post-usecase";
-import { UpdatePostStatusUseCase } from "../../usecases/post/update-post-status-usecase";
-import { UpdatePostSlideUseCase } from "../../usecases/post/update-post-slide-usecase";
-import { UpdatePostHighlightUseCase } from "../../usecases/post/update-post-highlight-usecase";
+import { UpdatePostChangeStatusUseCase,  } from "../../usecases/post/update-post-change-status-usecase";
 import { DeletePostUseCase } from "../../usecases/post/delete-post-usecase";
 import { uploadImage } from "../../lib/storage";
 
@@ -46,6 +44,7 @@ router.get("/allPosts", async (req: Request, res: Response) => {
 });
 
 router.get("/:id", authenticate, async (req: Request, res: Response) => {
+  console.log("first")
   const getPostById = new GetPostByIdUseCase();
   const result = await getPostById.execute(req);
   res.json(result);
@@ -83,21 +82,9 @@ router.put(
   },
 );
 
-router.patch("/:id/status", authenticate, async (req: Request, res: Response) => {
-  const updatePostStatus = new UpdatePostStatusUseCase();
+router.patch("/:id/changeStatus", authenticate, async (req: Request, res: Response) => {
+  const updatePostStatus = new UpdatePostChangeStatusUseCase();
   const result = await updatePostStatus.execute(req);
-  res.json(result);
-});
-
-router.patch("/:id/slide", authenticate, async (req: Request, res: Response) => {
-  const updatePostSlide = new UpdatePostSlideUseCase();
-  const result = await updatePostSlide.execute(req);
-  res.json(result);
-});
-
-router.patch("/:id/highlight", authenticate, async (req: Request, res: Response) => {
-  const updatePostSlide = new UpdatePostHighlightUseCase();
-  const result = await updatePostSlide.execute(req);
   res.json(result);
 });
 

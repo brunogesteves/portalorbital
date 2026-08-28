@@ -1,11 +1,13 @@
-import type { CreateUpdatePost } from "../../controllers/post/presenters/create-update-entity";
 import type { TitleExisting } from "../../controllers/post/presenters/title-presenters";
-import type { Request } from "express";
-import type { GetPosts } from "../../controllers/post/presenters/get-post-entity";
-import type { GetSlides } from "../../controllers/post/presenters/get-slide-entity";
-import type { GetHighlight } from "../../controllers/post/presenters/get-highlight-entity";
-import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-entity";
+import type { GetPosts } from "../../controllers/post/presenters/get-post-presenters";
+import type { GetSlides } from "../../controllers/post/presenters/get-slide-presenters";
+import type { GetHighlightPresenter } from "../../controllers/post/presenters/get-highlight-presenters";
+import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-presenter";
 import prisma from "../../lib/prisma";
+import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
+import type { PostEntity } from "../../entities/post-entity";
+
+type AllowedFields = 'status' | 'slide' | 'highlight'
 
 export class PostRepository {
   private prisma = prisma;
@@ -73,7 +75,7 @@ export class PostRepository {
     return slides;
   }
 
-  public async highlightPosts(): Promise<GetHighlight[]> {
+  public async highlightPosts(): Promise<GetHighlightPresenter[]> {
     const posts = await this.prisma.post.findMany({
       where: {
         highlight: true,
@@ -149,7 +151,7 @@ export class PostRepository {
     return existingTitle;
   }
 
-  public async createUpdatePost(postSettings: CreateUpdatePost, itensTitle: TitleExisting) {
+  public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
     const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } = postSettings;
     const upsertPost = await this.prisma.post.upsert({
@@ -180,27 +182,29 @@ export class PostRepository {
     return upsertPost;
   }
 
-  public async updatePostStatus(req: Request) {
-    const { id } = req.params;
-    const { status } = req.body;
+  public async updatePostStatus(data: Pick<PostEntity,"id" | "status"> &{
+    field:"status" | "slide" | "highlight"
+  }) {
+
+    const {status, id, field} = data
     const post = await this.prisma.post.update({
       where: { id: Number(id) },
-      data: { status },
+      data: { [field]:status },
     });
 
     return post;
   }
 
-  public async updatePostSlide(req: Request) {
-    const { id } = req.params;
-    const { highlight } = req.body;
-    const post = await this.prisma.post.update({
-      where: { id: Number(id) },
-      data: { highlight },
-    });
+  // public async updatePostSlide(data: Pick<PostEntity,"id" | "slide">) {
 
-    return post;
-  }
+  //   const {slide, id} = data
+  //   const post = await this.prisma.post.update({
+  //     where: { id: Number(id) },
+  //     data: { slide:!slide },
+  //   });
+
+  //   return post;
+  // }
 
   public async deletePost(id: string) {
     const existingPost = await this.prisma.post.delete({

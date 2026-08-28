@@ -1,6 +1,5 @@
-import type { User } from "../../controllers/auth/presenters/user-presenters";
+
 import prisma from "../../lib/prisma";
-import type { UserSettings } from "../../entities/user-settings-entity";
 
 export class ImageRepository {
   private prisma = prisma;

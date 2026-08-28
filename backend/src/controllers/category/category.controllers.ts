@@ -5,7 +5,6 @@ import { GetFrontCategoriesUseCase } from "../../usecases/category/get-front-cat
 import { GetCategoriesUseCase } from "../../usecases/category/get-categories-usecase";
 import { CreateCategorysUseCase } from "../../usecases/category/create-category-usecase";
 import { DeleteCategorysUseCase } from "../../usecases/category/delete-category-usecase";
-import { GetContentCategoryUseCase } from "../../usecases/category/get-ContentCategory-usecase";
 
 const router = Router();
 
@@ -18,12 +17,6 @@ router.get("/", authenticate, async (req: Request, res: Response) => {
 router.get("/front", async (req: Request, res: Response) => {
   const getCategories = new GetFrontCategoriesUseCase();
   const result = await getCategories.execute();
-  return res.json(result);
-});
-
-router.get("/:category", async (req: Request, res: Response) => {
-  const searchOneContent = new GetContentCategoryUseCase();
-  const result = await searchOneContent.execute(req);
   return res.json(result);
 });
 

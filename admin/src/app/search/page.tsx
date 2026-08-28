@@ -11,17 +11,18 @@ import {
   FiCalendar,
   FiUser,
 } from "react-icons/fi";
-import { useSearchResults } from "./useSearch";
+import { useSearchLogic } from "./useLogicSearch";
 import Image from "next/image";
+import Loading from "@/components/Loading";
+import { imageUrl } from "@/Utils/api";
 
 function SearchResults() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
-  const { data, methods } = useSearchResults(initialQuery);
+  const { data, methods } = useSearchLogic(initialQuery);
 
-  return (
-    <div className="space-y-12 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-      {/* Header Section */}
+  return (    
+    <div className="space-y-12 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">      
       <div className="flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-red-600 font-black text-[10px] uppercase tracking-[4px] mb-2">
@@ -35,11 +36,8 @@ function SearchResults() {
             </span>
           </h1>
         </div>
-      </div>
-
-      {/* Main Content Area */}
+      </div>      
       <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
-        {/* Internal Search Bar (Same style as Header) */}
         <div className="p-10 border-b border-slate-50 bg-slate-50/30 flex flex-col lg:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -56,8 +54,8 @@ function SearchResults() {
               <input
                 type="text"
                 placeholder="Search for..."
-                value={data.internalSearch}
-                onChange={(e) => methods.handleInternalSearch(e)}
+                value={data.term}
+                onChange={(e) => methods.setTerm(e.target.value)}
                 className="w-full bg-white border-2 border-slate-200 focus:border-red-600 rounded-2xl pl-12 pr-4 py-3.5 outline-none transition-all text-sm font-semibold text-slate-700 shadow-sm"
               />
             </div>
@@ -69,8 +67,6 @@ function SearchResults() {
             </button>
           </form>
         </div>
-
-        {/* Loading State */}
         {data.loading ? (
           <div className="px-10 py-32 text-center">
             <div className="inline-block w-12 h-12 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin"></div>
@@ -101,8 +97,11 @@ function SearchResults() {
                           <div className="w-20 h-16 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border-2 border-white shadow-md">
                             {post.thumbnail ? (
                               <Image
-                                src={`${process.env.NEXT_PUBLIC_API_URL}${post.thumbnail}`}
+                                src={`${imageUrl}/${post.thumbnail}`}
                                 alt={post.title}
+                                width={500}
+                                height={500}
+                                unoptimized
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                               />
                             ) : (
@@ -177,7 +176,7 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div>Carregando Informações...</div>}>
+    <Suspense fallback={<Loading />}>
       <SearchResults />
     </Suspense>
   );

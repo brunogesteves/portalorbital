@@ -1,15 +1,12 @@
-// import type { Category } from "@prisma/client";
-import type { Request } from "express";
 import prisma from "../../lib/prisma";
-import type { CreateCategories } from "../../controllers/category/presenters/create-category-presenters";
-import type { GetCategories } from "../../controllers/category/presenters/get-category-presenters";
-import type { GetCategoryContent } from "../../controllers/category/presenters/category-content-presenters";
+import type {GetCategoriesPresenter } from "../../controllers/category/presenters/get-category-presenters";
+import type { CategoryEntity } from "../../entities/category-entity";
 
 export class CategoryRepository {
   private prisma = prisma;
 
-  public async create(cat: CreateCategories): Promise<GetCategories> {
-    const { name, slug } = cat;
+  public async create(data: CategoryEntity): Promise<GetCategoriesPresenter> {
+    const { name, slug } = data;
 
     const existingName = await this.prisma.category.findFirst({
       where: { name },
@@ -24,7 +21,7 @@ export class CategoryRepository {
     return createCategory;
   }
 
-  public async getCategories(): Promise<GetCategories[]> {
+  public async getCategories(): Promise<GetCategoriesPresenter[]> {
     const categories = await this.prisma.category.findMany({
       orderBy: { name: "asc" },
       include: {
@@ -36,7 +33,7 @@ export class CategoryRepository {
     return categories;
   }
 
-  public async frontCategories(): Promise<GetCategories[]> {
+  public async frontCategories(): Promise<GetCategoriesPresenter[]> {
     const categories = await this.prisma.category.findMany({
       where: {
         posts: {
@@ -50,7 +47,8 @@ export class CategoryRepository {
     return categories;
   }
 
-  public async delete(id: number): Promise<boolean> {
+  public async delete(data:CategoryEntity): Promise<boolean> {
+    const {id} = data
     const categoryHasBeenDeleted = await this.prisma.category.delete({
       where: { id },
     });
@@ -60,18 +58,4 @@ export class CategoryRepository {
     throw new Error("Já existe uma categoria com este nome");
   }
 
-  public async getCategoryContent(req: Request): Promise<GetCategoryContent | null> {
-    const { categoryContent } = req.params;
-
-    const getCategoryContent = await this.prisma.category.findFirst({
-      where: {
-        slug: categoryContent as string,
-      },
-      select: {
-        name: true,
-        posts: true,
-      },
-    });
-    return getCategoryContent;
-  }
 }

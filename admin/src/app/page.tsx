@@ -9,6 +9,7 @@ import DeleteModal from "../components/Dashboard/DeleteModal";
 import { usePage } from "@/components/UsePage";
 import ModalMessage from "@/components/ModalMessage";
 import Loading from "@/components/Loading";
+import Toast from "@/components/Toast";
 
 
 function Home() {
@@ -44,9 +45,10 @@ function Home() {
         <PostTable
           posts={data.posts}
           currentUser={data.userData.role}
-          handleToggleStatus={methods.handleToggleStatus}
-          handleToggleSlide={methods.handleToggleSlide}
-          handleToggleHighlight={methods.handleToggleHighlight}
+          // handleToggleStatus={methods.handleToggleStatus}
+          // handleToggleSlide={methods.handleToggleSlide}
+          // handleToggleHighlight={methods.handleToggleHighlight}
+          handleUpdateStatus={methods.handleUpdateStatus}
           setPostToDelete={(id) => methods.setPostToDelete(id)}
           setShowModal={methods.setShowModal}
           pagination={data.pagination}
@@ -65,6 +67,12 @@ function Home() {
       )}
       {data.showModalMessage && (
         <ModalMessage text={data.modalWarning} setShowModal={(e: boolean) => methods.setShowModalMessage(e)} />
+      )}
+      {data.showToast && (
+        <Toast
+          message={data.toastMessage}
+          onClose={() => methods.setShowToast(false)}
+        />
       )}
     </div>
   );
