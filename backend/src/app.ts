@@ -8,11 +8,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://admin.localhost",
-      "https://orbitalportalbackend.vercel.app",
-    ],
+    origin: ["http://localhost:3000", "http://admin.localhost"],
     credentials: true,
   }),
 );

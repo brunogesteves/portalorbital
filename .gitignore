@@ -5,7 +5,7 @@ node_modules/
 # Next.js / Build
 .next/
 dist/
-agent/
+.agent/
 # Sensitive Data / Secrets (MANDATORY)
 .env
 .env.*
