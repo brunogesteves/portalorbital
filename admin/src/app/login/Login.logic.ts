@@ -9,8 +9,6 @@ import { LoginFormValues, loginSchema } from "@/Utils/schemas";
 import axios from "axios";
 
 export default function useLogin() {
-
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -33,8 +31,8 @@ export default function useLogin() {
     try {
       const { data: result } = await api.post("auth/login", data);
 
-      console.log(result)
-      if (result?.status) {
+      console.log(result);
+      if (result.status) {
         router.push("/");
       }
     } catch (err: unknown) {
@@ -42,7 +40,7 @@ export default function useLogin() {
       if (axios.isAxiosError(err)) {
         setError(
           err.response?.data?.message ??
-          "Credenciais inválidas ou o de conexão.",
+            "Credenciais inválidas ou o de conexão.",
         );
       } else {
         setError("Ocorreu um erro inesperado.");

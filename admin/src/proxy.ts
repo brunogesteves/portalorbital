@@ -8,16 +8,13 @@ export function proxy(request: NextRequest) {
   const isLoginPage = pathname === "/login";
 
   if (!token && !isLoginPage) {
-    console.log("sem token e nao é login page");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (token && isLoginPage) {
-    console.log("tem token e é login page");
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  console.log("nao fez nada");
   return NextResponse.next();
 }
 
