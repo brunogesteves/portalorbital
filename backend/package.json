@@ -12,7 +12,9 @@
     "check": "eslint . --fix && ./scripts/format.sh",
     "check:all": "eslint . && prettier --check .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "prisma generate && tsc",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
