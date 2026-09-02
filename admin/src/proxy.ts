@@ -8,18 +8,19 @@ export function proxy(request: NextRequest) {
   const isLoginPage = pathname === "/login";
 
   if (!token && !isLoginPage) {
+    console.log("sem token e nao é login page");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (token && isLoginPage) {
+    console.log("tem token e é login page");
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  console.log("nao fez nada");
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
