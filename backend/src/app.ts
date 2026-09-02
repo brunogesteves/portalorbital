@@ -12,7 +12,7 @@ app.use(
       "http://localhost:3000",
       "http://admin.localhost",
       "https://orbitalportalpoliticoadmin.vercel.app",
-      "https://orbitalportalpolitico.vercel.app/",
+      "https://orbitalportalpolitico.vercel.app",
     ],
     credentials: true,
   }),
