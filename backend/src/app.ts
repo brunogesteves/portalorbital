@@ -8,7 +8,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://admin.localhost"],
+    origin: [
+      "http://localhost:3000",
+      "http://admin.localhost",
+      "https://orbitalportalpoliticoadmin.vercel.app",
+    ],
     credentials: true,
   }),
 );
