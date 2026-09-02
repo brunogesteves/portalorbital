@@ -145,7 +145,7 @@ export const LibraryModal = ({
       {showToast && (
         <Toast
           message={toastMessage}
-          type={toastMessage.includes("sendo usada") ? "warning" : "success"}
+          type={toastMessage.includes("sendo usada") ? "error" : "success"}
           onClose={() => {
             setShowToast(false);
             setToastMessage("");

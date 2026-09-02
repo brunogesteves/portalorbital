@@ -16,4 +16,11 @@ router.post(
     res.json(result);
   },
 );
+
+// router.get("/audio/:id", async (req: Request, res: Response) => {
+//   const UploadEditor = new UploadEditorAudioUseCase();
+//   const result = await UploadEditor.execute(req);
+//   res.json(result);
+// });
+
 export default router;

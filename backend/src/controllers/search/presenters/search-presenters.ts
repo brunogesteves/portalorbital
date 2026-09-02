@@ -1,7 +1,7 @@
-import type { GetCategories } from "../../category/presenters/get-category-presenters";
+import type { GetCategoriesPresenter } from "../../category/presenters/get-category-presenters";
 
 export class SearchContent {
-  category: GetCategories;
+  category: GetCategoriesPresenter;
   id: number;
   slug: string;
   createdAt: Date;
@@ -16,7 +16,7 @@ export class SearchContent {
   categoryId: number;
   authorId: number;
   constructor(
-    category: GetCategories,
+    category: GetCategoriesPresenter,
     id: number,
     slug: string,
     createdAt: Date,

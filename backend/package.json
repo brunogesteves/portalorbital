@@ -11,7 +11,8 @@
     "format:check": "prettier --check .",
     "check": "eslint . --fix && ./scripts/format.sh",
     "check:all": "eslint . && prettier --check .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
