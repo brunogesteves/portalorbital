@@ -4,7 +4,7 @@ import type { GetCategoriesPresenter } from "../../controllers/category/presente
 export class GetFrontCategoriesUseCase {
   public async execute(): Promise<GetCategoriesPresenter[]> {
     const categoryRepository = new CategoryRepository();
-    const result = categoryRepository.frontCategories();
+    const result = categoryRepository.getCategoriesWithNoPostSlide();
     return result;
   }
 }
