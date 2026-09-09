@@ -1,6 +1,6 @@
 import type { PostContent } from "./post-presenters";
 
-export class GetPosts {
+export class GetPostsPresenter {
   posts: PostContent[];
 
   pagination: {

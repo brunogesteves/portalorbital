@@ -17,7 +17,8 @@ export class UserRepository {
   }
 
   // TODO: Talvez o nome mais claro seja getUserById
-  public async getUserSettings(id: number): Promise<UserPresenter | null> {
+  //feito
+  public async getUserById(id: number): Promise<UserPresenter | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: {

@@ -1,11 +1,12 @@
 import type { TitleExisting } from "../../controllers/post/presenters/title-presenters";
-import type { GetPosts } from "../../controllers/post/presenters/get-post-presenters";
+import type { GetPostsPresenter } from "../../controllers/post/presenters/get-post-presenter";
 import type { GetSlides } from "../../controllers/post/presenters/get-slide-presenters";
 import type { GetHighlightPresenter } from "../../controllers/post/presenters/get-highlight-presenters";
 import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-presenter";
 import prisma from "../../lib/prisma";
 import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
 import type { PostEntity } from "../../entities/post-entity";
+import { SearchContent } from "../../controllers/search/presenters/search-presenters";
 
 type AllowedFields = "status" | "slide" | "highlight";
 
@@ -15,24 +16,32 @@ export class PostRepository {
   // TODO: Separar cada query em um metodo diferente, respeitado o nome conforme ele retorna:
   // Ex.: getStatsPosts, getStatsHighlights, getStatsActivePosts, getStatsSlides
   // E deixar essa promise no usecase
-  public async stats(whereClause: any) {
-    const [totalPosts, totalHighlights, totalActivePosts, totalSlides] = await Promise.all([
-      this.prisma.post.count({ where: whereClause }),
-      this.prisma.post.count({ where: { ...whereClause, highlight: true } }),
-      this.prisma.post.count({ where: { ...whereClause, status: true } }),
-      this.prisma.post.count({ where: { ...whereClause, slide: true } }),
-    ]);
+  //feito
 
-    return {
-      totalPosts,
-      totalHighlights,
-      totalActivePosts,
-      totalSlides,
-    };
+  public async totalPosts(whereClause: any) {
+    return this.prisma.post.count({ where: whereClause });
+  }
+
+  public async totalHighlights(whereClause: any) {
+    return this.prisma.post.count({ where: { ...whereClause, highlight: true } });
+  }
+
+  public async totalActivePosts(whereClause: any) {
+    return this.prisma.post.count({ where: { ...whereClause, status: true } });
+  }
+
+  public async totalSlides(whereClause: any) {
+    return this.prisma.post.count({ where: { ...whereClause, slide: true } });
   }
 
   // Evitaria deixar o whereClause como parametro. Melhor criar um metodo para cada where necessario
-  public async getPosts(whereClause: any, skip: number, limitNum: number, pageNum: number): Promise<GetPosts> {
+  //nãp entendi
+  public async getPosts(
+    whereClause: any,
+    skip: number,
+    limitNum: number,
+    pageNum: number,
+  ): Promise<GetPostsPresenter> {
     const [posts, total] = await Promise.all([
       this.prisma.post.findMany({
         where: whereClause,
@@ -61,7 +70,8 @@ export class PostRepository {
   }
 
   // TODO: Talvez o nome mais claro seja getPostsWithSlides
-  public async getSlides(): Promise<GetSlides[]> {
+  //feito
+  public async getPostsWithSlides(): Promise<GetSlides[]> {
     const slides = await this.prisma.post.findMany({
       where: {
         slide: true,
@@ -76,7 +86,8 @@ export class PostRepository {
   }
 
   // TODO: getHighlightPosts
-  public async highlightPosts(): Promise<GetHighlightPresenter[]> {
+  //feito
+  public async getHighlightPosts(): Promise<GetHighlightPresenter[]> {
     const posts = await this.prisma.post.findMany({
       where: {
         highlight: true,
@@ -153,10 +164,12 @@ export class PostRepository {
   }
 
   // TODO: Pode remover o Post do nome. Acho meio redundante, ja que esta no repository de Posts
+  //feito
   public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
-    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } = postSettings;
-    const upsertPost = await this.prisma.post.upsert({
+    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } =
+      postSettings;
+    return await this.prisma.post.upsert({
       where: { id: action === "editPost" ? Number(id) : 0 },
       update: {
         title,
@@ -181,40 +194,84 @@ export class PostRepository {
         highlight: highlight === true,
       },
     });
-    return upsertPost;
   }
 
   // TODO: Pode remover o Post do nome
+  //feito
   public async updatePostStatus(
     data: Pick<PostEntity, "id" | "status"> & {
       field: "status" | "slide" | "highlight";
-    }
+    },
   ) {
     const { status, id, field } = data;
-    const post = await this.prisma.post.update({
+    return await this.prisma.post.update({
       where: { id: Number(id) },
       data: { [field]: status },
     });
-
-    return post;
   }
 
-  // public async updatePostSlide(data: Pick<PostEntity,"id" | "slide">) {
-
-  //   const {slide, id} = data
-  //   const post = await this.prisma.post.update({
-  //     where: { id: Number(id) },
-  //     data: { slide:!slide },
-  //   });
-
-  //   return post;
-  // }
-
   // TODO: Pode remover o Post do nome
+  //feito
   public async deletePost(id: string) {
-    const existingPost = await this.prisma.post.delete({
+    return await this.prisma.post.delete({
       where: { id: Number(id) },
     });
-    return existingPost;
+  }
+
+  public async getNewsContent(slug: string) {
+    const newsContent = await this.prisma.post.findFirst({
+      where: {
+        slug,
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        thumbnail: true,
+        createdAt: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return newsContent;
+  }
+
+  public async searchTerm(term: string): Promise<SearchContent[]> {
+    const getPostsResults = await this.prisma.post.findMany({
+      where: {
+        OR: [
+          {
+            content: {
+              contains: term,
+            },
+          },
+          {
+            title: {
+              contains: term,
+            },
+          },
+          {
+            slug: {
+              contains: term,
+            },
+          },
+        ],
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
+    });
+
+    return getPostsResults;
   }
 }

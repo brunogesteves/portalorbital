@@ -3,7 +3,6 @@ import { PostRepository } from "../../repository/post/post-repository";
 import type { AuthRequest } from "../../types/auth-request";
 
 export class GetPostUseCase {
-  
   public async execute(req: AuthRequest) {
     if (!req.user) {
       throw new Error("Não autenticado");
@@ -24,7 +23,6 @@ export class GetPostUseCase {
       whereClause.categoryId = Number(categoryId);
     }
 
-    // Se for ADM, permite filtrar por authorId passado na query
     if (req.user.role === Role.ADM && authorId) {
       whereClause.authorId = Number(authorId);
     }

@@ -10,7 +10,6 @@ import { uploadImage } from "../lib/storage";
 const router = Router();
 
 router.get("/", authenticate, async (req: Request, res: Response) => {
-  console.log("first: ",)
   const allImages = new AllImagesPostUseCase();
   const result = await allImages.execute();
   res.json(result);
