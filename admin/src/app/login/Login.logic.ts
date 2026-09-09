@@ -33,6 +33,7 @@ export default function useLogin() {
 
       console.log(result);
       if (result.status) {
+        console.log("aqui redireciona");
         router.push("/");
       }
     } catch (err: unknown) {
