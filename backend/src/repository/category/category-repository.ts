@@ -1,5 +1,5 @@
 import prisma from "../../lib/prisma";
-import type {GetCategoriesPresenter } from "../../controllers/category/presenters/get-category-presenters";
+import type { GetCategoriesPresenter } from "../../controllers/category/presenters/get-category-presenters";
 import type { CategoryEntity } from "../../entities/category-entity";
 
 export class CategoryRepository {
@@ -47,8 +47,8 @@ export class CategoryRepository {
     return categories;
   }
 
-  public async delete(data:CategoryEntity): Promise<boolean> {
-    const {id} = data
+  public async delete(data: CategoryEntity): Promise<boolean> {
+    const { id } = data;
     const categoryHasBeenDeleted = await this.prisma.category.delete({
       where: { id },
     });
@@ -57,5 +57,4 @@ export class CategoryRepository {
     }
     throw new Error("Já existe uma categoria com este nome");
   }
-
 }

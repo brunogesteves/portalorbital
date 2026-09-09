@@ -1,10 +1,9 @@
-export class UpsertPostEntity{
-
-slug: string;
-content: string;
-categoryId: number;
-scheduledAt: Date;
-thumbnail: string;
+export class UpsertPostEntity {
+  slug: string;
+  content: string;
+  categoryId: number;
+  scheduledAt: Date;
+  thumbnail: string;
   slide: boolean;
   highlight: boolean;
   authorId: number;
@@ -13,11 +12,11 @@ thumbnail: string;
     slug: string,
     content: string,
     categoryId: number,
-scheduledAt: Date,
+    scheduledAt: Date,
     thumbnail: string,
     slide: boolean,
     highlight: boolean,
-    authorId: number
+    authorId: number,
   ) {
     this.slug = slug;
     this.thumbnail = thumbnail;

@@ -6,10 +6,10 @@ import { UserRepository } from "../../repository/user/user-repository";
 import { AuthEntity } from "../../entities/auth-entity";
 
 export class LoginUseCase {
-
+  
   public async execute(req: Request, res: Response): Promise<{ status: boolean }> {
     const { email, password } = req.body;
-    const authEntity = new AuthEntity(email, "")
+    const authEntity = new AuthEntity(email, "");
     const userRepository = new UserRepository();
     const user = await userRepository.findByEmail(authEntity);
 

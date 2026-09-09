@@ -10,6 +10,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
       "http://admin.localhost",
       "https://orbitalportalpoliticoadmin.vercel.app",
       "https://orbitalportalpolitico.vercel.app",

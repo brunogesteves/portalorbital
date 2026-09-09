@@ -7,7 +7,7 @@ import prisma from "../../lib/prisma";
 import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
 import type { PostEntity } from "../../entities/post-entity";
 
-type AllowedFields = 'status' | 'slide' | 'highlight'
+type AllowedFields = "status" | "slide" | "highlight";
 
 export class PostRepository {
   private prisma = prisma;
@@ -153,7 +153,8 @@ export class PostRepository {
 
   public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
-    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } = postSettings;
+    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } =
+      postSettings;
     const upsertPost = await this.prisma.post.upsert({
       where: { id: action === "editPost" ? Number(id) : 0 },
       update: {
@@ -182,14 +183,15 @@ export class PostRepository {
     return upsertPost;
   }
 
-  public async updatePostStatus(data: Pick<PostEntity,"id" | "status"> &{
-    field:"status" | "slide" | "highlight"
-  }) {
-
-    const {status, id, field} = data
+  public async updatePostStatus(
+    data: Pick<PostEntity, "id" | "status"> & {
+      field: "status" | "slide" | "highlight";
+    },
+  ) {
+    const { status, id, field } = data;
     const post = await this.prisma.post.update({
       where: { id: Number(id) },
-      data: { [field]:status },
+      data: { [field]: status },
     });
 
     return post;

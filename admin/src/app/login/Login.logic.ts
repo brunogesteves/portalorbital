@@ -28,12 +28,13 @@ export default function useLogin() {
   const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
     setError("");
+    let routerStatus = null;
     try {
       const { data: result } = await api.post("auth/login", data);
 
       console.log(result);
       if (result.status) {
-        router.push("/");
+        routerStatus = result.status;
       }
     } catch (err: unknown) {
       console.log(err);
@@ -47,6 +48,9 @@ export default function useLogin() {
       }
     } finally {
       setLoading(false);
+      if (routerStatus) {
+        router.push("/");
+      }
     }
   };
 

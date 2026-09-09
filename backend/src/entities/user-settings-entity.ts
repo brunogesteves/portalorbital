@@ -1,7 +1,6 @@
 import type { Role } from "@prisma/client";
 
 export class UserSettingsEntity {
-
   name: string | null;
   role: Role;
   email: string;

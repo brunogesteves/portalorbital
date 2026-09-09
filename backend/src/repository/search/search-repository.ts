@@ -11,11 +11,10 @@ export class SearchRepository {
       },
       select: {
         name: true,
-        posts: true
+        posts: true,
       },
-
     });
-    if (categoryContent) return { item: "category", content: categoryContent }
+    if (categoryContent) return { item: "category", content: categoryContent };
 
     const newsContent = await this.prisma.post.findFirst({
       where: {
@@ -35,7 +34,7 @@ export class SearchRepository {
         },
       },
     });
-    if (newsContent) return { item: "news", content: newsContent }
+    if (newsContent) return { item: "news", content: newsContent };
   }
 
   public async searchTerm(term: string): Promise<SearchContent[]> {

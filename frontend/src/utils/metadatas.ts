@@ -68,7 +68,7 @@ export const metadataSearch: Metadata = {
 
 export async function getSlugMetadata(slug: string): Promise<Metadata> {
   try {
-    const res = await api.get(`/search/${slug}`);
+    const res = await api.get(`/search/slug/${slug}`);
     if (res.data.status && res.data.content) {
       const data = res.data.content;
       if (res.data.status) {

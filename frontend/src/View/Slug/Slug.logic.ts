@@ -14,7 +14,7 @@ export function useLogicSlug(slug: string) {
       setLoading(true);
 
       try {
-        const res = await api.get(`/search/${slug}`);        
+        const res = await api.get(`/search/slug/${slug}`);        
         if (res.data.status) {
           setType(res.data.type);
           if (res.data.type == "category") {
