@@ -29,11 +29,13 @@ export class LoginUseCase {
       { expiresIn: "1h" },
     );
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.COOKIE_SECURE === "true",
+      secure: isProduction,
       maxAge: 1 * 60 * 60 * 1000,
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax",
       path: "/",
     });
 
