@@ -4,6 +4,7 @@ import type { SearchContent } from "../../controllers/search/presenters/search-p
 export class SearchRepository {
   private prisma = prisma;
 
+  // Mover cada query para o seu respectivo repository
   public async getContent(slug: string) {
     const categoryContent = await this.prisma.category.findFirst({
       where: {
@@ -37,6 +38,7 @@ export class SearchRepository {
     if (newsContent) return { item: "news", content: newsContent };
   }
 
+  // IDEM
   public async searchTerm(term: string): Promise<SearchContent[]> {
     const postsResults = await this.prisma.post.findMany({
       where: {

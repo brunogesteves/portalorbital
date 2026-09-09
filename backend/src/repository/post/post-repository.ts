@@ -12,6 +12,9 @@ type AllowedFields = "status" | "slide" | "highlight";
 export class PostRepository {
   private prisma = prisma;
 
+  // TODO: Separar cada query em um metodo diferente, respeitado o nome conforme ele retorna:
+  // Ex.: getStatsPosts, getStatsHighlights, getStatsActivePosts, getStatsSlides
+  // E deixar essa promise no usecase
   public async stats(whereClause: any) {
     const [totalPosts, totalHighlights, totalActivePosts, totalSlides] = await Promise.all([
       this.prisma.post.count({ where: whereClause }),
@@ -28,12 +31,8 @@ export class PostRepository {
     };
   }
 
-  public async getPosts(
-    whereClause: any,
-    skip: number,
-    limitNum: number,
-    pageNum: number,
-  ): Promise<GetPosts> {
+  // Evitaria deixar o whereClause como parametro. Melhor criar um metodo para cada where necessario
+  public async getPosts(whereClause: any, skip: number, limitNum: number, pageNum: number): Promise<GetPosts> {
     const [posts, total] = await Promise.all([
       this.prisma.post.findMany({
         where: whereClause,
@@ -61,6 +60,7 @@ export class PostRepository {
     };
   }
 
+  // TODO: Talvez o nome mais claro seja getPostsWithSlides
   public async getSlides(): Promise<GetSlides[]> {
     const slides = await this.prisma.post.findMany({
       where: {
@@ -75,6 +75,7 @@ export class PostRepository {
     return slides;
   }
 
+  // TODO: getHighlightPosts
   public async highlightPosts(): Promise<GetHighlightPresenter[]> {
     const posts = await this.prisma.post.findMany({
       where: {
@@ -151,10 +152,10 @@ export class PostRepository {
     return existingTitle;
   }
 
+  // TODO: Pode remover o Post do nome. Acho meio redundante, ja que esta no repository de Posts
   public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
-    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } =
-      postSettings;
+    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } = postSettings;
     const upsertPost = await this.prisma.post.upsert({
       where: { id: action === "editPost" ? Number(id) : 0 },
       update: {
@@ -183,10 +184,11 @@ export class PostRepository {
     return upsertPost;
   }
 
+  // TODO: Pode remover o Post do nome
   public async updatePostStatus(
     data: Pick<PostEntity, "id" | "status"> & {
       field: "status" | "slide" | "highlight";
-    },
+    }
   ) {
     const { status, id, field } = data;
     const post = await this.prisma.post.update({
@@ -208,6 +210,7 @@ export class PostRepository {
   //   return post;
   // }
 
+  // TODO: Pode remover o Post do nome
   public async deletePost(id: string) {
     const existingPost = await this.prisma.post.delete({
       where: { id: Number(id) },
