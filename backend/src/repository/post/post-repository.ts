@@ -6,18 +6,14 @@ import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-
 import prisma from "../../lib/prisma";
 import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
 import type { PostEntity } from "../../entities/post-entity";
-import { SearchContent } from "../../controllers/search/presenters/search-presenters";
+import type { SearchContent } from "../../controllers/search/presenters/search-presenters";
 
 type AllowedFields = "status" | "slide" | "highlight";
 
 export class PostRepository {
   private prisma = prisma;
 
-  // TODO: Separar cada query em um metodo diferente, respeitado o nome conforme ele retorna:
-  // Ex.: getStatsPosts, getStatsHighlights, getStatsActivePosts, getStatsSlides
-  // E deixar essa promise no usecase
-  //feito
-
+  // Se não for user o await, não precisa do async no metodo. Fica intrinseco que ele retorna uma promise.
   public async totalPosts(whereClause: any) {
     return this.prisma.post.count({ where: whereClause });
   }
@@ -36,12 +32,7 @@ export class PostRepository {
 
   // Evitaria deixar o whereClause como parametro. Melhor criar um metodo para cada where necessario
   //nãp entendi
-  public async getPosts(
-    whereClause: any,
-    skip: number,
-    limitNum: number,
-    pageNum: number,
-  ): Promise<GetPostsPresenter> {
+  public async getPosts(whereClause: any, skip: number, limitNum: number, pageNum: number): Promise<GetPostsPresenter> {
     const [posts, total] = await Promise.all([
       this.prisma.post.findMany({
         where: whereClause,
@@ -167,8 +158,7 @@ export class PostRepository {
   //feito
   public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
-    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } =
-      postSettings;
+    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } = postSettings;
     return await this.prisma.post.upsert({
       where: { id: action === "editPost" ? Number(id) : 0 },
       update: {
@@ -201,7 +191,7 @@ export class PostRepository {
   public async updatePostStatus(
     data: Pick<PostEntity, "id" | "status"> & {
       field: "status" | "slide" | "highlight";
-    },
+    }
   ) {
     const { status, id, field } = data;
     return await this.prisma.post.update({

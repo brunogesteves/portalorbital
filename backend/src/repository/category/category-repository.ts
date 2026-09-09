@@ -5,19 +5,31 @@ import type { CategoryEntity } from "../../entities/category-entity";
 export class CategoryRepository {
   private prisma = prisma;
 
-  // TODO: Separar este metodo em dois, um para criar a categoria e outro para verificar
-  // se a categoria já existe.
-  // O "existingName" deve ficar no usecase
-  //feito
+  // ANTES
+  // public async create(data: CategoryEntity): Promise<GetCategoriesPresenter> {
+  //   const { name, slug } = data;
+
+  //   const createCategory = await this.prisma.category.create({
+  //     data: { name, slug },
+  //   });
+  //   return createCategory;
+  // }
+
+  // DEPOIS
+  // pode retornar direto as chamadas do banco.
+  // faça isso em todos os outros métodos.
   public async create(data: CategoryEntity): Promise<GetCategoriesPresenter> {
     const { name, slug } = data;
 
-    const createCategory = await this.prisma.category.create({
-      data: { name, slug },
+    return this.prisma.category.create({
+      data: {
+        name,
+        slug,
+      },
     });
-    return createCategory;
   }
 
+  // Melhor mudar para getCategoryByName e retornar o resultado. Aí lá no useCase verifica se a categoria existe.
   public async existCategoryByName(name: string): Promise<boolean> {
     const existingCategoryByName = await this.prisma.category.findFirst({
       where: { name },
@@ -37,9 +49,6 @@ export class CategoryRepository {
     return categories;
   }
 
-  // TODO: Renomear para para o que ele faz e não pra quem ele serve"
-  // Ex.: getCategoriesWithNoPostSlide (não tenho certeza do que ele deveria retornar)
-  //feito
   public async getCategoriesWithNoPostSlide(): Promise<GetCategoriesPresenter[]> {
     const categories = await this.prisma.category.findMany({
       where: {
@@ -54,10 +63,7 @@ export class CategoryRepository {
     return categories;
   }
 
-  // TODO: Realmente necessário verificar se a categoria foi deletada? Creio que se
-  // não retornou erro, subentende-se foi deletada com sucesso.
-  // Não entendi o throw
-  //feito - está esperando uma resposta no frontend.
+  // TODO: Vamos melhorar depois essa logica
   public async delete(data: CategoryEntity): Promise<boolean> {
     const { id } = data;
     const categoryHasBeenDeleted = await this.prisma.category.delete({
@@ -65,11 +71,11 @@ export class CategoryRepository {
     });
     if (categoryHasBeenDeleted) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
+  // Melhor getCategoryBySlug
   public async getCategoryContent(slug: string) {
     const categoryContent = await this.prisma.category.findFirst({
       where: {

@@ -7,6 +7,7 @@ import type { UserSettingsPresenter } from "../../controllers/user/presenters/us
 export class UserRepository {
   private prisma = prisma;
 
+  // getByEmail
   public async findByEmail(data: AuthEntity): Promise<UserSettingsPresenter | null> {
     const { email } = data;
     const user = await this.prisma.user.findUnique({
@@ -16,8 +17,6 @@ export class UserRepository {
     return user;
   }
 
-  // TODO: Talvez o nome mais claro seja getUserById
-  //feito
   public async getUserById(id: number): Promise<UserPresenter | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },

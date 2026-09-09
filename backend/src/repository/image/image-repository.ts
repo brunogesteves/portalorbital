@@ -3,7 +3,9 @@ import prisma from "../../lib/prisma";
 export class ImageRepository {
   private prisma = prisma;
 
-  // TODO: Separar em 2 metodos e deixar o "verificationImage" no usecase
+  // O UseCase vai chamar os dois métodos
+
+  // getPostByThumbnail
   public async veriricationImage(filename: string) {
     const thumbnailhasbeenUsed = await this.prisma.post.findFirst({
       where: {
@@ -12,10 +14,11 @@ export class ImageRepository {
       select: { id: true, title: true },
     });
 
-    const contentUsage = await this.contentUsage(filename);
-    return thumbnailhasbeenUsed || contentUsage;
+    const contentUsage = await this.contentUsage(filename); // ----> remover esta linha
+    return thumbnailhasbeenUsed || contentUsage; // o usecase que vai fazer essa lógica.
   }
 
+  // getPostByHasContent
   public async contentUsage(filename: string) {
     const contentUsage = await this.prisma.post.findFirst({
       where: {

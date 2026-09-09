@@ -6,8 +6,9 @@ import { PostRepository } from "../post/post-repository";
 export class SearchRepository {
   private prisma = prisma;
 
-  // Mover cada query para o seu respectivo repository
-  //feito
+  // Eu quis dizer que o motodo inteiro deve ficar no repository respectivo.
+  // Esse arquivo não deve existir
+
   public async getContent(slug: string) {
     const categoryContent = new CategoryRepository().getCategoryContent(slug);
     if (categoryContent) return { item: "category", content: categoryContent };
@@ -20,7 +21,4 @@ export class SearchRepository {
     const postsResults = new PostRepository().searchTerm(term);
     if (postsResults) return postsResults;
   }
-
-  // IDEM
-  //feito
 }
