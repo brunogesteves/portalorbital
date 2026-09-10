@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["orbitaladmin", "localhost"],
   images: {
     remotePatterns: [
       {
@@ -14,6 +15,11 @@ const nextConfig: NextConfig = {
         hostname: "api.localhost",
         port: "80",
         pathname: "/images/**",
+      },
+      {
+        protocol: "http",
+        hostname: "api",
+        pathname: "/**",
       },
       {
         protocol: "http",

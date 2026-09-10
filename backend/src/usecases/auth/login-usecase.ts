@@ -4,14 +4,14 @@ import jwt from "jsonwebtoken";
 
 import { UserRepository } from "../../repository/user/user-repository";
 import { AuthEntity } from "../../entities/auth-entity";
+import { LoginPresenter } from "../../controllers/auth/presenters/login.presenter";
 
 export class LoginUseCase {
-  
-  public async execute(req: Request, res: Response): Promise<{ status: boolean }> {
+  public async execute(req: Request, res: Response): Promise<LoginPresenter> {
     const { email, password } = req.body;
     const authEntity = new AuthEntity(email, "");
     const userRepository = new UserRepository();
-    const user = await userRepository.findByEmail(authEntity);
+    const user = await userRepository.getByEmail(authEntity);
 
     if (!user) {
       throw new Error("Invalid user");
@@ -29,16 +29,6 @@ export class LoginUseCase {
       { expiresIn: "1h" },
     );
 
-    const isProduction = process.env.NODE_ENV === "production";
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: isProduction,
-      maxAge: 1 * 60 * 60 * 1000,
-      sameSite: isProduction ? "none" : "lax",
-      path: "/",
-    });
-
-    return { status: true };
+    return { status: true, token };
   }
 }

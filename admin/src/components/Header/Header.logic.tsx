@@ -20,7 +20,9 @@ const useHeader = () => {
   const handleLogout = async () => {
     try {
       await api.post("/auth/logout");
-      router.push("/login");
+      document.cookie = `token=; path=/; max-age=0`;
+      router.push("/")
+      
     } catch (error) {
       console.error("Erro ao sair:", error);
     }

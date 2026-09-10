@@ -1,10 +1,10 @@
 "use client";
 import { CategoryProps } from "@/utils/types";
-import { useHeaderCategories } from "./useHeaderCategories";
+import { HeaderCategoriesLogic } from "./Header.Categories.Logic";
 import Link from "next/link";
 
 export const HeaderCategoriesDesktop = () => {
-  const { data } = useHeaderCategories();
+  const { data } = HeaderCategoriesLogic();
 
   return (
     <nav
@@ -33,7 +33,7 @@ export const HeaderCategoriesDesktop = () => {
 };
 
 export const HeaderCategoriesMobile = ({ slug }: { slug: string }) => {
-  const { data } = useHeaderCategories();
+  const { data } = HeaderCategoriesLogic();
 
   return (
     <nav className="relative z-10 w-full overflow-x-auto no-scrollbar">

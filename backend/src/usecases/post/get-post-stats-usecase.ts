@@ -15,10 +15,10 @@ export class GetPostStatsUseCase {
 
     const postRepository = new PostRepository();
     const [totalPosts, totalHighlights, totalActivePosts, totalSlides] = await Promise.all([
-      postRepository.totalPosts({ where: whereClause }),
-      postRepository.totalHighlights({ where: { ...whereClause, highlight: true } }),
-      postRepository.totalActivePosts({ where: { ...whereClause, status: true } }),
-      postRepository.totalSlides({ where: { ...whereClause, slide: true } }),
+      postRepository.totalPosts(whereClause),
+      postRepository.totalHighlights(whereClause),
+      postRepository.totalActivePosts(whereClause),
+      postRepository.totalSlides(whereClause),
     ]);
 
     const result = {
@@ -27,7 +27,6 @@ export class GetPostStatsUseCase {
       totalActivePosts,
       totalSlides,
     };
-
     if (!result) {
       throw new Error("Invalid credentials");
     }

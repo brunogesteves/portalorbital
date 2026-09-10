@@ -12,11 +12,10 @@ export class ImageRepository {
       select: { id: true, title: true },
     });
 
-    const contentUsage = await this.contentUsage(filename);
-    return thumbnailhasbeenUsed || contentUsage;
+    return thumbnailhasbeenUsed;
   }
 
-  public async contentUsage(filename: string) {
+  public async getPostByHasContent(filename: string) {
     const contentUsage = await this.prisma.post.findFirst({
       where: {
         content: {

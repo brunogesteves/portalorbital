@@ -6,7 +6,7 @@ import { api } from "@/Utils/api";
 import { PostProps, CategoryProps, Pagination, PostStats } from "@/Utils/types";
 import { useUIStore } from '@/store/useUIStore';
 
-export const usePage = () => {
+export const HomeLogic = () => {
     const { userData, setUserData } = useUIStore();
     const [posts, setPosts] = useState<PostProps[]>([]);
     const [categories, setCategories] = useState<CategoryProps[]>([]);
@@ -61,7 +61,7 @@ export const usePage = () => {
             setPagination(postsRes.data.pagination);
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response?.status === 401) {
-                router.push("/login");
+                // router.push("/login");
             }
         } finally {
             if (isDebounced) setFetching(false);
@@ -73,9 +73,9 @@ export const usePage = () => {
             const statsRes = await api.get("/posts/stats");
             setStats(statsRes.data);
         } catch (error: unknown) {
-            if (axios.isAxiosError(error) && error.response?.status === 401) {
-                router.push("/login");
-            }
+            // if (axios.isAxiosError(error) && error.response?.status === 401) {
+            //     router.push("/login");
+            // }
         }
     }, [router]);
 
@@ -96,7 +96,7 @@ export const usePage = () => {
                 })
             } catch (error: unknown) {
                 if (axios.isAxiosError(error) && error.response?.status === 401) {
-                    router.push("/login");
+                    // router.push("/login");
                 }
             } finally {
                 setLoading(false);

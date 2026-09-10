@@ -11,7 +11,7 @@ import {
   FiCalendar,
   FiUser,
 } from "react-icons/fi";
-import { useSearchLogic } from "./useLogicSearch";
+import { SearchLogic } from "./Search.Logic";
 import Image from "next/image";
 import Loading from "@/components/Loading";
 import { imageUrl } from "@/Utils/api";
@@ -19,7 +19,7 @@ import { imageUrl } from "@/Utils/api";
 function SearchResults() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
-  const { data, methods } = useSearchLogic(initialQuery);
+  const { data, methods } = SearchLogic(initialQuery);
 
   return (    
     <div className="space-y-12 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">      

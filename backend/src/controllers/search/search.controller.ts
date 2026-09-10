@@ -1,12 +1,10 @@
 import { type Request, type Response, Router } from "express";
-
-import { SearchTermUseCase } from "../../usecases/search/search-term-usecase";
+import { SearchTermUseCase } from "../../usecases/search/searchTerm-usecase";
 import { NewSCategoryUseCase } from "../../usecases/search/category-news-usecase";
 
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
-
+router.get("/searchcontent", async (req: Request, res: Response) => {
   const searchTerm = new SearchTermUseCase();
   const result = await searchTerm.execute(req);
   return res.json(result);

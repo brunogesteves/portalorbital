@@ -6,7 +6,7 @@ import { api } from "@/Utils/api";
 import { PostProps } from "@/Utils/types";
 
 
-export const useSearchLogic = (initialQuery: string) => {
+export const SearchLogic = (initialQuery: string) => {
   const router = useRouter();
 
   const [posts, setPosts] = useState<PostProps[]>([]);
@@ -16,8 +16,9 @@ export const useSearchLogic = (initialQuery: string) => {
   const fetchResults = async (term: string) => {
     setLoading(true);
     try {
-      const response = await api.get(`/search?q=${encodeURIComponent(term)}`);
-      console.log(response.data)
+      
+      const response = await api.get(`/search/searchcontent?term=${term.toLowerCase()}`);
+      console.log("busca: ", response.data)
       setPosts(response.data);
     } catch  {
       //errro

@@ -9,7 +9,9 @@ export class DeleteImageUseCase {
 
     const imageRepository = new ImageRepository();
 
-    const result = await imageRepository.veriricationImage(filename as string);
+    const result =
+      (await imageRepository.veriricationImage(filename as string)) ||
+      (await imageRepository.getPostByHasContent(filename as string));
     if (result) {
       return `Imagem sendo usada como capa do post ou em conteúdo "${result?.title}"`;
     }

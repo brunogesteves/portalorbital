@@ -6,7 +6,8 @@ import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-
 import prisma from "../../lib/prisma";
 import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
 import type { PostEntity } from "../../entities/post-entity";
-import { SearchContent } from "../../controllers/search/presenters/search-presenters";
+import type { SearchContentPresenter } from "../../controllers/search/presenters/search-presenters";
+import { PostContent } from "../../controllers/post/presenters/post-presenters";
 
 type AllowedFields = "status" | "slide" | "highlight";
 
@@ -19,7 +20,7 @@ export class PostRepository {
   //feito
 
   public async totalPosts(whereClause: any) {
-    return this.prisma.post.count({ where: whereClause });
+    return await this.prisma.post.count({ where: whereClause });
   }
 
   public async totalHighlights(whereClause: any) {
@@ -237,10 +238,11 @@ export class PostRepository {
         },
       },
     });
+    console.log("pega do repositorio: ", newsContent);
     return newsContent;
   }
 
-  public async searchTerm(term: string): Promise<SearchContent[]> {
+  public async searchTerm(term: string): Promise<PostContent[]> {
     const getPostsResults = await this.prisma.post.findMany({
       where: {
         OR: [

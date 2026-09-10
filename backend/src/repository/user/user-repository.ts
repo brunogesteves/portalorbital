@@ -7,7 +7,7 @@ import type { UserSettingsPresenter } from "../../controllers/user/presenters/us
 export class UserRepository {
   private prisma = prisma;
 
-  public async findByEmail(data: AuthEntity): Promise<UserSettingsPresenter | null> {
+  public async getByEmail(data: AuthEntity): Promise<UserSettingsPresenter | null> {
     const { email } = data;
     const user = await this.prisma.user.findUnique({
       where: { email },

@@ -1,26 +1,18 @@
 import type { Request } from "express";
-import { SearchRepository } from "../../repository/search/search-repository";
+import type { SearchContentPresenter } from "../../controllers/search/presenters/search-presenters";
+import { CategoryRepository } from "../../repository/category/category-repository";
+import { PostRepository } from "../../repository/post/post-repository";
 
 export class NewSCategoryUseCase {
-
-  public async execute(req: Request) {
+  public async execute(req: Request): Promise<SearchContentPresenter> {
     const { slug } = req.params;
-    const searchRepository = new SearchRepository();
-    const result = await searchRepository.getContent(slug as string);
 
-    if (result?.item === "news") {
-      return {
-        status: true,
-        type: "news",
-        content: result.content,
-      }
-    } else if (result?.item === "category") {
-      return {
-        status: true,
-        type: "category",
-        content: result.content,
-      }
+    const categoryContent = await new CategoryRepository().getCategoryContent(slug as string);
+
+    if (categoryContent) {
+      return { item: "category", content: categoryContent };
+    } else {
+      return { item: "news", content: await new PostRepository().getNewsContent(slug as string) };
     }
-    return { status: false };
   }
 }

@@ -12,17 +12,15 @@ export class CategoryRepository {
   public async create(data: CategoryEntity): Promise<GetCategoriesPresenter> {
     const { name, slug } = data;
 
-    const createCategory = await this.prisma.category.create({
+    return await this.prisma.category.create({
       data: { name, slug },
     });
-    return createCategory;
   }
 
-  public async existCategoryByName(name: string): Promise<boolean> {
-    const existingCategoryByName = await this.prisma.category.findFirst({
+  public async getCategoryByName(name: string) {
+    return await this.prisma.category.findFirst({
       where: { name },
     });
-    return !!existingCategoryByName;
   }
 
   public async getCategories(): Promise<GetCategoriesPresenter[]> {
@@ -65,9 +63,8 @@ export class CategoryRepository {
     });
     if (categoryHasBeenDeleted) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   public async getCategoryContent(slug: string) {

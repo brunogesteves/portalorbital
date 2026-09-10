@@ -13,12 +13,21 @@ interface AuthRequest extends Request {
 export const authenticate = (req: AuthRequest, res: Response, next: NextFunction) => {
   const { token } = req.cookies;
 
-  if (!token) {
+  let authToken = token;
+
+  if (!authToken) {
+    const authHeader = req.headers.authorization;
+    if (authHeader?.startsWith("Bearer ")) {
+      authToken = authHeader.slice(7);
+    }
+  }
+
+  if (!authToken) {
     return res.status(401).json({ message: "Não autorizado" });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
+    const decoded = jwt.verify(authToken, process.env.JWT_SECRET as string) as any;
     req.user = decoded;
     next();
   } catch {

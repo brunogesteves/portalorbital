@@ -10,7 +10,7 @@ export class CreateCategorysUseCase {
 
     const categoryEntity = CategoryEntity.fromCreate({ name, slug });
     const createCategoryRepository = new CategoryRepository();
-    const existCategory = await createCategoryRepository.existCategoryByName(name);
+    const existCategory = !!(await createCategoryRepository.getCategoryByName(name));
 
     if (existCategory) {
       throw new Error("Já existe uma categoria com este nome");

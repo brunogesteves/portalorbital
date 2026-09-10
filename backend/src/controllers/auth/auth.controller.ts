@@ -8,9 +8,14 @@ import { UserSettingsUseCase } from "../../usecases/auth/user-usecase";
 const router = Router();
 
 router.post("/login", async (req: Request, res: Response) => {
-  const login = new LoginUseCase();
-  const result = await login.execute(req, res);
-  res.json(result);
+  try {
+    const login = new LoginUseCase();
+    const result = await login.execute(req, res);
+    res.json(result);
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(401).json({ message: "Credenciais inválidas" });
+  }
 });
 
 router.post("/logout", async (req: Request, res: Response) => {
