@@ -13,7 +13,7 @@ type AllowedFields = "status" | "slide" | "highlight";
 export class PostRepository {
   private prisma = prisma;
 
-  // Se não for user o await, não precisa do async no metodo. Fica intrinseco que ele retorna uma promise.
+  // Se não for user o await, não precisa do async no metodo.
   public async totalPosts(whereClause: any) {
     return this.prisma.post.count({ where: whereClause });
   }
@@ -60,8 +60,6 @@ export class PostRepository {
     };
   }
 
-  // TODO: Talvez o nome mais claro seja getPostsWithSlides
-  //feito
   public async getPostsWithSlides(): Promise<GetSlides[]> {
     const slides = await this.prisma.post.findMany({
       where: {
@@ -76,8 +74,6 @@ export class PostRepository {
     return slides;
   }
 
-  // TODO: getHighlightPosts
-  //feito
   public async getHighlightPosts(): Promise<GetHighlightPresenter[]> {
     const posts = await this.prisma.post.findMany({
       where: {
@@ -142,6 +138,7 @@ export class PostRepository {
     return uniquePost;
   }
 
+  // getPostByTitle
   public async findTitle(itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
 
@@ -154,8 +151,6 @@ export class PostRepository {
     return existingTitle;
   }
 
-  // TODO: Pode remover o Post do nome. Acho meio redundante, ja que esta no repository de Posts
-  //feito
   public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
     const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } = postSettings;
@@ -186,8 +181,7 @@ export class PostRepository {
     });
   }
 
-  // TODO: Pode remover o Post do nome
-  //feito
+  // TODO: Depois te explico como melhorar essa tipagem.
   public async updatePostStatus(
     data: Pick<PostEntity, "id" | "status"> & {
       field: "status" | "slide" | "highlight";
@@ -200,14 +194,13 @@ export class PostRepository {
     });
   }
 
-  // TODO: Pode remover o Post do nome
-  //feito
   public async deletePost(id: string) {
     return await this.prisma.post.delete({
       where: { id: Number(id) },
     });
   }
 
+  // getPostBySlug
   public async getNewsContent(slug: string) {
     const newsContent = await this.prisma.post.findFirst({
       where: {
