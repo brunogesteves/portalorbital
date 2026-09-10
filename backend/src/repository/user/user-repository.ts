@@ -9,17 +9,15 @@ export class UserRepository {
 
   public async getByEmail(data: AuthEntity): Promise<UserSettingsPresenter | null> {
     const { email } = data;
-    const user = await this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where: { email },
     });
-
-    return user;
   }
 
   // TODO: Talvez o nome mais claro seja getUserById
   //feito
   public async getUserById(id: number): Promise<UserPresenter | null> {
-    const user = await this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where: { id },
       select: {
         email: true,
@@ -27,6 +25,5 @@ export class UserRepository {
         role: true,
       },
     });
-    return user;
   }
 }

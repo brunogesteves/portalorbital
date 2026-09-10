@@ -70,10 +70,8 @@ export class PostRepository {
     };
   }
 
-  // TODO: Talvez o nome mais claro seja getPostsWithSlides
-  //feito
   public async getPostsWithSlides(): Promise<GetSlides[]> {
-    const slides = await this.prisma.post.findMany({
+    return await this.prisma.post.findMany({
       where: {
         slide: true,
       },
@@ -83,13 +81,10 @@ export class PostRepository {
         title: true,
       },
     });
-    return slides;
   }
 
-  // TODO: getHighlightPosts
-  //feito
   public async getHighlightPosts(): Promise<GetHighlightPresenter[]> {
-    const posts = await this.prisma.post.findMany({
+    return await this.prisma.post.findMany({
       where: {
         highlight: true,
       },
@@ -100,11 +95,10 @@ export class PostRepository {
         title: true,
       },
     });
-    return posts;
   }
 
   public async allPosts(): Promise<AllPostsFront[]> {
-    const allPosts = await this.prisma.category.findMany({
+    return await this.prisma.category.findMany({
       where: {
         posts: {
           some: {
@@ -142,30 +136,25 @@ export class PostRepository {
         },
       },
     });
-    return allPosts;
   }
 
   public async getPostById(id: string) {
-    const uniquePost = await this.prisma.post.findUnique({
+    return await this.prisma.post.findUnique({
       where: { id: Number(id) },
     });
-    return uniquePost;
   }
 
   public async findTitle(itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
 
-    const existingTitle = await this.prisma.post.findFirst({
+    return await this.prisma.post.findFirst({
       where: {
         title,
         ...(action === "editPost" && id ? { id: { not: Number(id) } } : {}),
       },
     });
-    return existingTitle;
   }
 
-  // TODO: Pode remover o Post do nome. Acho meio redundante, ja que esta no repository de Posts
-  //feito
   public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
     const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } =
@@ -197,22 +186,21 @@ export class PostRepository {
     });
   }
 
-  // TODO: Pode remover o Post do nome
-  //feito
   public async updatePostStatus(
     data: Pick<PostEntity, "id" | "status"> & {
       field: "status" | "slide" | "highlight";
     },
   ) {
     const { status, id, field } = data;
+    console.log("status: ", status);
+    console.log("id: ", id);
+    console.log("field: ", field);
     return await this.prisma.post.update({
       where: { id: Number(id) },
       data: { [field]: status },
     });
   }
 
-  // TODO: Pode remover o Post do nome
-  //feito
   public async deletePost(id: string) {
     return await this.prisma.post.delete({
       where: { id: Number(id) },
@@ -238,12 +226,11 @@ export class PostRepository {
         },
       },
     });
-    console.log("pega do repositorio: ", newsContent);
     return newsContent;
   }
 
   public async searchTerm(term: string): Promise<PostContent[]> {
-    const getPostsResults = await this.prisma.post.findMany({
+    return await this.prisma.post.findMany({
       where: {
         OR: [
           {
@@ -273,7 +260,5 @@ export class PostRepository {
         },
       },
     });
-
-    return getPostsResults;
   }
 }

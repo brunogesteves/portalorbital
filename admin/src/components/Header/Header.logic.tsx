@@ -30,7 +30,8 @@ const useHeader = () => {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      router.push(`/search?term=${encodeURIComponent(searchQuery)}`);
+      
       setSearchQuery("");
     }
   };

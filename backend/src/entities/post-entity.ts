@@ -60,7 +60,7 @@ export class PostEntity {
       false,
       0,
       0,
-      "status",
+      data.field,
     );
   }
 }

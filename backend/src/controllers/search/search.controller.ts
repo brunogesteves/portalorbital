@@ -4,7 +4,7 @@ import { NewSCategoryUseCase } from "../../usecases/search/category-news-usecase
 
 const router = Router();
 
-router.get("/searchcontent", async (req: Request, res: Response) => {
+router.get("/searchcontent/:term", async (req: Request, res: Response) => {
   const searchTerm = new SearchTermUseCase();
   const result = await searchTerm.execute(req);
   return res.json(result);

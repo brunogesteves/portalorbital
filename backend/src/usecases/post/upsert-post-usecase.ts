@@ -11,7 +11,9 @@ export class UpsertPostUseCase {
       throw new Error("Não autenticado");
     }
     const { id } = req.params;
-    const { title, content, categoryId, scheduledAt, thumbnailUrl, slide, highlight, action } = req.body ;
+    const { title, content, categoryId, scheduledAt, thumbnailUrl, action } = req.body;
+    const slide = req.body.slide === "true" || req.body.slide === true;
+    const highlight = req.body.highlight === "true" || req.body.highlight === true;
     const thumbnail = req.file  ? `/images/${req.file.filename}` : thumbnailUrl || null;
 
     const slug = slugify(title);

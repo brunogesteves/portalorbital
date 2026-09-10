@@ -45,9 +45,6 @@ function Home() {
         <PostTable
           posts={data.posts}
           currentUser={data.userData.role}
-          // handleToggleStatus={methods.handleToggleStatus}
-          // handleToggleSlide={methods.handleToggleSlide}
-          // handleToggleHighlight={methods.handleToggleHighlight}
           handleUpdateStatus={methods.handleUpdateStatus}
           setPostToDelete={(id) => methods.setPostToDelete(id)}
           setShowModal={methods.setShowModal}

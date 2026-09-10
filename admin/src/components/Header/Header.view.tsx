@@ -31,7 +31,7 @@ const Header = () => {
 
       
       <div className="flex-1 max-w-xl px-3 md:px-10 hidden sm:block">
-        <div className="relative group">
+        {/* <div className="relative group">
           <input
             type="text"
             placeholder="Search for..."
@@ -46,7 +46,7 @@ const Header = () => {
           >
             <FiSearch size={18} />
           </div>
-        </div>
+        </div> */}
       </div>      
       <div className="flex items-center gap-3 md:gap-8">
         <div className="hidden lg:block text-slate-400 font-mono text-sm tracking-widest">          

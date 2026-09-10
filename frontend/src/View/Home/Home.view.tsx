@@ -1,12 +1,12 @@
 "use client";
 
 import Slider from "@/components/Header/Slider/Slider";
-import { useHome } from "./Home.logic";
+import { HomeLogic } from "./Home.logic";
 import Header from "@/components/Header/Header";
 import JsonLD from "@/components/jsonLd";
 
 export default function Home() {
-  const { data, methods } = useHome();
+  const { data, methods } = HomeLogic();
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
