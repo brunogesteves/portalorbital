@@ -5,6 +5,9 @@ import { GetFrontCategoriesUseCase } from "../../usecases/category/get-front-cat
 import { GetCategoriesUseCase } from "../../usecases/category/get-categories-usecase";
 import { CreateCategorysUseCase } from "../../usecases/category/create-category-usecase";
 import { DeleteCategorysUseCase } from "../../usecases/category/delete-category-usecase";
+import { CreateCategoryPresenter } from "./presenters/create-category-presenters";
+import { validateBody } from "../../middlewares/body-validator";
+import { createCategorySchema } from "./dtos/create-category.dto";
 
 const router = Router();
 
@@ -20,11 +23,18 @@ router.get("/front", async (req: Request, res: Response) => {
   return res.json(result);
 });
 
-router.post("/", authenticate, authorize([Role.ADM]), async (req: Request, res: Response) => {
-  const createCategory = new CreateCategorysUseCase();
-  const result = await createCategory.execute(req);
-  return res.json(result);
-});
+router.post(
+  "/",
+  authenticate,
+  authorize([Role.ADM]),
+  validateBody(createCategorySchema),
+  async (req: Request, res: Response) => {
+    const createCategoryUseCase = new CreateCategorysUseCase();
+    const newCategory = await createCategoryUseCase.execute(req.body);
+    const presenter = new CreateCategoryPresenter(newCategory.name, newCategory.slug);
+    return res.json(presenter);
+  }
+);
 
 router.delete("/:id", authenticate, authorize([Role.ADM]), async (req: Request, res: Response) => {
   const deleteCategory = new DeleteCategorysUseCase();

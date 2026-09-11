@@ -6,7 +6,8 @@ import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-
 import prisma from "../../lib/prisma";
 import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
 import type { PostEntity } from "../../entities/post-entity";
-import type { SearchContent } from "../../controllers/search/presenters/search-presenters";
+import type { SearchContentPresenter } from "../../controllers/search/presenters/search-presenters";
+import type { PostContent } from "../../controllers/post/presenters/post-presenters";
 
 type AllowedFields = "status" | "slide" | "highlight";
 
@@ -15,7 +16,7 @@ export class PostRepository {
 
   // Se não for user o await, não precisa do async no metodo.
   public async totalPosts(whereClause: any) {
-    return this.prisma.post.count({ where: whereClause });
+    return await this.prisma.post.count({ where: whereClause });
   }
 
   public async totalHighlights(whereClause: any) {
@@ -61,7 +62,7 @@ export class PostRepository {
   }
 
   public async getPostsWithSlides(): Promise<GetSlides[]> {
-    const slides = await this.prisma.post.findMany({
+    return await this.prisma.post.findMany({
       where: {
         slide: true,
       },
@@ -71,11 +72,10 @@ export class PostRepository {
         title: true,
       },
     });
-    return slides;
   }
 
   public async getHighlightPosts(): Promise<GetHighlightPresenter[]> {
-    const posts = await this.prisma.post.findMany({
+    return await this.prisma.post.findMany({
       where: {
         highlight: true,
       },
@@ -86,11 +86,10 @@ export class PostRepository {
         title: true,
       },
     });
-    return posts;
   }
 
   public async allPosts(): Promise<AllPostsFront[]> {
-    const allPosts = await this.prisma.category.findMany({
+    return await this.prisma.category.findMany({
       where: {
         posts: {
           some: {
@@ -128,27 +127,24 @@ export class PostRepository {
         },
       },
     });
-    return allPosts;
   }
 
   public async getPostById(id: string) {
-    const uniquePost = await this.prisma.post.findUnique({
+    return await this.prisma.post.findUnique({
       where: { id: Number(id) },
     });
-    return uniquePost;
   }
 
   // getPostByTitle
   public async findTitle(itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
 
-    const existingTitle = await this.prisma.post.findFirst({
+    return await this.prisma.post.findFirst({
       where: {
         title,
         ...(action === "editPost" && id ? { id: { not: Number(id) } } : {}),
       },
     });
-    return existingTitle;
   }
 
   public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
@@ -181,13 +177,15 @@ export class PostRepository {
     });
   }
 
-  // TODO: Depois te explico como melhorar essa tipagem.
   public async updatePostStatus(
     data: Pick<PostEntity, "id" | "status"> & {
       field: "status" | "slide" | "highlight";
     }
   ) {
     const { status, id, field } = data;
+    console.log("status: ", status);
+    console.log("id: ", id);
+    console.log("field: ", field);
     return await this.prisma.post.update({
       where: { id: Number(id) },
       data: { [field]: status },
@@ -223,8 +221,8 @@ export class PostRepository {
     return newsContent;
   }
 
-  public async searchTerm(term: string): Promise<SearchContent[]> {
-    const getPostsResults = await this.prisma.post.findMany({
+  public async searchTerm(term: string): Promise<PostContent[]> {
+    return await this.prisma.post.findMany({
       where: {
         OR: [
           {
@@ -254,7 +252,5 @@ export class PostRepository {
         },
       },
     });
-
-    return getPostsResults;
   }
 }

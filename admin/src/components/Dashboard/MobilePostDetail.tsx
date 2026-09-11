@@ -17,9 +17,6 @@ const MobilePostDetail = ({
   post,
   currentUser,
   onClose,
-  // handleToggleStatus,
-  // handleToggleSlide,
-  // handleToggleHighlight,
   handleUpdateStatus,
   setPostToDelete,
   setShowModal,
@@ -81,17 +78,21 @@ const MobilePostDetail = ({
 
               {currentUser === "ADM" && (
                 <button
-                  onClick={() => {
-                    handleUpdateStatus(post.id, post.status, "status");
-                  }}
-                  className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
+                  onClick={() =>
+                    handleUpdateStatus(post.id, post.status, "status")
+                  }
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.status ? "bg-green-600" : "bg-red-300"
+                    }`}
                 >
-                  {post.status ? (
-                    <FiToggleRight size={18} />
-                  ) : (
-                    <FiToggleLeft size={18} />
-                  )}
-                  Alterar
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow 
+                      ${post.status ? "translate-x-[18px]" : "translate-x-[3px]"}
+                      ${currentUser !== "ADM"
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                      }
+                      `}
+                  />
                 </button>
               )}
             </div>
@@ -112,17 +113,20 @@ const MobilePostDetail = ({
               </span>
               {currentUser === "ADM" && (
                 <button
-                  onClick={() => {
-                    handleUpdateStatus(post.id, post.slide, "slide");
-                  }}
-                  className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
+                  onClick={() =>
+                    currentUser === "ADM" &&
+                    handleUpdateStatus(post.id, post.slide, "slide")
+                  }
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.slide ? "bg-green-600" : "bg-red-300"
+                    } ${currentUser !== "ADM"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                    }`}
                 >
-                  {post.slide ? (
-                    <FiToggleRight size={18} />
-                  ) : (
-                    <FiToggleLeft size={18} />
-                  )}
-                  Alterar
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.slide ? "translate-x-[18px]" : "translate-x-[3px]"
+                      }`}
+                  />
                 </button>
               )}
             </div>
@@ -143,17 +147,22 @@ const MobilePostDetail = ({
               </span>
               {currentUser === "ADM" && (
                 <button
-                  onClick={() => {
-                    handleUpdateStatus(post.id, post.highlight, "highlight");
-                  }}
-                  className="flex items-center gap-2 text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline"
+                  onClick={() =>
+                    currentUser === "ADM" &&
+                    handleUpdateStatus(post.id, post.highlight, "highlight")
+                  }
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.highlight ? "bg-yellow-500" : "bg-gray-300"
+                    } ${currentUser !== "ADM"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                    }`}
                 >
-                  {post.highlight ? (
-                    <FiToggleRight size={18} />
-                  ) : (
-                    <FiToggleLeft size={18} />
-                  )}
-                  Alterar
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.highlight
+                        ? "translate-x-[18px]"
+                        : "translate-x-[3px]"
+                      }`}
+                  />
                 </button>
               )}
             </div>

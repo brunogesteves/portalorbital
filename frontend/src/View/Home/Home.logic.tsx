@@ -7,7 +7,7 @@ import { api, imageUrl } from "@/utils/api";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebookF } from "react-icons/fa";
 
-export function useHome() {
+export function HomeLogic() {
   const [content, setContent] = useState<AllContentProps[]>([]);
   const [highLight, setHighLight] = useState<SliderHighlightsProps[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,25 +48,44 @@ export function useHome() {
             {highLight.map((post, i) => {
               if (i <= 3) {
                 return (
-                  <Link href={post.slug} key={post.id} className="relative block bg-gray-800 rounded-xl p-2 flex flex-col items-center justify-end text-center space-y-2 aspect-square overflow-hidden">
-                    <Image
-                      alt={post.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      src={`${imageUrl}/${post.thumbnail}`}
-                      fill
-                      loading="eager"
-                      unoptimized
-                    />
-                    <div className="absolute inset-0 bg-black/40" />
-                    <span className="relative text-white text-xl font-bold z-10">
+                  // <Link href={post.slug} key={post.id} className="relative block bg-gray-800 rounded-xl p-2 flex flex-col items-center justify-end text-center space-y-2 aspect-square overflow-hidden">
+                  //   <Image
+                  //     alt={post.title}
+                  //     className="absolute inset-0 w-full h-full object-cover"
+                  //     src={`${imageUrl}/${post.thumbnail}`}
+                  //     fill
+                  //     loading="eager"
+                  //     unoptimized
+                  //   />
+                  //   <div className="absolute inset-0 bg-black/40" />
+                  //   <span className="relative text-white text-xl font-bold z-10">
+                  //     {post.title}
+                  //   </span>
+                  // </Link>
+                  <article key={post.id}>
+              <Link href={post.slug} aria-label={`Ler: ${post.title}`}>
+                <div className="relative group rounded-xl overflow-hidden aspect-square bg-gray-100 cursor-pointer">
+                  <Image
+                    alt={post.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    src={`${imageUrl}/${post.thumbnail}`}
+                    fill
+                    loading="eager"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                    <h3 className="text-white font-bold text-xl first-letter:capitalize">
                       {post.title}
-                    </span>
-                  </Link>
+                    </h3>
+                  </div>
+                </div>
+              </Link>
+            </article>
                 )
               }
             })}
           </div>
-          {/* Embedded Eventos Component */}
+          
           <div className="bg-gray-50/50 p-4 rounded-xl border border-gray-100 md:col-span-3">
             <div className="flex items-center space-x-2 mb-4">
               <h3 className="text-sm font-bold text-[#111415] uppercase tracking-wider">
@@ -174,20 +193,39 @@ export function useHome() {
             {highLight.map((post, i) => {
               if (i >= 4 && i <= 7) {
                 return (
-                  <Link href={post.slug} key={post.id} className="relative block bg-gray-800 rounded-xl p-2 flex flex-col items-center justify-end text-center space-y-2 aspect-square overflow-hidden">
-                    <Image
-                      alt={post.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      src={`${imageUrl}/${post.thumbnail}`}
-                      fill
-                      loading="eager"
-                      unoptimized
-                    />
-                    <div className="absolute inset-0 bg-black/40" />
-                    <span className="relative text-white text-[20px] font-bold z-10">
+                  // <Link href={post.slug} key={post.id} className="relative block bg-gray-800 rounded-xl p-2 flex flex-col items-center justify-end text-center space-y-2 aspect-square overflow-hidden">
+                  //   <Image
+                  //     alt={post.title}
+                  //     className="absolute inset-0 w-full h-full object-cover"
+                  //     src={`${imageUrl}/${post.thumbnail}`}
+                  //     fill
+                  //     loading="eager"
+                  //     unoptimized
+                  //   />
+                  //   <div className="absolute inset-0 bg-black/40" />
+                  //   <span className="relative text-white text-[20px] font-bold z-10">
+                  //     {post.title}
+                  //   </span>
+                  // </Link>
+                  <article key={post.id}>
+              <Link href={post.slug} aria-label={`Ler: ${post.title}`}>
+                <div className="relative group rounded-xl overflow-hidden aspect-square bg-gray-100 cursor-pointer">
+                  <Image
+                    alt={post.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    src={`${imageUrl}/${post.thumbnail}`}
+                    fill
+                    loading="eager"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                    <h3 className="text-white font-bold text-xl first-letter:capitalize">
                       {post.title}
-                    </span>
-                  </Link>
+                    </h3>
+                  </div>
+                </div>
+              </Link>
+            </article>
                 )
               }
             })}

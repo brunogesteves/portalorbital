@@ -1,6 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+      },
+      {
+        source: "/images/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/images/:path*`,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
@@ -20,9 +32,14 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
         pathname: "/**",
       },
+      // {
+      //   protocol: "http",
+      //   hostname: "api.localhost",
+      //   pathname: "/**",
+      // },
       {
         protocol: "http",
-        hostname: "api.localhost",
+        hostname: "api",
         pathname: "/**",
       },
       {

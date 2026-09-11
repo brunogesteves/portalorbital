@@ -6,14 +6,14 @@ import StatsGrid from "../components/Dashboard/StatsGrid";
 import PostFilters from "../components/Dashboard/PostFilters";
 import PostTable from "../components/Dashboard/PostTable";
 import DeleteModal from "../components/Dashboard/DeleteModal";
-import { usePage } from "@/components/UsePage";
+import { HomeLogic } from "@/components/Home.Logic";
 import ModalMessage from "@/components/ModalMessage";
 import Loading from "@/components/Loading";
 import Toast from "@/components/Toast";
 
 
 function Home() {
-  const { data, methods } = usePage();
+  const { data, methods } = HomeLogic();
 
   return (
     <div className="space-y-6 md:space-y-12 pb-12 md:pb-20 px-2 md:px-0 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -45,9 +45,6 @@ function Home() {
         <PostTable
           posts={data.posts}
           currentUser={data.userData.role}
-          // handleToggleStatus={methods.handleToggleStatus}
-          // handleToggleSlide={methods.handleToggleSlide}
-          // handleToggleHighlight={methods.handleToggleHighlight}
           handleUpdateStatus={methods.handleUpdateStatus}
           setPostToDelete={(id) => methods.setPostToDelete(id)}
           setShowModal={methods.setShowModal}

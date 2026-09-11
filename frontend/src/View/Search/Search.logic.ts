@@ -2,7 +2,7 @@ import { api } from "@/utils/api";
 import { PostProps } from "@/utils/types";
 import { useEffect, useState } from "react";
 
-export function useSearch(term: string) {
+export function SearchLogic(term: string) {
   const [searchTerm, setSearchTerm] = useState(term);
   const [searchResults, setSearchResults] = useState<PostProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,8 +19,7 @@ export function useSearch(term: string) {
     setIsError(false);
 
     try {
-      console.log("term: ", term)
-      const res = await api.get(`/search?term=${term.toLowerCase()}`);
+      const res = await api.get(`/search/searchcontent?term=${term.toLowerCase()}`);
       setSearchResults(res.data);
     } catch {
       setIsError(true);

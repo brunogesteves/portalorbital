@@ -2,7 +2,7 @@ import { api } from "@/utils/api";
 import { CategoryProps } from "@/utils/types";
 import { useEffect, useState } from "react";
 
-export function useHeaderCategories() {
+export function HeaderCategoriesLogic() {
   const [categories, setCategories] = useState<CategoryProps[]>([]);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export function useHeaderCategories() {
         await api.get("/categories/front").then((res) => {
           setCategories(res.data);
         });
-      } catch { }
+      } catch {}
     }
     getCategories();
   }, []);

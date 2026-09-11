@@ -61,7 +61,7 @@ export const useLogicNewPost = () => {
   }, []);
 
   const onDeleteImage = async (filename: string) => {
-    await api.delete(`/posts/images/${filename}`);
+    await api.delete(`/images/${filename}`);
     setExistingImages((prev) => prev.filter((img) => img !== filename));
   };
 

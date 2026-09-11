@@ -9,12 +9,15 @@ const app = express();
 app.use(
   cors({
     origin: [
+      "http://localhost",
       "http://localhost:3000",
       "http://localhost:3001",
       "http://localhost:3002",
       "http://admin.localhost",
+      "http://orbitaladmin",
       "https://orbitalportalpoliticoadmin.vercel.app",
       "https://orbitalportalpolitico.vercel.app",
+      "http://api",
     ],
     credentials: true,
   }),

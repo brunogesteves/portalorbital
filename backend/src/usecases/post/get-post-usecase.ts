@@ -10,7 +10,6 @@ export class GetPostUseCase {
     const { q, page = "1", limit = "20", categoryId, authorId, type } = req.query;
     const whereClause: any = {};
 
-    // Regra: PBR só vê os seus, ADM vê todos
     if (req.user.role === Role.PBR) {
       whereClause.authorId = req.user.id;
     }

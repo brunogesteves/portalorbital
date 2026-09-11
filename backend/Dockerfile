@@ -6,7 +6,7 @@ COPY package.json yarn.lock ./
 COPY prisma.config.ts ./
 COPY prisma ./prisma
 
-RUN yarn --frozen-lockfile && yarn cache clean
+RUN yarn install --frozen-lockfile --ignore-scripts && yarn cache clean
 
 COPY . .
 RUN chmod +x entrypoint.sh

@@ -1,4 +1,4 @@
-export class CreateCategories {
+export class CreateCategoryPresenter {
   name: string;
   slug: string;
 

@@ -46,11 +46,11 @@ const StatsGrid = ({
 
   // 1. Verificar se slide tem menos de 1 post ativo
   if (lenghtSlides < 1) {
-    warnings.push("O slide precisa ter no mínimo 1 post ativo");
+    warnings.push("O slide precisa ter no mínimo 1 post ativos");
   }
 
   if (lenghtHighliht < 8) {
-    warnings.push("O slide precisa ter no mínimo 8 post ativo");
+    warnings.push("O destaque precisa ter no mínimo 8 post ativos");
   }
 
   // 2. Verificar se algum post ativo está tanto no slide quanto no highlight

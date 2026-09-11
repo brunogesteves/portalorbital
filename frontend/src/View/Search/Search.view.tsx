@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
-import { useSearch } from "./Search.logic";
+import { SearchLogic } from "./Search.logic";
 import Image from "next/image";
 import Link from "next/link";
 import { imageUrl } from "@/utils/api";
@@ -13,15 +13,11 @@ export default function SearchResults() {
   const searchParams = useSearchParams();
   const term = searchParams.get("term") || "";
 
-  const { data, methods } = useSearch(term);
+  const { data, methods } = SearchLogic(term);
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       <Header slug="Search" />
-
-      {/* ============================= */}
-      {/* 💻 DESKTOP LAYOUT            */}
-      {/* ============================= */}
       {data.isLoading && (
         <div className="text-center text-black/80 bg-white/40 py-10 w-full">
           Carregando...
@@ -29,7 +25,7 @@ export default function SearchResults() {
       )}
       <div className="hidden md:flex text-center text-black/80 bg-white/40 py-5 w-full px-14 flex items-center gap-2 ">
         <input
-          className="bg-transparent  border-2 border-gray-500 h-9 rounded-lg  text-sm w-full p-4 focus:ring-0  focus:outline-none text-gray-700 placeholder-gray-500"
+          className="bg-transparent  border-2 border-gray-500 h-9 rounded-lg  text-sm w-full p-4 focus:ring-0  focus:outline-none text-gray-700 placeholder-gray-500 cursor-pointer"
           placeholder="Buscar..."
           type="text"
           onChange={(e) => methods.setSearchTerm(e.target.value)}
@@ -40,16 +36,16 @@ export default function SearchResults() {
             }
           }}
         />
-        <button className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white px-6 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">
+        <button 
+        onClick={() => methods.searchPosts()}
+        className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white px-6 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors cursor-pointer">
           Buscar
         </button>
       </div>
       {!data.isLoading && data.searchResults.length > 0 && (
         <div className="hidden md:flex flex-col flex-1 bg-white">
-          <main className="w-full flex-1">
-            {/* Search Results Section */}
-            <section className="py-12 px-6 md:px-16 max-w-7xl mx-auto">
-              {/* Section Header */}
+          <main className="w-full flex-1">            
+            <section className="py-12 px-6 md:px-16 max-w-7xl mx-auto">              
               <div className="mb-8 space-y-2">
                 <div className="flex items-center space-x-4">
                   <h1 className="text-black font-bold text-2xl md:text-3xl uppercase tracking-wider whitespace-nowrap font-awanzaman">
@@ -65,14 +61,15 @@ export default function SearchResults() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {data?.searchResults?.map((item) => (
+                  <Link
+                    href={item.slug}
+                    className="aspect-video w-full overflow-hidden"
+                  >
                   <article
                     key={item.id}
                     className="bg-[#1d2021] rounded-md overflow-hidden border border-blue-900/30 flex flex-col cursor-pointer hover:border-blue-700/50 transition-colors duration-300"
                   >
-                    <Link
-                      href={item.slug}
-                      className="aspect-video w-full overflow-hidden"
-                    >
+                   
                       <Image
                         alt={item.title}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
@@ -82,7 +79,6 @@ export default function SearchResults() {
                         loading="eager"
                         unoptimized
                       />
-                    </Link>
                     <div className="p-4 flex flex-col grow space-y-2">
                       <h2 className="text-white font-bold text-base leading-tight">
                         {item.title}
@@ -93,6 +89,7 @@ export default function SearchResults() {
                       </span>
                     </div>
                   </article>
+                    </Link>
                 ))}
               </div>
             </section>
@@ -104,14 +101,9 @@ export default function SearchResults() {
           {data.warning}
         </div>
       )}
-
-      {/* ============================= */}
-      {/* 📱 MOBILE LAYOUT             */}
-      {/* ============================= */}
       <div className="block md:hidden flex-1 bg-white">
         {!data.isLoading && data.searchResults.length > 0 && (
-          <main className="p-4" style={{ paddingBottom: "80px" }}>
-            {/* Section Header */}
+          <main className="p-4" style={{ paddingBottom: "80px" }}>            
             <div className="mb-6 space-y-1">
               <div className="flex items-center gap-3">
                 <h1 className="text-black font-bold text-lg uppercase tracking-wider whitespace-nowrap">
@@ -124,15 +116,7 @@ export default function SearchResults() {
                 <span className="text-white font-semibold">{data.term}</span>
               </p>
             </div>
-
-            {/* Mobile Cards */}
-            <div className="space-y-4 bg-white">
-              {/* {data.isLoading && (
-              <div className="text-center text-black/80 bg-white/40 py-10 w-full">
-                Carregando...
-              </div>
-            )} */}
-
+            <div className="space-y-4 bg-white">              
               {data?.searchResults?.map((item) => (
                 <article key={item.id} className="p-4 space-y-3">
                   <div className="relative rounded-lg overflow-hidden">

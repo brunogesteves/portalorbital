@@ -13,10 +13,9 @@ import { imageUrl } from "@/Utils/api";
 import Pagination from "./Pagination";
 import MobilePostDetail from "./MobilePostDetail";
 
-
 const PostTable = ({
   posts,
-  currentUser,  
+  currentUser,
   handleUpdateStatus,
   setPostToDelete,
   setShowModal,
@@ -43,8 +42,6 @@ const PostTable = ({
           <span className="text-center">Data</span>
           <span className="text-center">Ações</span>
         </div>
-
-        {/* Loading overlay */}
         {fetching && (
           <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
             <div className="flex flex-col items-center gap-3">
@@ -52,7 +49,9 @@ const PostTable = ({
                 <div className="absolute inset-0 border-3 border-red-600/20 rounded-full"></div>
                 <div className="absolute inset-0 border-3 border-red-600 border-t-transparent rounded-full animate-spin"></div>
               </div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Carregando...</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Carregando...
+              </p>
             </div>
           </div>
         )}
@@ -99,16 +98,21 @@ const PostTable = ({
               </div>
               <div className="hidden md:flex justify-center items-center gap-1.5">
                 <button
-                  onClick={() => handleUpdateStatus(post.id, post.status, "status")}
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.status ? "bg-green-600" : "bg-red-300"
-                    }`}
+                  onClick={() =>
+                    handleUpdateStatus(post.id, post.status, "status")
+                  }
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
+                    post.status ? "bg-green-600" : "bg-red-300"
+                  }`}
                 >
                   <span
                     className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow 
                       ${post.status ? "translate-x-[18px]" : "translate-x-[3px]"}
-                      ${currentUser !== "ADM"
-                        ? "opacity-50 cursor-not-allowed"
-                        : "cursor-pointer"}
+                      ${
+                        currentUser !== "ADM"
+                          ? "opacity-50 cursor-not-allowed"
+                          : "cursor-pointer"
+                      }
                       `}
                   />
                 </button>
@@ -122,15 +126,18 @@ const PostTable = ({
                     currentUser === "ADM" &&
                     handleUpdateStatus(post.id, post.slide, "slide")
                   }
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.slide ? "bg-green-600" : "bg-red-300"
-                    } ${currentUser !== "ADM"
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
+                    post.slide ? "bg-green-600" : "bg-red-300"
+                  } ${
+                    currentUser !== "ADM"
                       ? "opacity-50 cursor-not-allowed"
                       : "cursor-pointer"
-                    }`}
+                  }`}
                 >
                   <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.slide ? "translate-x-[18px]" : "translate-x-[3px]"
-                      }`}
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
+                      post.slide ? "translate-x-[18px]" : "translate-x-[3px]"
+                    }`}
                   />
                 </button>
                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
@@ -143,25 +150,26 @@ const PostTable = ({
                     currentUser === "ADM" &&
                     handleUpdateStatus(post.id, post.highlight, "highlight")
                   }
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.highlight ? "bg-yellow-500" : "bg-gray-300"
-                    } ${currentUser !== "ADM"
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
+                    post.highlight ? "bg-yellow-500" : "bg-gray-300"
+                  } ${
+                    currentUser !== "ADM"
                       ? "opacity-50 cursor-not-allowed"
                       : "cursor-pointer"
-                    }`}
+                  }`}
                 >
                   <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.highlight
-                      ? "translate-x-[18px]"
-                      : "translate-x-[3px]"
-                      }`}
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
+                      post.highlight
+                        ? "translate-x-[18px]"
+                        : "translate-x-[3px]"
+                    }`}
                   />
                 </button>
                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
                   {post.highlight ? "Sim" : "Não"}
                 </span>
               </div>
-
-              {/* Data */}
               <div className="hidden md:flex justify-center items-center">
                 <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
                   <FiCalendar className="text-red-600" size={12} />
@@ -172,7 +180,6 @@ const PostTable = ({
                 </span>
               </div>
 
-              {/* Ações */}
               <div className="hidden md:flex justify-center items-center gap-2">
                 <Link
                   href={`/post/edit/${post.id}`}
@@ -186,9 +193,10 @@ const PostTable = ({
                     setShowModal(true);
                   }}
                   className={`p-2.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-red-600 rounded-xl transition-all shadow-sm
-                    ${currentUser !== "ADM"
-                      ? "opacity-50 cursor-not-allowed"
-                      : "cursor-pointer"
+                    ${
+                      currentUser !== "ADM"
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
                     }
                     `}
                 >
@@ -226,9 +234,6 @@ const PostTable = ({
           post={mobilePostDetail}
           currentUser={currentUser}
           onClose={closeMobileModal}
-          // handleToggleStatus={handleToggleStatus}
-          // handleToggleSlide={handleToggleSlide}
-          // handleToggleHighlight={handleToggleHighlight}
           handleUpdateStatus={handleUpdateStatus}
           setPostToDelete={setPostToDelete}
           setShowModal={setShowModal}

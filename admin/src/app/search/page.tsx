@@ -11,15 +11,19 @@ import {
   FiCalendar,
   FiUser,
 } from "react-icons/fi";
-import { useSearchLogic } from "./useLogicSearch";
+import { SearchLogic } from "./Search.Logic";
 import Image from "next/image";
 import Loading from "@/components/Loading";
 import { imageUrl } from "@/Utils/api";
+import MobilePostDetail from "@/components/Dashboard/MobilePostDetail";
+import DeleteModal from "@/components/Dashboard/DeleteModal";
+import { useUIStore } from "@/store/useUIStore";
 
 function SearchResults() {
   const searchParams = useSearchParams();
-  const initialQuery = searchParams.get("q") || "";
-  const { data, methods } = useSearchLogic(initialQuery);
+  const initialQuery = searchParams.get("term") || "";
+  const { data, methods } = SearchLogic(initialQuery);
+  const { userData } = useUIStore();
 
   return (    
     <div className="space-y-12 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">      
@@ -37,8 +41,8 @@ function SearchResults() {
           </h1>
         </div>
       </div>      
-      <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
-        <div className="p-10 border-b border-slate-50 bg-slate-50/30 flex flex-col lg:flex-row justify-between items-center gap-6">
+      <div className="bg-white rounded-2xl md:rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
+        <div className="p-6 md:p-10 border-b border-slate-50 bg-slate-50/30 flex flex-col lg:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">
               Filtros de Pesquisa
@@ -46,8 +50,8 @@ function SearchResults() {
           </div>
 
           <form
-            onSubmit={methods.handleInternalSearch}
-            className="flex items-center gap-4 w-full lg:w-auto"
+            onSubmit={(e) => { e.preventDefault(); methods.fetchResults(data.term); }}
+            className="flex items-center flex-col md:flex-row gap-4 w-full lg:w-auto"
           >
             <div className="relative flex-1 lg:w-96">
               <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -61,7 +65,7 @@ function SearchResults() {
             </div>
             <button
               type="submit"
-              className="bg-red-600 text-white px-8 py-3.5 rounded-2xl font-black text-sm hover:bg-red-700 transition-all shadow-lg active:scale-95"
+              className="w-full md:w-auto bg-red-600 text-white px-8 py-3.5 rounded-2xl font-black text-sm hover:bg-red-700 transition-all shadow-lg active:scale-95"
             >
               Pesquisar
             </button>
@@ -75,101 +79,173 @@ function SearchResults() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-slate-400 uppercase text-[10px] font-black tracking-[3px]">
-                  <th className="px-10 py-8">Notícia / Autor</th>
-                  <th className="px-10 py-8">Categoria</th>
-                  <th className="px-10 py-8">Data</th>
-                  <th className="px-10 py-8 text-center">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                {data.posts.length > 0 ? (
-                  data.posts.map((post) => (
-                    <tr
-                      key={post.id}
-                      className="hover:bg-slate-50/80 transition-all group"
-                    >
-                      <td className="px-10 py-8">
-                        <div className="flex items-center gap-6">
-                          <div className="w-20 h-16 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border-2 border-white shadow-md">
-                            {post.thumbnail ? (
-                              <Image
-                                src={`${imageUrl}/${post.thumbnail}`}
-                                alt={post.title}
-                                width={500}
-                                height={500}
-                                unoptimized
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
-                                <FiFileText size={24} />
+          <>
+            <div className="md:hidden flex flex-col divide-y divide-slate-50">
+              {data.posts.length > 0 ? (
+                data.posts.map((post) => (
+                  <div
+                    key={post.id}
+                    onClick={() => methods.setMobilePostDetail(post)}
+                    className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-50/80 transition-all group"
+                  >
+                    <div className="w-14 h-10 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-white shadow-sm">
+                      {post.thumbnail ? (
+                        <Image
+                          src={`${imageUrl}/${post.thumbnail}`}
+                          alt={post.title}
+                          width={200}
+                          height={200}
+                          unoptimized
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
+                          <FiFileText size={14} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-bold text-slate-800 leading-tight group-hover:text-red-600 transition-colors line-clamp-1 text-sm">
+                        {post.title}
+                      </h4>
+                      <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-semibold mt-0.5">
+                        <FiUser size={9} /> {post.author?.name || "Redação"}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center gap-4 py-16">
+                  <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center text-slate-200">
+                    <FiSearch size={40} />
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <p className="text-slate-900 font-black text-lg tracking-tight">
+                      Nenhum resultado encontrado
+                    </p>
+                    <p className="text-slate-400 font-medium text-sm">
+                      Tente outros termos ou verifique a ortografia.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="text-slate-400 uppercase text-[10px] font-black tracking-[3px]">
+                    <th className="px-10 py-8">Notícia / Autor</th>
+                    <th className="px-10 py-8">Categoria</th>
+                    <th className="px-10 py-8">Data</th>
+                    <th className="px-10 py-8 text-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {data.posts.length > 0 ? (
+                    data.posts.map((post) => (
+                      <tr
+                        key={post.id}
+                        className="hover:bg-slate-50/80 transition-all group"
+                      >
+                        <td className="px-10 py-8">
+                          <div className="flex items-center gap-6">
+                            <div className="w-20 h-16 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border-2 border-white shadow-md">
+                              {post.thumbnail ? (
+                                <Image
+                                  src={`${imageUrl}/${post.thumbnail}`}
+                                  alt={post.title}
+                                  width={500}
+                                  height={500}
+                                  unoptimized
+                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
+                                  <FiFileText size={24} />
+                                </div>
+                              )}
+                            </div>
+                            <div className="max-w-xs space-y-1">
+                              <h4 className="font-bold text-slate-800 leading-tight group-hover:text-red-600 transition-colors line-clamp-2">
+                                {post.title}
+                              </h4>
+                              <div className="flex items-center gap-2 text-slate-400 text-xs font-semibold">
+                                <FiUser size={12} />{" "}
+                                {post.author?.name || "Redação"}
                               </div>
-                            )}
-                          </div>
-                          <div className="max-w-xs space-y-1">
-                            <h4 className="font-bold text-slate-800 leading-tight group-hover:text-red-600 transition-colors line-clamp-2">
-                              {post.title}
-                            </h4>
-                            <div className="flex items-center gap-2 text-slate-400 text-xs font-semibold">
-                              <FiUser size={12} />{" "}
-                              {post.author?.name || "Redação"}
                             </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-10 py-8">
-                        <span className="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider border border-slate-200">
-                          {post.category?.name || "Geral"}
-                        </span>
-                      </td>
-                      <td className="px-10 py-8 text-sm font-bold text-slate-500">
-                        <div className="flex items-center gap-2">
-                          <FiCalendar className="text-red-600" />
-                          {new Date(post.scheduledAt).toLocaleDateString(
-                            "pt-BR",
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-10 py-8">
-                        <div className="flex justify-center gap-3">
-                          <Link
-                            href={`/post/edit/${post.id}`}
-                            className="p-3.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-slate-800 rounded-2xl transition-all shadow-sm"
-                          >
-                            <FiEdit2 size={18} />
-                          </Link>
+                        </td>
+                        <td className="px-10 py-8">
+                          <span className="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider border border-slate-200">
+                            {post.category?.name || "Geral"}
+                          </span>
+                        </td>
+                        <td className="px-10 py-8 text-sm font-bold text-slate-500">
+                          <div className="flex items-center gap-2">
+                            <FiCalendar className="text-red-600" />
+                            {new Date(post.scheduledAt).toLocaleDateString(
+                              "pt-BR",
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-10 py-8">
+                          <div className="flex justify-center gap-3">
+                            <Link
+                              href={`/post/edit/${post.id}`}
+                              className="p-3.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-slate-800 rounded-2xl transition-all shadow-sm"
+                            >
+                              <FiEdit2 size={18} />
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={4} className="px-10 py-32 text-center">
+                        <div className="flex flex-col items-center gap-6">
+                          <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center text-slate-200">
+                            <FiSearch size={48} />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-slate-900 font-black text-xl tracking-tight">
+                              Nenhum resultado encontrado
+                            </p>
+                            <p className="text-slate-400 font-medium">
+                              Tente outros termos ou verifique a ortografia.
+                            </p>
+                          </div>
                         </div>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={4} className="px-10 py-32 text-center">
-                      <div className="flex flex-col items-center gap-6">
-                        <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center text-slate-200">
-                          <FiSearch size={48} />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-slate-900 font-black text-xl tracking-tight">
-                            Nenhum resultado encontrado
-                          </p>
-                          <p className="text-slate-400 font-medium">
-                            Tente outros termos ou verifique a ortografia.
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
+
+      {data.mobilePostDetail && (
+        <MobilePostDetail
+          post={data.mobilePostDetail}
+          currentUser={userData.role}
+          onClose={methods.closeMobileModal}
+          handleUpdateStatus={methods.handleUpdateStatus}
+          setPostToDelete={methods.setPostToDelete}
+          setShowModal={methods.setShowModal}
+        />
+      )}
+
+      {data.showModal && (
+        <DeleteModal
+          postTitle={data.posts.find((p) => p.id === data.postToDelete)?.title}
+          handleDelete={methods.handleDelete}
+          setShowModal={methods.setShowModal}
+        />
+      )}
     </div>
   );
 }

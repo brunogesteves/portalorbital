@@ -11,6 +11,7 @@ import { ShareButton } from "@/components/ShareButton";
 import JsonLD from "@/components/jsonLd";
 
 export default function NewsPage({ data }: NewsDataProps) {
+  console.log("noticia: ", data)
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
       <JsonLD description={data.title} />
