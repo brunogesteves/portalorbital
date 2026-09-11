@@ -1,15 +1,18 @@
 import { CategoryEntity } from "./../../entities/category-entity";
 import { CategoryRepository } from "../../repository/category/category-repository";
 import type { CreateCategoryDTO } from "../../controllers/category/dtos/create-category.dto";
+import { slugify } from "../../lib/slug";
 
 export class CreateCategorysUseCase {
   public async execute(dto: CreateCategoryDTO): Promise<CategoryEntity> {
-    const { name, slug } = dto;
+    const { name } = dto;
 
-    const categoryEntity = CategoryEntity.fromCreate({ name, slug });
+    const slug = slugify(name);
+
+    const categoryEntity = CategoryEntity.fromCreateCategoryDTO(name, slug);
     const createCategoryRepository = new CategoryRepository();
-    const existCategory = !!(await createCategoryRepository.getCategoryByName(name));
 
+    const existCategory = await createCategoryRepository.getCategoryByName(name);
     if (existCategory) {
       throw new Error("Já existe uma categoria com este nome");
     }

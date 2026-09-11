@@ -38,7 +38,8 @@ router.post(
 
 router.delete("/:id", authenticate, authorize([Role.ADM]), async (req: Request, res: Response) => {
   const deleteCategory = new DeleteCategorysUseCase();
-  const result = await deleteCategory.execute(req);
+  const { id } = req.params;
+  const result = await deleteCategory.execute(Number(id));
   return res.json(result);
 });
 

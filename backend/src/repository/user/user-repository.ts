@@ -7,15 +7,14 @@ import type { UserSettingsPresenter } from "../../controllers/user/presenters/us
 export class UserRepository {
   private prisma = prisma;
 
-  public async getByEmail(data: AuthEntity): Promise<UserSettingsPresenter | null> {
-    const { email } = data;
-    return await this.prisma.user.findUnique({
-      where: { email },
+  public getByEmail(data: AuthEntity): Promise<UserSettingsPresenter | null> {
+    return this.prisma.user.findUnique({
+      where: { email: data.email },
     });
   }
 
-  public async getUserById(id: number): Promise<UserPresenter | null> {
-    return await this.prisma.user.findUnique({
+  public getUserById(id: number): Promise<UserPresenter | null> {
+    return this.prisma.user.findUnique({
       where: { id },
       select: {
         email: true,
