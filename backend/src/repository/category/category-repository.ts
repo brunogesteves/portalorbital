@@ -4,19 +4,17 @@ import { CategoryEntity } from "../../entities/category-entity";
 export class CategoryRepository {
   private prisma = prisma;
 
-  public async create(data: CategoryEntity): Promise<CategoryEntity> {
-    const created = await this.prisma.category.create({
+  public create(data: CategoryEntity): Promise<CategoryEntity> {
+    return this.prisma.category.create({
       data: {
         name: data.name,
         slug: data.slug,
       },
     });
-
-    return CategoryEntity.fromPersistence(created);
   }
 
-  public async getCategoryByName(name: string) {
-    return await this.prisma.category.findFirst({
+  public getCategoryByName(name: string) {
+    return this.prisma.category.findFirst({
       where: { name },
     });
   }
@@ -45,15 +43,14 @@ export class CategoryRepository {
     });
   }
 
-  public async delete(id: number): Promise<boolean> {
+  public delete(id: number): Promise<CategoryEntity> {
     return this.prisma.category.delete({
       where: { id },
     });
   }
 
-  // Melhor getCategoryBySlug
-  public async getCategoryContent(slug: string) {
-    return await this.prisma.category.findFirst({
+  public getCategoryContent(slug: string) {
+    return this.prisma.category.findFirst({
       where: {
         slug,
       },

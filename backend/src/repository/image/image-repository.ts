@@ -3,8 +3,8 @@ import prisma from "../../lib/prisma";
 export class ImageRepository {
   private prisma = prisma;
 
-  public async veriricationImage(filename: string) {
-    return await this.prisma.post.findFirst({
+  public veriricationImage(filename: string) {
+    return this.prisma.post.findFirst({
       where: {
         OR: [{ thumbnail: filename }, { thumbnail: `/images/${filename}` }],
       },
@@ -12,8 +12,8 @@ export class ImageRepository {
     });
   }
 
-  public async getPostByHasContent(filename: string) {
-    return await this.prisma.post.findFirst({
+  public getPostByHasContent(filename: string) {
+    return this.prisma.post.findFirst({
       where: {
         content: {
           contains: filename,

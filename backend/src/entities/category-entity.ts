@@ -1,6 +1,4 @@
 import type { Category as CategoryPrisma } from "@prisma/client";
-import type { CreateCategoryDTO } from "../controllers/category/dtos/create-category.dto";
-
 export class CategoryEntity {
   id?: number;
   name: string;
@@ -19,11 +17,7 @@ export class CategoryEntity {
     });
   }
 
-  static fromDelete(data: Pick<CategoryEntity, "id">): CategoryEntity {
-    return new CategoryEntity("", "", data.id);
-  }
-
-  static fromPersistence(data: CategoryPrisma): CategoryEntity {
-    return new CategoryEntity(data.name, data.slug, data.id);
-  }
+  //   static fromPersistence(data: CategoryPrisma): CategoryEntity {
+  //   return new CategoryEntity(data.name, data.slug, data.id);
+  // }
 }

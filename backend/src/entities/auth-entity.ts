@@ -1,13 +1,9 @@
-
-export class AuthEntity{
-
-  email: string ;
+export class AuthEntity {
+  email: string;
   password: string;
 
-  constructor(email:string,password:string){
-
-  this.email=  email ;
-  this.password= password;
-
+  constructor(params: { email: string; password: string }) {
+    this.email = params.email;
+    this.password = params.password;
   }
 }

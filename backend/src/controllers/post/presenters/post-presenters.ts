@@ -1,4 +1,19 @@
-export class PostContent {
+export class PostContentPresenter {
+  id: number;
+  slug: string;
+  createdAt: Date;
+  title: string;
+  thumbnail: string | null;
+  content: string;
+  scheduledAt: Date;
+  updatedAt: Date;
+  status: boolean;
+  slide: boolean;
+  highlight: boolean;
+  categoryId: number;
+  authorId: number;
+
+  constructor(params: {
     id: number;
     slug: string;
     createdAt: Date;
@@ -12,34 +27,19 @@ export class PostContent {
     highlight: boolean;
     categoryId: number;
     authorId: number;
-
-    constructor(
-        id: number,
-        slug: string,
-        createdAt: Date,
-        title: string,
-        thumbnail: string | null,
-        content: string,
-        scheduledAt: Date,
-        updatedAt: Date,
-        status: boolean,
-        slide: boolean,
-        highlight: boolean,
-        categoryId: number,
-        authorId: number,
-    ) {
-        this.id = id;
-        this.slug = slug;
-        this.createdAt = createdAt;
-        this.title = title;
-        this.thumbnail = thumbnail;
-        this.content = content;
-        this.scheduledAt = scheduledAt;
-        this.updatedAt = updatedAt;
-        this.status = status;
-        this.slide = slide;
-        this.highlight = highlight;
-        this.categoryId = categoryId;
-        this.authorId = authorId;
-    }
+  }) {
+    this.id = params.id;
+    this.slug = params.slug;
+    this.createdAt = params.createdAt;
+    this.title = params.title;
+    this.thumbnail = params.thumbnail;
+    this.content = params.content;
+    this.scheduledAt = params.scheduledAt;
+    this.updatedAt = params.updatedAt;
+    this.status = params.status;
+    this.slide = params.slide;
+    this.highlight = params.highlight;
+    this.categoryId = params.categoryId;
+    this.authorId = params.authorId;
+  }
 }

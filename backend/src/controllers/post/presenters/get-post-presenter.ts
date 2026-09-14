@@ -1,7 +1,7 @@
-import type { PostContent } from "./post-presenters";
+import type { PostContentPresenter } from "./post-presenters";
 
 export class GetPostsPresenter {
-  posts: PostContent[];
+  posts: PostContentPresenter[];
 
   pagination: {
     page: number;
@@ -11,7 +11,7 @@ export class GetPostsPresenter {
   };
 
   constructor(
-    posts: PostContent[],
+    posts: PostContentPresenter[],
     pagination: {
       page: number;
       limit: number;

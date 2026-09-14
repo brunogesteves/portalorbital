@@ -1,5 +1,3 @@
-import type { PostContent } from "../../post/presenters/post-presenters";
-
 export class LoginPresenter {
   status: boolean;
   token: string;

@@ -6,34 +6,37 @@ import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-
 import prisma from "../../lib/prisma";
 import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
 import type { PostEntity } from "../../entities/post-entity";
-import type { SearchContentPresenter } from "../../controllers/search/presenters/search-presenters";
-import type { PostContent } from "../../controllers/post/presenters/post-presenters";
+import type { PostContentPresenter } from "../../controllers/post/presenters/post-presenters";
 
 type AllowedFields = "status" | "slide" | "highlight";
 
 export class PostRepository {
   private prisma = prisma;
 
-  // Se não for user o await, não precisa do async no metodo.
-  public async totalPosts(whereClause: any) {
-    return await this.prisma.post.count({ where: whereClause });
+  public totalPosts(whereClause: any) {
+    return this.prisma.post.count({ where: whereClause });
   }
 
-  public async totalHighlights(whereClause: any) {
+  public totalHighlights(whereClause: any) {
     return this.prisma.post.count({ where: { ...whereClause, highlight: true } });
   }
 
-  public async totalActivePosts(whereClause: any) {
+  public totalActivePosts(whereClause: any) {
     return this.prisma.post.count({ where: { ...whereClause, status: true } });
   }
 
-  public async totalSlides(whereClause: any) {
+  public totalSlides(whereClause: any) {
     return this.prisma.post.count({ where: { ...whereClause, slide: true } });
   }
 
   // Evitaria deixar o whereClause como parametro. Melhor criar um metodo para cada where necessario
   //nãp entendi
-  public async getPosts(whereClause: any, skip: number, limitNum: number, pageNum: number): Promise<GetPostsPresenter> {
+  public async getPosts(
+    whereClause: any,
+    skip: number,
+    limitNum: number,
+    pageNum: number,
+  ): Promise<GetPostsPresenter> {
     const [posts, total] = await Promise.all([
       this.prisma.post.findMany({
         where: whereClause,
@@ -61,8 +64,8 @@ export class PostRepository {
     };
   }
 
-  public async getPostsWithSlides(): Promise<GetSlides[]> {
-    return await this.prisma.post.findMany({
+  public getPostsWithSlides(): Promise<GetSlides[]> {
+    return this.prisma.post.findMany({
       where: {
         slide: true,
       },
@@ -74,8 +77,8 @@ export class PostRepository {
     });
   }
 
-  public async getHighlightPosts(): Promise<GetHighlightPresenter[]> {
-    return await this.prisma.post.findMany({
+  public getHighlightPosts(): Promise<GetHighlightPresenter[]> {
+    return this.prisma.post.findMany({
       where: {
         highlight: true,
       },
@@ -88,8 +91,8 @@ export class PostRepository {
     });
   }
 
-  public async allPosts(): Promise<AllPostsFront[]> {
-    return await this.prisma.category.findMany({
+  public allPosts(): Promise<AllPostsFront[]> {
+    return this.prisma.category.findMany({
       where: {
         posts: {
           some: {
@@ -129,17 +132,17 @@ export class PostRepository {
     });
   }
 
-  public async getPostById(id: string) {
-    return await this.prisma.post.findUnique({
+  public getPostById(id: string) {
+    return this.prisma.post.findUnique({
       where: { id: Number(id) },
     });
   }
 
   // getPostByTitle
-  public async findTitle(itensTitle: TitleExisting) {
+  public findTitle(itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
 
-    return await this.prisma.post.findFirst({
+    return this.prisma.post.findFirst({
       where: {
         title,
         ...(action === "editPost" && id ? { id: { not: Number(id) } } : {}),
@@ -147,10 +150,11 @@ export class PostRepository {
     });
   }
 
-  public async upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
+  public upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
     const { action, id, title } = itensTitle;
-    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } = postSettings;
-    return await this.prisma.post.upsert({
+    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } =
+      postSettings;
+    return this.prisma.post.upsert({
       where: { id: action === "editPost" ? Number(id) : 0 },
       update: {
         title,
@@ -177,30 +181,29 @@ export class PostRepository {
     });
   }
 
-  public async updatePostStatus(
+  public updatePostStatus(
     data: Pick<PostEntity, "id" | "status"> & {
       field: "status" | "slide" | "highlight";
-    }
+    },
   ) {
     const { status, id, field } = data;
     console.log("status: ", status);
     console.log("id: ", id);
     console.log("field: ", field);
-    return await this.prisma.post.update({
+    return this.prisma.post.update({
       where: { id: Number(id) },
       data: { [field]: status },
     });
   }
 
-  public async deletePost(id: string) {
-    return await this.prisma.post.delete({
+  public deletePost(id: string) {
+    return this.prisma.post.delete({
       where: { id: Number(id) },
     });
   }
 
-  // getPostBySlug
-  public async getNewsContent(slug: string) {
-    const newsContent = await this.prisma.post.findFirst({
+  public getPostBySlug(slug: string) {
+    const newsContent = this.prisma.post.findFirst({
       where: {
         slug,
       },
@@ -221,8 +224,8 @@ export class PostRepository {
     return newsContent;
   }
 
-  public async searchTerm(term: string): Promise<PostContent[]> {
-    return await this.prisma.post.findMany({
+  public searchTerm(term: string): Promise<PostContentPresenter | PostContentPresenter[]> {
+    return this.prisma.post.findMany({
       where: {
         OR: [
           {
@@ -245,7 +248,6 @@ export class PostRepository {
       include: {
         category: {
           select: {
-            id: true,
             name: true,
             slug: true,
           },

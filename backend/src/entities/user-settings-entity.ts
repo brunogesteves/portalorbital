@@ -5,9 +5,9 @@ export class UserSettingsEntity {
   role: Role;
   email: string;
 
-  constructor(name: string | null, email: string, role: Role) {
-    this.name = name;
-    this.email = email;
-    this.role = role;
+  constructor(params: { name: string | null; email: string; role: Role }) {
+    this.name = params.name;
+    this.email = params.email;
+    this.role = params.role;
   }
 }

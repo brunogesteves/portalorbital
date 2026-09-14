@@ -8,23 +8,23 @@ export class UpsertPostEntity {
   highlight: boolean;
   authorId: number;
 
-  constructor(
-    slug: string,
-    content: string,
-    categoryId: number,
-    scheduledAt: Date,
-    thumbnail: string,
-    slide: boolean,
-    highlight: boolean,
-    authorId: number,
-  ) {
-    this.slug = slug;
-    this.thumbnail = thumbnail;
-    this.content = content;
-    this.scheduledAt = scheduledAt;
-    this.slide = slide;
-    this.highlight = highlight;
-    this.categoryId = categoryId;
-    this.authorId = authorId;
+  constructor(params: {
+    slug: string;
+    content: string;
+    categoryId: number;
+    scheduledAt: Date;
+    thumbnail: string;
+    slide: boolean;
+    highlight: boolean;
+    authorId: number;
+  }) {
+    this.slug = params.slug;
+    this.thumbnail = params.thumbnail;
+    this.content = params.content;
+    this.scheduledAt = params.scheduledAt;
+    this.slide = params.slide;
+    this.highlight = params.highlight;
+    this.categoryId = params.categoryId;
+    this.authorId = params.authorId;
   }
 }
