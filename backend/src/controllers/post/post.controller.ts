@@ -36,19 +36,19 @@ router.get("/", authenticate, async (req: Request, res: Response) => {
   return res.json(presenter);
 });
 
-router.get("/allSlides", async (res: Response) => {
+router.get("/allSlides", async (req: Request, res: Response) => {
   const sliderPostUseCase = new SliderPostUseCase();
-  return await sliderPostUseCase.execute();
+  return res.json(await sliderPostUseCase.execute());
 });
 
-router.get("/highlightPosts", async (res: Response) => {
+router.get("/highlightPosts", async (req: Request, res: Response) => {
   const highlightPostsPostUseCase = new HighlightPostsPostUseCase();
-  return await highlightPostsPostUseCase.execute();
+  return res.json(await highlightPostsPostUseCase.execute());
 });
 
-router.get("/allPosts", async (res: Response) => {
+router.get("/allPosts", async (req: Request, res: Response) => {
   const allPosts = new AllPostsPostUseCase();
-  return await allPosts.execute();
+  return res.json(await allPosts.execute());
 });
 
 router.get("/:id", authenticate, async (req: Request, res: Response) => {
