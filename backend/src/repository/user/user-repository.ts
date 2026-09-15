@@ -1,4 +1,4 @@
-import type { UserPresenter } from "../../controllers/user/presenters/user-presenters";
+import type { UserPresenterPresenter } from "../../controllers/user/presenters/user-presenters";
 import prisma from "../../lib/prisma";
 
 import type { AuthEntity } from "../../entities/auth-entity";
@@ -13,7 +13,7 @@ export class UserRepository {
     });
   }
 
-  public getUserById(id: number): Promise<UserPresenter | null> {
+  public getUserById(id: number): Promise<UserPresenterPresenter | null> {
     return this.prisma.user.findUnique({
       where: { id },
       select: {

@@ -28,13 +28,11 @@ export default function useLogin() {
   const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
     setError("");
-    console.log("tentativa");
+
     try {
       const { data: result } = await api.post("/auth/login", data);
 
-      console.log(result);
-      if (result.status) {
-        console.log("aqui redireciona");
+      if (result.token) {
         document.cookie = `token=${result.token}; path=/; max-age=3600; SameSite=Lax`;
         router.push("/");
       }

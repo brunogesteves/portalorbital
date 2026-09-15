@@ -1,17 +1,16 @@
 import { PostRepository } from "../../repository/post/post-repository";
-import { Role } from "@prisma/client";
 import type { AuthRequest } from "../../types/auth-request";
+import type { PostContentPresenter } from "../../controllers/post/presenters/post-presenters";
+import { Role } from "@prisma/client";
 
 export class GetPostByIdUseCase {
-
-  public async execute(req: AuthRequest) {
+  public async execute(id: number, req: AuthRequest): Promise<PostContentPresenter> {
     if (!req.user) {
       throw new Error("Não autenticado");
     }
-    const { id } = req.params;
 
     const postRepository = new PostRepository();
-    const result = await postRepository.getPostById(id as string);
+    const result = await postRepository.getPostById(id);
 
     if (!result) {
       throw new Error("Post não encontrado");

@@ -7,47 +7,55 @@ import { HighlightPostsPostUseCase } from "../../usecases/post/highlight-post-us
 import { AllPostsPostUseCase } from "../../usecases/post/all-posts-usecase";
 import { GetPostByIdUseCase } from "../../usecases/post/get-post-by-id-usecase";
 import { UpsertPostUseCase } from "../../usecases/post/upsert-post-usecase";
-import { UpdatePostChangeStatusUseCase,  } from "../../usecases/post/update-post-change-status-usecase";
-import { DeletePostUseCase } from "../../usecases/post/delete-post-usecase";
 import { uploadImage } from "../../lib/storage";
+import { GetStatsPresenter } from "./presenters/getStats.presenter";
+import { GetPostsPresenter } from "./presenters/get-post-presenter";
+import { PostContentPresenter } from "./presenters/post-presenters";
+import { UpsertPostPresenter } from "./presenters/upsert-post-presenters";
+import { UpdatePostChangeStatusUseCase } from "../../usecases/post/update-post-change-status-usecase";
+import { DeletePostUseCase } from "../../usecases/post/delete-post-usecase";
 
 const router = Router();
 
 router.get("/stats", authenticate, async (req: Request, res: Response) => {
-  const getStats = new GetPostStatsUseCase();
-  const result = await getStats.execute(req);
-  res.json(result);
+  const getPostStatsUseCase = new GetPostStatsUseCase();
+  const getStats = await getPostStatsUseCase.execute(req);
+  const presenter = new GetStatsPresenter({
+    totalPosts: getStats.totalPosts,
+    totalHighlights: getStats.totalHighlights,
+    totalActivePosts: getStats.totalActivePosts,
+    totalSlides: getStats.totalSlides,
+  });
+  return res.json(presenter);
 });
 
 router.get("/", authenticate, async (req: Request, res: Response) => {
-  const getPosts = new GetPostUseCase();
-  const result = await getPosts.execute(req);
-  res.json(result);
+  const getPostsUseCase = new GetPostUseCase();
+  const getPosts = await getPostsUseCase.execute(req);
+  const presenter = new GetPostsPresenter(getPosts.posts, getPosts.pagination);
+  return res.json(presenter);
 });
 
-router.get("/allSlides", async (req: Request, res: Response) => {
-  const getPosts = new SliderPostUseCase();
-  const result = await getPosts.execute();
-  res.json(result);
+router.get("/allSlides", async (res: Response) => {
+  const sliderPostUseCase = new SliderPostUseCase();
+  return await sliderPostUseCase.execute();
 });
 
-router.get("/highlightPosts", async (req: Request, res: Response) => {
-  const getPosts = new HighlightPostsPostUseCase();
-  const result = await getPosts.execute();
-  res.json(result);
+router.get("/highlightPosts", async (res: Response) => {
+  const highlightPostsPostUseCase = new HighlightPostsPostUseCase();
+  return await highlightPostsPostUseCase.execute();
 });
 
-router.get("/allPosts", async (req: Request, res: Response) => {
+router.get("/allPosts", async (res: Response) => {
   const allPosts = new AllPostsPostUseCase();
-  const result = await allPosts.execute();
-  res.json(result);
+  return await allPosts.execute();
 });
 
 router.get("/:id", authenticate, async (req: Request, res: Response) => {
-  console.log("first")
-  const getPostById = new GetPostByIdUseCase();
-  const result = await getPostById.execute(req);
-  res.json(result);
+  const getPostByIdUseCase = new GetPostByIdUseCase();
+  const getPostById = await getPostByIdUseCase.execute(Number(req.params.id), req);
+  const presenter = new PostContentPresenter(getPostById);
+  return res.json(presenter);
 });
 
 router.post(
@@ -55,14 +63,10 @@ router.post(
   authenticate,
   uploadImage.single("thumbnail"),
   async (req: Request, res: Response) => {
-    try {
-      const createUpdatePost = new UpsertPostUseCase();
-      const result = await createUpdatePost.execute(req);
-      res.json(result);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Erro ao criar post";
-      res.status(400).json({ message });
-    }
+    const createUpdatePost = new UpsertPostUseCase();
+    const upsertPost = await createUpdatePost.execute(req);
+    const presenter = new UpsertPostPresenter(upsertPost);
+    return res.json(presenter);
   },
 );
 
@@ -71,27 +75,22 @@ router.put(
   authenticate,
   uploadImage.single("thumbnail"),
   async (req: Request, res: Response) => {
-    try {
-      const createUpdatePost = new UpsertPostUseCase();
-      const result = await createUpdatePost.execute(req);
-      res.json(result);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Erro ao atualizar post";
-      res.status(400).json({ message });
-    }
+    const createUpdatePost = new UpsertPostUseCase();
+    const upsertPost = await createUpdatePost.execute(req);
+    const presenter = new UpsertPostPresenter(upsertPost);
+    return res.json(presenter);
   },
 );
 
 router.patch("/:id/changeStatus", authenticate, async (req: Request, res: Response) => {
   const updatePostStatus = new UpdatePostChangeStatusUseCase();
-  const result = await updatePostStatus.execute(req);
-  res.json(result);
+  return await updatePostStatus.execute(req);
 });
 
 router.delete("/:id", authenticate, async (req: Request, res: Response) => {
-  const deletePost = new DeletePostUseCase();
-  const result = await deletePost.execute(req);
-  res.json(result);
+  const deletePostUseCase = new DeletePostUseCase();
+  const presenter = await deletePostUseCase.execute(Number(req.params.id));
+  res.json(presenter);
 });
 
 export default router;

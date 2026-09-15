@@ -7,12 +7,8 @@ export class UpdatePostChangeStatusUseCase {
     const { status, field } = req.body;
     const { id } = req.params;
 
-    const updatePostSlide = PostEntity.fromStatus({ id: Number(id), status, field });
+    const updatePostSlideEntity = PostEntity.fromStatusPostDTO(Number(id), status, field);
     const postRepository = new PostRepository();
-    const result = await postRepository.updatePostStatus(updatePostSlide);
-    if (!result) {
-      throw new Error("Erro ao buscar posts");
-    }
-    return result;
+    return await postRepository.updatePostStatus(updatePostSlideEntity);
   }
 }

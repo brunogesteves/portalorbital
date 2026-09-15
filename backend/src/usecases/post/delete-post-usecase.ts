@@ -1,12 +1,9 @@
-import type { Request } from "express";
 import { PostRepository } from "../../repository/post/post-repository";
 
 export class DeletePostUseCase {
-  
-  public async execute(req: Request) {
-    const { id } = req.params;
+  public async execute(id: number): Promise<{ message: string }> {
     const postRepository = new PostRepository();
-    const result = await postRepository.deletePost(id as string);
+    const result = await postRepository.deletePost(id);
     if (!result) {
       throw new Error("Post não encontrado");
     }

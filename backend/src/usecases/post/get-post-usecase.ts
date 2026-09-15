@@ -1,9 +1,10 @@
 import { Role } from "@prisma/client";
 import { PostRepository } from "../../repository/post/post-repository";
 import type { AuthRequest } from "../../types/auth-request";
+import { GetPostsPresenter } from "../../controllers/post/presenters/get-post-presenter";
 
 export class GetPostUseCase {
-  public async execute(req: AuthRequest) {
+  public async execute(req: AuthRequest): Promise<GetPostsPresenter> {
     if (!req.user) {
       throw new Error("Não autenticado");
     }

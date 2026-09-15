@@ -4,18 +4,18 @@ import { LoginUseCase } from "../../usecases/auth/login-usecase";
 import { LogoutUseCase } from "../../usecases/auth/logout-usecase";
 import { authenticate } from "../../middlewares/auth.middleware";
 import { UserSettingsUseCase } from "../../usecases/auth/user-usecase";
+import { loginSchema } from "./dtos/login.dto";
+import { validateBody } from "../../middlewares/body-validator";
+import { AuthPresenter } from "./presenters/auth.presenter";
+import { UserPresenterPresenter } from "../user/presenters/user-presenters";
 
 const router = Router();
 
-router.post("/login", async (req: Request, res: Response) => {
-  try {
-    const login = new LoginUseCase();
-    const result = await login.execute(req, res);
-    res.json(result);
-  } catch (error) {
-    console.error("Login error:", error);
-    res.status(401).json({ message: "Credenciais inválidas" });
-  }
+router.post("/login", validateBody(loginSchema), async (req: Request, res: Response) => {
+  const loginUseCase = new LoginUseCase();
+  const login = await loginUseCase.execute(req.body);
+  const presenter = new AuthPresenter(login);
+  res.json(presenter);
 });
 
 router.post("/logout", async (req: Request, res: Response) => {
@@ -25,11 +25,10 @@ router.post("/logout", async (req: Request, res: Response) => {
 });
 
 router.get("/me", authenticate, async (req: Request, res: Response) => {
+  const userSettingsUseCase = new UserSettingsUseCase();
+  const presenter = await userSettingsUseCase.execute(req);
 
-  const userSettings = new UserSettingsUseCase();
-  const result = await userSettings.execute(req);
-  res.json({ user: result });
-
+  res.json(presenter);
 });
 
 export default router;

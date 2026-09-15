@@ -3,10 +3,10 @@ export class GetHighlightPresenter {
   title: string;
   slug: string;
   thumbnail: string | null;
-  constructor(id: number, title: string, slug: string, thumbnail: string | null) {
-    this.id = id;
-    this.title = title;
-    this.thumbnail = thumbnail;
-    this.slug = slug;
+  constructor(params: { id: number; title: string; slug: string; thumbnail: string | null }) {
+    this.id = params.id;
+    this.title = params.title;
+    this.thumbnail = params.thumbnail;
+    this.slug = params.slug;
   }
 }

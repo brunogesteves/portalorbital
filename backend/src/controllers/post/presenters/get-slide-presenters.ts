@@ -1,10 +1,10 @@
-export class GetSlides {
+export class GetSlidesPresenter {
   thumbnail: string | null;
   slug: string;
   title: string;
-  constructor(thumbnail: string | null, slug: string, title: string) {
-    this.title = title;
-    this.thumbnail = thumbnail;
-    this.slug = slug;
+  constructor(params: { thumbnail: string | null; slug: string; title: string }) {
+    this.title = params.title;
+    this.thumbnail = params.thumbnail;
+    this.slug = params.slug;
   }
 }

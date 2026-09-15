@@ -1,8 +1,7 @@
 import type { Response } from "express";
 
 export class LogoutUseCase {
-
-  public async execute(res: Response): Promise<{ message: string }> {
+  public async execute(res: Response): Promise<{ status: boolean }> {
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.COOKIE_SECURE === "true",
@@ -10,6 +9,6 @@ export class LogoutUseCase {
       path: "/",
       domain: process.env.COOKIE_DOMAIN || undefined,
     });
-    return { message: "Logout bem-sucedido" };
+    return { status: true };
   }
 }

@@ -45,22 +45,27 @@ export class PostEntity {
     this.authorId = params.authorId;
     this.field = params.field;
   }
-  // static fromStatus(data: Pick<PostEntity, "id" | "status" | "field">): PostEntity {
-  //   return new PostEntity(
-  //     data.id,
-  //     "",
-  //     "",
-  //     "",
-  //     "",
-  //     new Date(),
-  //     new Date(),
-  //     new Date(),
-  //     data.status,
-  //     false,
-  //     false,
-  //     0,
-  //     0,
-  //     data.field,
-  //   );
-  // }
+
+  static fromStatusPostDTO(
+    id: number,
+    status: boolean,
+    field: "status" | "slide" | "highlight",
+  ): PostEntity {
+    return new PostEntity({
+      id,
+      status,
+      field,
+      title: "",
+      slug: "",
+      thumbnail: "",
+      content: "",
+      scheduledAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      slide: false,
+      highlight: false,
+      categoryId: 0,
+      authorId: 0,
+    });
+  }
 }

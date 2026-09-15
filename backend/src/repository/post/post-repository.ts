@@ -1,11 +1,14 @@
+import prisma from "../../lib/prisma";
+
 import type { TitleExisting } from "../../controllers/post/presenters/title-presenters";
-import type { GetPostsPresenter } from "../../controllers/post/presenters/get-post-presenter";
-import type { GetSlides } from "../../controllers/post/presenters/get-slide-presenters";
+import type { GetSlidesPresenter } from "../../controllers/post/presenters/get-slide-presenters";
 import type { GetHighlightPresenter } from "../../controllers/post/presenters/get-highlight-presenters";
 import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-presenter";
-import prisma from "../../lib/prisma";
+
 import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
 import type { PostEntity } from "../../entities/post-entity";
+
+import type { GetPostsPresenter } from "../../controllers/post/presenters/get-post-presenter";
 import type { PostContentPresenter } from "../../controllers/post/presenters/post-presenters";
 
 type AllowedFields = "status" | "slide" | "highlight";
@@ -64,7 +67,7 @@ export class PostRepository {
     };
   }
 
-  public getPostsWithSlides(): Promise<GetSlides[]> {
+  public getPostsWithSlides(): Promise<GetSlidesPresenter[]> {
     return this.prisma.post.findMany({
       where: {
         slide: true,
@@ -132,7 +135,7 @@ export class PostRepository {
     });
   }
 
-  public getPostById(id: string) {
+  public getPostById(id: number) {
     return this.prisma.post.findUnique({
       where: { id: Number(id) },
     });
@@ -196,9 +199,9 @@ export class PostRepository {
     });
   }
 
-  public deletePost(id: string) {
+  public deletePost(id: number) {
     return this.prisma.post.delete({
-      where: { id: Number(id) },
+      where: { id },
     });
   }
 
