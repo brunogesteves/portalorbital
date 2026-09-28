@@ -41,11 +41,7 @@ export default function SoonPage() {
       const remaining = getTimeRemaining();
       setTime(remaining);
 
-      const total =
-        remaining.days * 86400 +
-        remaining.hours * 3600 +
-        remaining.minutes * 60 +
-        remaining.seconds;
+      const total = remaining.days * 86400 + remaining.hours * 3600 + remaining.minutes * 60 + remaining.seconds;
 
       if (total <= 0) {
         router.push("/");
@@ -87,9 +83,7 @@ export default function SoonPage() {
               </div>
             </div>
           </div>
-          <h2 className="text-2xl md:text-9xl text-red-400 mb-8 font-semibold leading-relaxed">
-            Em breve!
-          </h2>
+          <h2 className="text-2xl md:text-9xl text-red-400 mb-8 font-semibold leading-relaxed">Em breve</h2>
         </div>
       </div>
     );
@@ -128,15 +122,11 @@ export default function SoonPage() {
           </div>
         </div>
 
-        <h2 className="text-2xl md:text-9xl text-red-400 mb-8 font-semibold leading-relaxed">
-          Em breve!
-        </h2>
+        <h2 className="text-2xl md:text-9xl text-red-400 mb-8 font-semibold leading-relaxed">Em breve!</h2>
 
         {/* Countdown */}
         <div className="mb-8">
-          <p className="text-zinc-500 text-sm mb-4">
-            Estamos quase lá! Lance em:
-          </p>
+          <p className="text-zinc-500 text-sm mb-4">Estamos quase lá! Lance em:</p>
           <div className="flex justify-center gap-4 md:gap-8">
             {[
               { value: time.days, label: "Dias" },
@@ -159,10 +149,7 @@ export default function SoonPage() {
         {/* Contato */}
         <div className="text-zinc-500 text-sm">
           <p>Dúvidas? Entre em contato:</p>
-          <a
-            href="mailto:contato@orbitaltv.net"
-            className="text-red-400 hover:text-red-300 transition-colors"
-          >
+          <a href="mailto:contato@orbitaltv.net" className="text-red-400 hover:text-red-300 transition-colors">
             contato@orbitaltv.net
           </a>
         </div>
