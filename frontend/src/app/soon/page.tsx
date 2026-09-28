@@ -83,7 +83,7 @@ export default function SoonPage() {
               </div>
             </div>
           </div>
-          <h2 className="text-2xl md:text-9xl text-red-400 mb-8 font-semibold leading-relaxed">Em breve</h2>
+          <h2 className="text-2xl md:text-9xl text-red-400 mb-8 font-semibold leading-relaxed">Em breve!</h2>
         </div>
       </div>
     );
