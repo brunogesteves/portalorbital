@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
 **/node_modules/
-admin/.next-root-antigo/**
+admin/.next-root-antigo/
 # Next.js / Build
 .next/
 dist/
