@@ -1,10 +1,10 @@
+import { CategoryEntity } from "../../entities/category-entity";
 import { CategoryRepository } from "../../repository/category/category-repository";
-import type { GetCategoriesPresenter } from "../../controllers/category/presenters/get-category-presenters";
 
 export class GetFrontCategoriesUseCase {
-  public async execute(): Promise<GetCategoriesPresenter[]> {
+  public async execute(): Promise<CategoryEntity[]> {
     const categoryRepository = new CategoryRepository();
-    const result = categoryRepository.getCategoriesWithNoPostSlide();
-    return result;
+    const getAllFrontCategories = await categoryRepository.getCategoriesWithNoPostSlide();
+    return getAllFrontCategories;
   }
 }

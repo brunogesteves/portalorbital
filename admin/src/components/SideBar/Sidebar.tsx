@@ -1,53 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
 import {
-  FiHome,
-  FiFileText,
-  FiLayers,
-  FiUsers,
   FiSettings,
   FiChevronDown,
-  FiSearch,
   FiLayout,
-  FiDatabase,  
+  FiDatabase,
   FiX,
 } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { useUIStore } from '@/store/useUIStore';
+import { useSidebarLogic } from "./Sidebar.Logic";
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const { setIsSidebarOpen } = useUIStore();
-  const [isCadastrosOpen, setIsCadastrosOpen] = useState(true);
-
-  const menuItems = [
-    {
-      group: "GERAL",
-      items: [{ name: "Home", href: "/", icon: FiHome }],
-    },
-    {
-      group: "CADASTROS",
-      items: [
-        {
-          name: "Notícias",
-          href: "/posts",
-          icon: FiFileText,
-          subItems: [
-            { name: "Listar Todos", href: "/" },
-            { name: "Nova Notícia", href: "/post/new" },
-          ],
-        },
-
-        { name: "Categorias", href: "/category", icon: FiLayers },
-        { name: "Procurar", href: "/search", icon: FiSearch },
-        { name: "Publishers", href: "/publishers", icon: FiUsers },
-        { name: "Anúncios", href: "/ads", icon: FiLayout },
-      ],
-    },
-  ];
+  const { setIsSidebarOpen, isOpen, menuItems, userData } = useSidebarLogic();
 
   return (
     <motion.aside
@@ -57,7 +24,6 @@ const Sidebar = () => {
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className="bg-[#1e293b] text-slate-300 flex flex-col h-full shadow-2xl z-50 border-r border-slate-700 overflow-hidden fixed top-0 left-0"
     >
-      {/* Título do Painel */}
       <div className="bg-[#0f172a] p-6 border-b border-slate-700 flex items-center justify-between">
         <h1 className="text-xl font-bold text-white tracking-tight uppercase">
           Painel Administrativo
@@ -70,18 +36,14 @@ const Sidebar = () => {
           <FiX size={20} />
         </button>
       </div>
-
-      {/* Seção Bem-vindo */}
       <div className="p-8 border-b border-slate-700 bg-[#1e293b]/50">
         <div className="flex flex-col items-center">
           <span className="text-xs text-slate-400 font-medium">Bem-vindo,</span>
           <span className="text-lg font-bold text-white mt-1">
-            Administrador
+            {userData.name}
           </span>
         </div>
       </div>
-
-      {/* Navegação */}
       <nav className="flex-1 overflow-y-auto custom-scrollbar p-4">
         {menuItems.map((group) => (
           <div key={group.group} className="mb-8">
@@ -128,31 +90,38 @@ const Sidebar = () => {
                           <FiChevronDown
                             size={14}
                             className={
-                              isCadastrosOpen
-                                ? "rotate-180 transition-transform"
-                                : ""
+                              isOpen ? "rotate-180 transition-transform" : ""
                             }
                           />
                         )}
                       </Link>
 
-                      {hasSubItems && isCadastrosOpen && (
+                      {hasSubItems && isOpen && (
                         <ul className="mt-1 ml-4 border-l border-slate-700">
-                          {item.subItems?.map((sub) => (
-                            <li key={sub.name}>
-                              <Link
-                                href={sub.href}
-                                className={`flex items-center gap-3 px-8 py-2.5 text-xs font-medium transition-colors hover:text-red-500 ${
-                                  pathname === sub.href
-                                    ? "text-red-500"
-                                    : "text-slate-400"
-                                }`}
-                              >
-                                <div className="w-1.5 h-1.5 rounded-full bg-slate-600"></div>
-                                {sub.name}
-                              </Link>
-                            </li>
-                          ))}
+                          {item.subItems?.map((sub) => {
+                            if (
+                              userData.role !== "ADM" &&
+                              sub.name == "Em Análise"
+                            )
+                              return "";
+                            else
+                              return (
+                                <li key={sub.name}>
+                                  <Link
+                                    href={sub.href}
+                                    className={`flex items-center gap-3 px-8 py-2.5 text-xs font-medium transition-colors hover:text-red-500 ${
+                                      pathname === sub.href
+                                        ? "text-red-500"
+                                        : "text-slate-400"
+                                    }`}
+                                  >
+                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-600"></div>
+
+                                    {sub.name}
+                                  </Link>
+                                </li>
+                              );
+                          })}
                         </ul>
                       )}
                     </div>

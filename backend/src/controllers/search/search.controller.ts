@@ -1,27 +1,23 @@
 import { type Request, type Response, Router } from "express";
+
 import { SearchTermUseCase } from "../../usecases/search/searchTerm-usecase";
-import { SearchSlugCategoryNewsUseCase } from "../../usecases/search/search-slug-category-news-usecase";
-import { PostContentPresenter } from "../post/presenters/post-presenters";
-import { SearchSlugPresenter } from "./presenters/search-slug-presenter";
-import { GetCategoryContentPresenter } from "../category/presenters/get-category-content-presenters";
+import { SearchBySlugOrCategoryContentUseCase } from "../../usecases/search/search-slug-category-news-usecase";
 
 const router = Router();
 
 router.get("/searchcontent/:term", async (req: Request, res: Response) => {
+  const { term } = req.params;
   const searchTermUseCase = new SearchTermUseCase();
-  const searchTerm = await searchTermUseCase.execute(req.params.term as string);
-  const presenter = new PostContentPresenter(searchTerm as PostContentPresenter);
-  return res.json(presenter);
+  const searchByTerm = await searchTermUseCase.execute(term as string);
+  return res.json(searchByTerm);
 });
 
 router.get("/slug/:slug", async (req: Request, res: Response) => {
-  const searchTermUseCase = new SearchSlugCategoryNewsUseCase();
-  const searchSlug = await searchTermUseCase.execute(req.params.slug as string);
-  const presenter = new SearchSlugPresenter({
-    item: searchSlug.item,
-    content: searchSlug.content as GetCategoryContentPresenter,
-  });
-  return res.json(presenter);
+  const { slug } = req.params;
+  const searchByTermUseCase = new SearchBySlugOrCategoryContentUseCase();
+  const searchBySlug = await searchByTermUseCase.execute(slug as string);
+
+  return res.json(searchBySlug);
 });
 
 export default router;

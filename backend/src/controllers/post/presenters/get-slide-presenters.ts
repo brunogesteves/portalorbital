@@ -1,10 +1,3 @@
-export class GetSlidesPresenter {
-  thumbnail: string | null;
-  slug: string;
-  title: string;
-  constructor(params: { thumbnail: string | null; slug: string; title: string }) {
-    this.title = params.title;
-    this.thumbnail = params.thumbnail;
-    this.slug = params.slug;
-  }
+export function getSlidesPresenter(title: string, thumbnail: string, slug: string) {
+  return { title, thumbnail, slug };
 }

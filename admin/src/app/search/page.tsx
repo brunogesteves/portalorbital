@@ -244,6 +244,7 @@ function SearchResults() {
           postTitle={data.posts.find((p) => p.id === data.postToDelete)?.title}
           handleDelete={methods.handleDelete}
           setShowModal={methods.setShowModal}
+          isDeleting={data.isDeleting}
         />
       )}
     </div>

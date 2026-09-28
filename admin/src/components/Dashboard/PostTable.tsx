@@ -23,6 +23,7 @@ const PostTable = ({
   goToPage,
   setLimit,
   fetching,
+  path,
 }: PostTableProps) => {
   const [mobilePostDetail, setMobilePostDetail] = useState<PostProps | null>(
     null,
@@ -36,9 +37,13 @@ const PostTable = ({
         <div className="hidden md:grid grid-cols-[2fr_0.8fr_0.6fr_0.5fr_0.5fr_0.6fr_0.5fr] items-center gap-2 px-3 py-4 text-slate-400 uppercase text-[9px] font-black tracking-[2px]">
           <span>Notícia</span>
           <span className="text-center">Categoria</span>
-          <span className="text-center">Status</span>
-          <span className="text-center">Slide</span>
-          <span className="text-center">Destaque</span>
+          {path === "edit" && (
+            <>
+              <span className="text-center">Status</span>
+              <span className="text-center">Slide</span>
+              <span className="text-center">Destaque</span>
+            </>
+          )}
           <span className="text-center">Data</span>
           <span className="text-center">Ações</span>
         </div>
@@ -56,7 +61,7 @@ const PostTable = ({
           </div>
         )}
 
-        {posts.length > 0 ? (
+        {posts?.length > 0 ? (
           posts.map((post) => (
             <div
               key={post.id}
@@ -96,80 +101,63 @@ const PostTable = ({
                   {post.category?.name || "Geral"}
                 </span>
               </div>
-              <div className="hidden md:flex justify-center items-center gap-1.5">
-                <button
-                  onClick={() =>
-                    handleUpdateStatus(post.id, post.status, "status")
-                  }
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
-                    post.status ? "bg-green-600" : "bg-red-300"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow 
-                      ${post.status ? "translate-x-[18px]" : "translate-x-[3px]"}
-                      ${
-                        currentUser !== "ADM"
-                          ? "opacity-50 cursor-not-allowed"
-                          : "cursor-pointer"
+              {path === "edit" && currentUser === "ADM" && (
+                <>
+                  <div className="hidden md:flex justify-center items-center gap-1.5">
+                    <button
+                      onClick={() => {
+                        const newStatus: boolean =
+                          post.published == "ACTIVE" ? false : true;
+                        handleUpdateStatus(post.id, newStatus, "published");
+                      }}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.published == "ACTIVE" ? "bg-green-600" : "bg-red-300"}`}
+                    >
+                      <span
+                        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow cursor-pointer
+                      ${post.published == "ACTIVE" ? "translate-x-[18px]" : "translate-x-[3px]"}`}
+                      />
+                    </button>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider hidden md:inline">
+                      {post.published == "ACTIVE" ? "No Ar" : "Fora"}
+                    </span>
+                  </div>
+                  <div className="hidden md:flex justify-center items-center gap-1.5">
+                    <button
+                      onClick={() =>
+                        handleUpdateStatus(post.id, post.slide, "slide")
                       }
-                      `}
-                  />
-                </button>
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider hidden md:inline">
-                  {post.status ? "No Ar" : "Fora"}
-                </span>
-              </div>
-              <div className="hidden md:flex justify-center items-center gap-1.5">
-                <button
-                  onClick={() =>
-                    currentUser === "ADM" &&
-                    handleUpdateStatus(post.id, post.slide, "slide")
-                  }
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
-                    post.slide ? "bg-green-600" : "bg-red-300"
-                  } ${
-                    currentUser !== "ADM"
-                      ? "opacity-50 cursor-not-allowed"
-                      : "cursor-pointer"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
-                      post.slide ? "translate-x-[18px]" : "translate-x-[3px]"
-                    }`}
-                  />
-                </button>
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
-                  {post.slide ? "Sim" : "Não"}
-                </span>
-              </div>
-              <div className="hidden md:flex justify-center items-center gap-1.5">
-                <button
-                  onClick={() =>
-                    currentUser === "ADM" &&
-                    handleUpdateStatus(post.id, post.highlight, "highlight")
-                  }
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${
-                    post.highlight ? "bg-yellow-500" : "bg-gray-300"
-                  } ${
-                    currentUser !== "ADM"
-                      ? "opacity-50 cursor-not-allowed"
-                      : "cursor-pointer"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
-                      post.highlight
-                        ? "translate-x-[18px]"
-                        : "translate-x-[3px]"
-                    }`}
-                  />
-                </button>
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
-                  {post.highlight ? "Sim" : "Não"}
-                </span>
-              </div>
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.slide ? "bg-green-600" : "bg-red-300"}`}
+                    >
+                      <span
+                        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${post.slide ? "translate-x-[18px]" : "translate-x-[3px]"}`}
+                      />
+                    </button>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                      {post.slide ? "Sim" : "Não"}
+                    </span>
+                  </div>
+                  <div className="hidden md:flex justify-center items-center gap-1.5">
+                    <button
+                      onClick={() =>
+                        handleUpdateStatus(post.id, post.highlight, "highlight")
+                      }
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.highlight ? "bg-yellow-500" : "bg-gray-300"}
+                        `}
+                    >
+                      <span
+                        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow ${
+                          post.highlight
+                            ? "translate-x-[18px]"
+                            : "translate-x-[3px]"
+                        }`}
+                      />
+                    </button>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                      {post.highlight ? "Sim" : "Não"}
+                    </span>
+                  </div>
+                </>
+              )}
               <div className="hidden md:flex justify-center items-center">
                 <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
                   <FiCalendar className="text-red-600" size={12} />
@@ -182,7 +170,7 @@ const PostTable = ({
 
               <div className="hidden md:flex justify-center items-center gap-2">
                 <Link
-                  href={`/post/edit/${post.id}`}
+                  href={`/post/${path}/${post.id}`}
                   className="p-2.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all shadow-sm"
                 >
                   <FiEdit2 size={14} />
@@ -222,10 +210,10 @@ const PostTable = ({
         )}
       </div>
       <Pagination
-        page={pagination.page}
-        limit={pagination.limit}
-        total={pagination.total}
-        totalPages={pagination.totalPages}
+        page={pagination?.page}
+        limit={pagination?.limit}
+        total={pagination?.total}
+        totalPages={pagination?.totalPages}
         goToPage={goToPage}
         setLimit={setLimit}
       />

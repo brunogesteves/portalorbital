@@ -1,7 +1,5 @@
-export class AuthPresenter {
-  token: string;
-
-  constructor(token: string) {
-    this.token = token;
-  }
+export function authPresenter(token: string) {
+  return {
+    token: token,
+  };
 }

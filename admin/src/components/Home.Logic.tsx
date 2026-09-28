@@ -21,6 +21,7 @@ export const HomeLogic = () => {
   const [showModalMessage, setShowModalMessage] = useState<boolean>(false);
   const [modalWarning, setModalWarning] = useState<string>("");
   const [showToast, setShowToast] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
@@ -57,9 +58,15 @@ export const HomeLogic = () => {
         if (authorId) params.set("authorId", authorId);
         if (type) params.set("type", type);
 
-        const postsRes = await api.get(`/posts?${params.toString()}`);
-        setPosts(postsRes.data.posts);
-        setPagination(postsRes.data.pagination);
+        const res = await api.get(`/posts/admin?${params.toString()}`);
+
+        setPosts(res.data.data);
+        setPagination({
+          page: res.data.page,
+          limit: res.data.limit,
+          total: res.data.total,
+          totalPages: res.data.totalPages,
+        });
       } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
           // router.push("/login");
@@ -86,16 +93,16 @@ export const HomeLogic = () => {
     const fetchData = async () => {
       try {
         const [catsRes, userRes] = await Promise.all([
-          api.get("/categories"),
+          api.get("/categories/admin"),
           api.get("/auth/me"),
           fetchPosts(1, 10),
           fetchStats(),
         ]);
         setCategories(catsRes.data);
         setUserData({
-          email: userRes.data.user.email,
-          name: userRes.data.user.name,
-          role: userRes.data.user.role,
+          email: userRes.data.email,
+          name: userRes.data.name,
+          role: userRes.data.role,
         });
       } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -131,6 +138,7 @@ export const HomeLogic = () => {
 
   const handleDelete = async () => {
     if (postToDelete === null) return;
+    setIsDeleting(true);
     try {
       await api.delete(`/posts/${postToDelete}`);
       await Promise.all([
@@ -150,6 +158,8 @@ export const HomeLogic = () => {
     } catch {
       setShowModalMessage(true);
       setModalWarning("Erro ao excluir post");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -159,30 +169,43 @@ export const HomeLogic = () => {
     field: string,
   ) => {
     if (userData?.role !== "ADM") return;
-    console.log("id: ", id)
-    console.log("field: ", field)
-    console.log("currentStatus: ", currentStatus)
+
     try {
-      await api.patch(`/posts/${id}/changeStatus`, {
-        status: !currentStatus,
-        field,
-      });
-      setPosts(
-        posts.map((p) => (p.id === id ? { ...p, [field]: !currentStatus } : p)),
-      );
+      await api
+        .patch(`/posts/${id}/changeStatus`, {
+          status: field == "published" ? currentStatus : !currentStatus,
+          field,
+        })
+        .then((res) => {
+          setPosts((prevPosts) =>
+            prevPosts.map((p) =>
+              p.id === res.data.id
+                ? {
+                    ...p,
+                    [field]:
+                      field == "published"
+                        ? res.data.published
+                        : !currentStatus,
+                  }
+                : p,
+            ),
+          );
+        });
     } catch {
       setShowModalMessage(true);
       setModalWarning("Erro ao atualizar slide");
     }
   };
 
-  const uniqueAuthors = Array.from(
-    new Set(
-      posts.map((p) =>
-        JSON.stringify({ id: p.authorId, name: p.author?.name || "Redação" }),
+  const uniqueAuthors =
+    posts &&
+    Array.from(
+      new Set(
+        posts.map((p) =>
+          JSON.stringify({ id: p.authorId, name: p.author?.name || "Redação" }),
+        ),
       ),
-    ),
-  ).map((a) => JSON.parse(a));
+    ).map((a) => JSON.parse(a));
 
   const goToPage = (page: number) => {
     fetchPosts(
@@ -226,6 +249,7 @@ export const HomeLogic = () => {
       pagination,
       stats,
       userData,
+      isDeleting,
     },
     methods: {
       handleDelete,

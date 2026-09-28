@@ -11,8 +11,7 @@ const useHeader = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-
-  useEffect(() => { 
+  useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -21,8 +20,8 @@ const useHeader = () => {
     try {
       await api.post("/auth/logout");
       document.cookie = `token=; path=/; max-age=0`;
-      router.push("/")
-      
+      router.push("/login");
+      router.refresh();
     } catch (error) {
       console.error("Erro ao sair:", error);
     }
@@ -31,7 +30,7 @@ const useHeader = () => {
   const handleSearch = () => {
     if (searchQuery.trim()) {
       router.push(`/search?term=${encodeURIComponent(searchQuery)}`);
-      
+
       setSearchQuery("");
     }
   };

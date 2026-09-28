@@ -1,26 +1,22 @@
-import type { UserPresenterPresenter } from "../../controllers/user/presenters/user-presenters";
 import prisma from "../../lib/prisma";
 
-import type { AuthEntity } from "../../entities/auth-entity";
-import type { UserSettingsPresenter } from "../../controllers/user/presenters/user-settings-presenters";
+import { UserEntity } from "../../entities/user/user-entity";
 
 export class UserRepository {
   private prisma = prisma;
 
-  public getByEmail(data: AuthEntity): Promise<UserSettingsPresenter | null> {
-    return this.prisma.user.findUnique({
-      where: { email: data.email },
+  public async getByEmail(email: string): Promise<UserEntity | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
     });
+    return user ? UserEntity.fromPersistent(user) : null;
   }
 
-  public getUserById(id: number): Promise<UserPresenterPresenter | null> {
-    return this.prisma.user.findUnique({
+  public async getUserById(id: number): Promise<UserEntity | null> {
+    const user = await this.prisma.user.findUnique({
       where: { id },
-      select: {
-        email: true,
-        name: true,
-        role: true,
-      },
     });
+
+    return user ? UserEntity.fromPersistent(user) : null;
   }
 }

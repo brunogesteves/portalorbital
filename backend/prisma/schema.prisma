@@ -6,9 +6,15 @@ datasource db {
   provider = "mysql"
 }
 
-enum Role {
+enum UserRole {
   ADM
   PBR
+}
+
+enum PostPublished {
+  DRAFT
+  UNACTIVE
+  ACTIVE
 }
 
 model User {
@@ -16,7 +22,7 @@ model User {
   email     String   @unique
   password  String
   name      String?
-  role      Role     @default(PBR)
+  role      UserRole @default(PBR)
   posts     Post[]
   createdAt DateTime @default(now())
 }
@@ -29,17 +35,17 @@ model Category {
 }
 
 model Post {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
-  slug        String   @unique
+  id          Int           @id @default(autoincrement())
+  title       String        @unique
+  slug        String        @unique
   thumbnail   String?
-  content     String   @db.LongText
+  content     String        @db.LongText
   scheduledAt DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  status      Boolean  @default(false)
-  slide      Boolean  @default(false)
-  highlight  Boolean  @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  published   PostPublished @default(DRAFT)
+  slide       Boolean       @default(false)
+  highlight   Boolean       @default(false)
 
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int

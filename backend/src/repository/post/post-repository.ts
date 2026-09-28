@@ -1,17 +1,19 @@
 import prisma from "../../lib/prisma";
 
-import type { TitleExisting } from "../../controllers/post/presenters/title-presenters";
-import type { GetSlidesPresenter } from "../../controllers/post/presenters/get-slide-presenters";
-import type { GetHighlightPresenter } from "../../controllers/post/presenters/get-highlight-presenters";
-import type { AllPostsFront } from "../../controllers/post/presenters/all-posts-presenter";
+import { TitleExisting } from "../../controllers/post/presenters/title-presenters";
 
-import type { UpsertPostEntity } from "../../entities/upsert-post-entity";
-import type { PostEntity } from "../../entities/post-entity";
+import { PostEntity } from "../../entities/post/post-entity";
 
-import type { GetPostsPresenter } from "../../controllers/post/presenters/get-post-presenter";
-import type { PostContentPresenter } from "../../controllers/post/presenters/post-presenters";
-
-type AllowedFields = "status" | "slide" | "highlight";
+import { PostField } from "../../entities/post/types/post-field";
+import { PaginationResult } from "../../types/pagination";
+import {
+  CategoryWithAuthorPostsRelations,
+  PostWithAuthorRelations,
+  PostWithCategoryAuthorRelations,
+  PostWithCategoryRelations,
+} from "../../entities/post/types/post-with-relations";
+import { PostPublished } from "@prisma/client";
+import { SlidesOrHighlightPosts } from "../../entities/post/types/post-slides-or-highlightPosts";
 
 export class PostRepository {
   private prisma = prisma;
@@ -25,21 +27,19 @@ export class PostRepository {
   }
 
   public totalActivePosts(whereClause: any) {
-    return this.prisma.post.count({ where: { ...whereClause, status: true } });
+    return this.prisma.post.count({ where: { ...whereClause, published: PostPublished.ACTIVE } });
   }
 
   public totalSlides(whereClause: any) {
     return this.prisma.post.count({ where: { ...whereClause, slide: true } });
   }
 
-  // Evitaria deixar o whereClause como parametro. Melhor criar um metodo para cada where necessario
-  //nãp entendi
-  public async getPosts(
+  public async getPostsPagination(
     whereClause: any,
     skip: number,
     limitNum: number,
     pageNum: number,
-  ): Promise<GetPostsPresenter> {
+  ): Promise<PaginationResult<PostEntity>> {
     const [posts, total] = await Promise.all([
       this.prisma.post.findMany({
         where: whereClause,
@@ -57,56 +57,37 @@ export class PostRepository {
     ]);
 
     return {
-      posts,
-      pagination: {
-        page: pageNum,
-        limit: limitNum,
-        total,
-        totalPages: Math.ceil(total / limitNum),
-      },
+      data: PostEntity.fromPersistence(posts as PostWithCategoryAuthorRelations[]),
+
+      page: pageNum,
+      limit: limitNum,
+      total,
+      totalPages: Math.ceil(total / limitNum),
     };
   }
 
-  public getPostsWithSlides(): Promise<GetSlidesPresenter[]> {
+  public getPostsWithSlidesOrHighlightPosts(field: SlidesOrHighlightPosts): Promise<PostEntity[]> {
     return this.prisma.post.findMany({
       where: {
-        slide: true,
-      },
-      select: {
-        thumbnail: true,
-        slug: true,
-        title: true,
+        published: PostPublished.ACTIVE,
+        [field]: true,
       },
     });
   }
 
-  public getHighlightPosts(): Promise<GetHighlightPresenter[]> {
-    return this.prisma.post.findMany({
-      where: {
-        highlight: true,
-      },
-      select: {
-        id: true,
-        thumbnail: true,
-        slug: true,
-        title: true,
-      },
-    });
-  }
-
-  public allPosts(): Promise<AllPostsFront[]> {
-    return this.prisma.category.findMany({
+  public async allFrontPosts() {
+    const content = await this.prisma.category.findMany({
       where: {
         posts: {
           some: {
-            slide: false,
-            highlight: false,
+            published: PostPublished.ACTIVE,
           },
         },
       },
       include: {
         posts: {
           where: {
+            published: PostPublished.ACTIVE,
             slide: false,
             highlight: false,
           },
@@ -114,13 +95,7 @@ export class PostRepository {
           orderBy: {
             createdAt: "desc",
           },
-          omit: {
-            createdAt: true,
-            updatedAt: true,
-            status: true,
-            scheduledAt: true,
-            slide: true,
-          },
+
           include: {
             author: {
               select: {
@@ -133,18 +108,17 @@ export class PostRepository {
         },
       },
     });
+    return PostEntity.fromAllPosts(content as CategoryWithAuthorPostsRelations[]);
   }
 
-  public getPostById(id: number) {
+  public getPostById(id: number): Promise<PostEntity | null> {
+    console.log("get post by id repository:", id);
     return this.prisma.post.findUnique({
-      where: { id: Number(id) },
+      where: { id },
     });
   }
 
-  // getPostByTitle
-  public findTitle(itensTitle: TitleExisting) {
-    const { action, id, title } = itensTitle;
-
+  public findTitle(action: string, id: number, title: string) {
     return this.prisma.post.findFirst({
       where: {
         title,
@@ -153,49 +127,60 @@ export class PostRepository {
     });
   }
 
-  public upsertPost(postSettings: UpsertPostEntity, itensTitle: TitleExisting) {
-    const { action, id, title } = itensTitle;
-    const { slug, content, categoryId, scheduledAt, thumbnail, slide, highlight, authorId } =
-      postSettings;
+  public upsertPost(postSettings: PostEntity) {
+    console.log("upsert post repository:", postSettings);
+    const {
+      id,
+      title,
+      slug,
+      content,
+      categoryId,
+      scheduledAt,
+      published,
+      thumbnail,
+      slide,
+      highlight,
+      authorId,
+    } = postSettings;
     return this.prisma.post.upsert({
-      where: { id: action === "editPost" ? Number(id) : 0 },
+      where: { id: id ? id : 0 },
       update: {
         title,
         slug,
         content,
-        categoryId: Number(categoryId),
-        scheduledAt: new Date(scheduledAt),
         ...(thumbnail && { thumbnail }),
+        categoryId: Number(categoryId),
+        published,
+        scheduledAt,
         ...(slide !== undefined && { slide: slide === true }),
         ...(highlight !== undefined && { highlight: highlight === true }),
       },
       create: {
-        title,
-        slug,
-        content,
-        thumbnail,
-        scheduledAt: new Date(scheduledAt),
-        categoryId: Number(categoryId),
+        title: postSettings.title!,
+        slug: postSettings.slug!,
+        content: postSettings.content!,
+        categoryId: Number(postSettings.categoryId),
+        thumbnail: postSettings.thumbnail!,
+        scheduledAt: postSettings.scheduledAt!,
         authorId,
-        status: false,
         slide: slide === true,
         highlight: highlight === true,
       },
     });
   }
 
-  public updatePostStatus(
-    data: Pick<PostEntity, "id" | "status"> & {
-      field: "status" | "slide" | "highlight";
-    },
-  ) {
-    const { status, id, field } = data;
-    console.log("status: ", status);
-    console.log("id: ", id);
-    console.log("field: ", field);
+  public updatePostStatus(id: number, field: PostField, status: boolean) {
+    console.log("status repo: ", status);
     return this.prisma.post.update({
       where: { id: Number(id) },
-      data: { [field]: status },
+      data: {
+        [field]:
+          field === "published"
+            ? status
+              ? PostPublished.ACTIVE
+              : PostPublished.UNACTIVE
+            : (status as boolean),
+      },
     });
   }
 
@@ -205,8 +190,8 @@ export class PostRepository {
     });
   }
 
-  public getPostBySlug(slug: string) {
-    const newsContent = this.prisma.post.findFirst({
+  public async getPostBySlug(slug: string): Promise<PostEntity | null> {
+    const newsContent = await this.prisma.post.findFirst({
       where: {
         slug,
       },
@@ -224,11 +209,11 @@ export class PostRepository {
         },
       },
     });
-    return newsContent;
+    return newsContent ? PostEntity.PostBySlug(newsContent as PostWithAuthorRelations) : null;
   }
 
-  public searchTerm(term: string): Promise<PostContentPresenter | PostContentPresenter[]> {
-    return this.prisma.post.findMany({
+  public async searchTerm(term: string): Promise<PostEntity[]> {
+    const posts = await this.prisma.post.findMany({
       where: {
         OR: [
           {
@@ -257,5 +242,6 @@ export class PostRepository {
         },
       },
     });
+    return PostEntity.fromSearch(posts as PostWithCategoryRelations[]);
   }
 }

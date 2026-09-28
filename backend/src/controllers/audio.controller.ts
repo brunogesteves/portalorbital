@@ -12,14 +12,14 @@ router.post(
   uploadAudio.single("audio"),
   async (req: Request, res: Response) => {
     const UploadEditor = new UploadEditorAudioUseCase();
-    const result = await UploadEditor.execute(req);
-    res.json(result);
+    const getAudioUrl = await UploadEditor.execute(req.file!);
+    res.json(getAudioUrl);
   },
 );
 
 // router.get("/audio/:id", async (req: Request, res: Response) => {
 //   const UploadEditor = new UploadEditorAudioUseCase();
-//   const result = await UploadEditor.execute(req);
+//   const result = await UploadEditor.execute(id: Number(req.params.id), file: req.file);
 //   res.json(result);
 // });
 

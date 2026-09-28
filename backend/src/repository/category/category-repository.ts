@@ -1,6 +1,8 @@
 import prisma from "../../lib/prisma";
-import type { GetCategoriesPresenter } from "../../controllers/category/presenters/get-category-presenters";
 import { CategoryEntity } from "../../entities/category-entity";
+import { PostEntity } from "../../entities/post/post-entity";
+import { PostPublished } from "@prisma/client";
+
 export class CategoryRepository {
   private prisma = prisma;
 
@@ -13,14 +15,14 @@ export class CategoryRepository {
     });
   }
 
-  public getCategoryByName(name: string) {
+  public getCategoryByName(name: string): Promise<CategoryEntity | null> {
     return this.prisma.category.findFirst({
       where: { name },
     });
   }
 
-  public async getCategories(): Promise<GetCategoriesPresenter[]> {
-    return await this.prisma.category.findMany({
+  public async getAllWithTotalPosts(): Promise<CategoryEntity[]> {
+    const categories = await this.prisma.category.findMany({
       orderBy: { name: "asc" },
       include: {
         _count: {
@@ -28,14 +30,18 @@ export class CategoryRepository {
         },
       },
     });
+
+    return categories.map((category) =>
+      CategoryEntity.fromPersistence(category, category._count.posts),
+    );
   }
 
-  public async getCategoriesWithNoPostSlide(): Promise<GetCategoriesPresenter[]> {
-    return await this.prisma.category.findMany({
+  public getCategoriesWithNoPostSlide(): Promise<CategoryEntity[]> {
+    return this.prisma.category.findMany({
       where: {
         posts: {
           some: {
-            slide: false,
+            published: PostPublished.ACTIVE,
           },
         },
       },
@@ -43,21 +49,25 @@ export class CategoryRepository {
     });
   }
 
-  public delete(id: number): Promise<CategoryEntity> {
+  public deleteCategory(id: number): Promise<CategoryEntity> {
     return this.prisma.category.delete({
       where: { id },
     });
   }
 
-  public getCategoryContent(slug: string) {
-    return this.prisma.category.findFirst({
+  public async getCategoryContent(slug: string): Promise<PostEntity[] | null> {
+    const postsFromCategory = await this.prisma.category.findFirst({
       where: {
         slug,
       },
       select: {
-        name: true,
         posts: true,
       },
     });
+    if (!postsFromCategory) {
+      return null;
+    }
+
+    return postsFromCategory.posts;
   }
 }

@@ -27,6 +27,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/images", express.static(path.join(__dirname, "../public/images")));
 app.use("/audio", express.static(path.join(__dirname, "../public/audio")));
-app.use("/", routes);
+app.use("/api", routes);
 
 export default app;

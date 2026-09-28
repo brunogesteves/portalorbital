@@ -1,6 +1,10 @@
 import { api } from "@/Utils/api";
 import dynamic from "next/dynamic";
 import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS
+import type {
+  UploadBeforeHandler,
+  UploadBeforeReturn,
+} from "suneditor-react/dist/types/upload";
 
 // Import SunEditor dynamically to avoid SSR issues
 const SunEditor = dynamic(() => import("suneditor-react"), {
@@ -15,10 +19,10 @@ interface EditorProps {
 
 export const Editor = ({ content, setContent }: EditorProps) => {
   const handleImageUploadBefore = (
-    files: any[],
+    files: File[],
     info: object,
-    uploadHandler: Function,
-  ) => {
+    uploadHandler: UploadBeforeHandler,
+  ): UploadBeforeReturn => {
     const file = files[0];
     const formData = new FormData();
     formData.append("image", file);
@@ -46,10 +50,10 @@ export const Editor = ({ content, setContent }: EditorProps) => {
   };
 
   const handleAudioUploadBefore = (
-    files: any[],
+    files: File[],
     info: object,
-    uploadHandler: Function,
-  ) => {
+    uploadHandler: UploadBeforeHandler,
+  ): UploadBeforeReturn => {
     const file = files[0];
     const formData = new FormData();
     formData.append("audio", file);

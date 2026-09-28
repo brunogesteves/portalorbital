@@ -42,7 +42,7 @@ const StatsGrid = ({
   const warnings: string[] = [];
 
   // Filtrar apenas posts ativos para todas as verificações
-  const activePosts = posts.filter(p => p.status);
+  const activePosts = posts.filter(p => p.published === "ACTIVE");
 
   // 1. Verificar se slide tem menos de 1 post ativo
   if (lenghtSlides < 1) {

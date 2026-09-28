@@ -11,7 +11,6 @@ import { CategoryProps } from "@/Utils/types";
 import { PostFormValues, postSchema } from "@/Utils/schemas";
 
 export const useLogicPost = () => {
-  const router = useRouter();
   const params = useParams();
   const id = params.id;
 
@@ -40,21 +39,19 @@ export const useLogicPost = () => {
       title: "",
       content: "",
       categoryId: "",
-      scheduledAt: "",
+      scheduledAt: "",      
       thumbnailUrl: "",
       slide: false,
       highlight: false,
     },
   });
 
-
   useEffect(() => {
     const fetchData = async () => {
-
       if (id) {
         try {
           const [cats, images, post, inUse] = await Promise.all([
-            api.get("/categories"),
+            api.get("/categories/admin"),
             api.get("/images"),
             api.get(`/posts/${id}`),
             api.get("/images/in-use"),
@@ -66,7 +63,9 @@ export const useLogicPost = () => {
             title: post.data.title,
             content: post.data.content,
             categoryId: post.data.categoryId.toString(),
-            scheduledAt: new Date(post.data.scheduledAt).toISOString().slice(0, 16),
+            scheduledAt: new Date(post.data.scheduledAt)
+              .toISOString()
+              .slice(0, 16),
             thumbnailUrl: post.data.thumbnail || "",
             slide: post.data.slide ?? false,
             highlight: post.data.highlight ?? false,
@@ -82,7 +81,6 @@ export const useLogicPost = () => {
       }
     };
     fetchData();
-
   }, [id, reset]);
 
   const onSubmit = async (data: PostFormValues) => {
@@ -94,7 +92,7 @@ export const useLogicPost = () => {
     formData.append("content", data.content);
     formData.append("categoryId", data.categoryId);
     formData.append("scheduledAt", data.scheduledAt);
-    if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);
+    if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);    
     formData.append("slide", String(data.slide));
     formData.append("highlight", String(data.highlight));
     formData.append("action", "editPost");
@@ -104,12 +102,10 @@ export const useLogicPost = () => {
       setSuccess(true);
       setShowToast(true);
     } catch (error) {
-
       const err = error as AxiosError<{ message: string }>;
-      const message = err.response?.data.message
+      const message = err.response?.data.message;
       setShowWarningModal(true);
       setWarningMessage(message ?? "");
-
     } finally {
       setLoading(false);
     }
@@ -145,4 +141,4 @@ export const useLogicPost = () => {
       register,
     },
   };
-}
+};

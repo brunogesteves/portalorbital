@@ -1,17 +1,17 @@
-import { Role } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import { PostRepository } from "../../repository/post/post-repository";
-import type { AuthRequest } from "../../types/auth-request";
-import { GetStatsPresenter } from "../../controllers/post/presenters/getStats.presenter";
+import { GetStatsProps } from "../../types/get-stats.type";
+import { UserEntity } from "../../entities/user/user-entity";
 
 export class GetPostStatsUseCase {
-  public async execute(req: AuthRequest): Promise<GetStatsPresenter> {
-    if (!req.user) {
+  public async execute(user: UserEntity): Promise<GetStatsProps> {
+    if (!user) {
       throw new Error("Não autenticado");
     }
     const whereClause: any = {};
 
-    if (req.user.role === Role.PBR) {
-      whereClause.authorId = req.user.id;
+    if (user.role === UserRole.PBR) {
+      whereClause.authorId = user.id;
     }
 
     const postRepository = new PostRepository();
@@ -28,9 +28,7 @@ export class GetPostStatsUseCase {
       totalActivePosts,
       totalSlides,
     };
-    if (!result) {
-      throw new Error("Invalid credentials");
-    }
+
     return result;
   }
 }

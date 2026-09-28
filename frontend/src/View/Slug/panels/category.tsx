@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-
 import { FiArrowRight } from "react-icons/fi";
 import HeroSlider from "@/components/Header/Slider/Slider";
 import Header from "@/components/Header/Header";
@@ -11,10 +10,8 @@ import { CategoryContentProps } from "@/utils/types";
 import { imageUrl } from "@/utils/api";
 import JsonLD from "@/components/jsonLd";
 
-
-
 export default function CategoryPage({ data }: { data: CategoryContentProps }) {
-
+  console.log("posts deeconomia: ", data.posts[0]);
   return (
     <div className="w-full min-h-screen bg-white flex flex-col font-awanzaman">
       <JsonLD description={data.name} />
@@ -26,15 +23,11 @@ export default function CategoryPage({ data }: { data: CategoryContentProps }) {
           <section className="bg-white py-12" data-purpose="main-content-body">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-center mb-4">
-                <h2 className="font-bold text-[#111415] uppercase tracking-wide text-4xl">
-                  {data.name}
-                </h2>
+                <h2 className="font-bold text-[#111415] uppercase tracking-wide text-4xl">{data.name}</h2>
               </div>
               <div>
                 <div className="flex items-center space-x-4 mb-6">
-                  <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">
-                    Mundo Geek &amp; Curiosidades
-                  </h2>
+                  <h2 className="text-xl font-bold text-[#111415] whitespace-nowrap">Mundo Geek &amp; Curiosidades</h2>
                   <div className="h-px bg-gray-200 w-full"></div>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -51,9 +44,7 @@ export default function CategoryPage({ data }: { data: CategoryContentProps }) {
                             unoptimized
                           />
                           <div className="p-4 grow bg-[#111415] z-10">
-                            <h4 className="text-white font-bold text-sm leading-tight">
-                              {post.title}
-                            </h4>
+                            <h4 className="text-white font-bold text-sm leading-tight">{post.title}</h4>
                           </div>
                         </div>
                       </Link>
@@ -66,17 +57,12 @@ export default function CategoryPage({ data }: { data: CategoryContentProps }) {
         </main>
       </div>
       <div className="block md:hidden text-gray-800 min-h-screen bg-white flex flex-col w-full">
-        <main
-          className="p-4 bg-white overflow-y-auto no-scrollbar flex-1"
-          style={{ paddingBottom: "80px" }}
-        >
+        <main className="p-4 bg-white overflow-y-auto no-scrollbar flex-1" style={{ paddingBottom: "80px" }}>
           <HeroSlider device="mobile" />
 
           <section className="py-6 px-4 bg-white">
             <div className="max-w-7xl mx-auto flex justify-center">
-              <h2 className="text-5xl font-bold text-gray-900 uppercase tracking-tighter text-center">
-                {data.name}
-              </h2>
+              <h2 className="text-5xl font-bold text-gray-900 uppercase tracking-tighter text-center">{data.name}</h2>
             </div>
           </section>
           <div className="space-y-8">
@@ -110,8 +96,6 @@ export default function CategoryPage({ data }: { data: CategoryContentProps }) {
                 </section>
               </Link>
             ))}
-
-
           </div>
         </main>
       </div>

@@ -8,8 +8,6 @@ import {
   FiUser,
 } from "react-icons/fi";
 
-
-
 import useHeader from "./Header.logic";
 import { useUIStore } from "@/store/useUIStore";
 
@@ -29,7 +27,6 @@ const Header = () => {
         </button>
       </div>
 
-      
       <div className="flex-1 max-w-xl px-3 md:px-10 hidden sm:block">
         {/* <div className="relative group">
           <input
@@ -47,12 +44,12 @@ const Header = () => {
             <FiSearch size={18} />
           </div>
         </div> */}
-      </div>      
+      </div>
       <div className="flex items-center gap-3 md:gap-8">
-        <div className="hidden lg:block text-slate-400 font-mono text-sm tracking-widest">          
-          {userData.name?
-             data.time.toLocaleTimeString("pt-BR", { hour12: false }):""
-          }
+        <div className="hidden lg:block text-slate-400 font-mono text-sm tracking-widest">
+          {userData.name
+            ? data.time.toLocaleTimeString("pt-BR", { hour12: false })
+            : ""}
         </div>
 
         <div className="flex items-center gap-2 md:gap-3 cursor-pointer group hover:bg-slate-800 p-1.5 md:p-2 rounded-lg transition-colors">

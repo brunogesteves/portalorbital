@@ -1,11 +1,11 @@
 import { PostRepository } from "../../repository/post/post-repository";
-import type { AuthRequest } from "../../types/auth-request";
-import type { PostContentPresenter } from "../../controllers/post/presenters/post-presenters";
-import { Role } from "@prisma/client";
+import { UserEntity } from "../../entities/user/user-entity";
+import { UserRole } from "../../entities/user/types/user-role";
+import { PostEntity } from "../../entities/post/post-entity";
 
 export class GetPostByIdUseCase {
-  public async execute(id: number, req: AuthRequest): Promise<PostContentPresenter> {
-    if (!req.user) {
+  public async execute(user: UserEntity, id: number): Promise<PostEntity> {
+    if (!user) {
       throw new Error("Não autenticado");
     }
 
@@ -16,7 +16,7 @@ export class GetPostByIdUseCase {
       throw new Error("Post não encontrado");
     }
 
-    if (req.user.role !== Role.ADM && result.authorId !== req.user.id) {
+    if (user.role !== UserRole.ADM && result.authorId !== user.id) {
       throw new Error("Sem permissão para visualizar este post");
     }
 

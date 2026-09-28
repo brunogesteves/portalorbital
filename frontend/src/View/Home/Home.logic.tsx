@@ -62,7 +62,7 @@ export function HomeLogic() {
                   //     {post.title}
                   //   </span>
                   // </Link>
-                  <article key={post.id}>
+                  <article key={i}>
               <Link href={post.slug} aria-label={`Ler: ${post.title}`}>
                 <div className="relative group rounded-xl overflow-hidden aspect-square bg-gray-100 cursor-pointer">
                   <Image
@@ -156,7 +156,7 @@ export function HomeLogic() {
           {highLight.map((post, i) => {
             if (i <= 3) {
               return (
-                <Link href={post.slug} key={post.id} className="relative block w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-sm cursor-pointer">
+                <Link href={post.slug} key={i} className="relative block w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-sm cursor-pointer">
                   <Image
                     alt={post.title}
                     className="absolute inset-0 w-full h-full object-cover"
@@ -207,7 +207,7 @@ export function HomeLogic() {
                   //     {post.title}
                   //   </span>
                   // </Link>
-                  <article key={post.id}>
+                  <article key={i}>
               <Link href={post.slug} aria-label={`Ler: ${post.title}`}>
                 <div className="relative group rounded-xl overflow-hidden aspect-square bg-gray-100 cursor-pointer">
                   <Image

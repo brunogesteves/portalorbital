@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useUIStore } from "@/store/useUIStore";
 import Header from "./Header/Header.view";
-import Sidebar from "./Sidebar";
+import Sidebar from "./SideBar/Sidebar";
 
 export default function LayoutWrapper({
   children,

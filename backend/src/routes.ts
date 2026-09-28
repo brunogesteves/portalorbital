@@ -8,11 +8,11 @@ import audioControllers from "./controllers/audio.controller";
 
 const routes = express();
 
-routes.use("/api/auth", authControllers);
-routes.use("/api/categories", categoryControllers);
-routes.use("/api/posts", postControllers);
-routes.use("/api/search", searchControllers);
-routes.use("/api/images", imagesControllers);
-routes.use("/api/audio", audioControllers);
+routes.use("/auth", authControllers);
+routes.use("/categories", categoryControllers);
+routes.use("/posts", postControllers);
+routes.use("/search", searchControllers);
+routes.use("/images", imagesControllers);
+routes.use("/audio", audioControllers);
 
 export default routes;

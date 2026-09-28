@@ -1,21 +1,17 @@
-
-
 type RoleProps = "ADM" | "PBR";
 
 export interface UserProps {
   // id: number;
   email: string;
   name: string;
-  role: RoleProps
+  role: RoleProps;
 }
 
 export interface CategoryProps {
   id: number;
   name: string;
   slug: string;
-  _count?: {
-    posts: number;
-  };
+  totalPosts: number;
 }
 
 export interface PaginationProps {
@@ -28,16 +24,18 @@ export interface PaginationProps {
 export interface PostTableProps {
   posts: PostProps[];
   currentUser: RoleProps;
-  // handleToggleStatus: (id: number, currentStatus: boolean) => void;
-  // handleToggleSlide: (id: number, currentSlide: boolean) => void;
-  // handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
-  handleUpdateStatus:(id: number, currentStatus: boolean, field:string) => void;
+  handleUpdateStatus: (
+    id: number,
+    currentStatus: boolean,
+    field: string,
+  ) => void;
   setPostToDelete: (id: number) => void;
   setShowModal: (show: boolean) => void;
   pagination: PaginationProps;
   goToPage: (page: number) => void;
   setLimit: (limit: number) => void;
   fetching: boolean;
+  path: string;
 }
 
 export interface MobilePostDetailProps {
@@ -47,7 +45,11 @@ export interface MobilePostDetailProps {
   // handleToggleStatus: (id: number, currentStatus: boolean) => void;
   // handleToggleSlide: (id: number, currentSlide: boolean) => void;
   // handleToggleHighlight: (id: number, currentHighlight: boolean) => void;
-  handleUpdateStatus: (id: number, currentstatus: boolean, field:string) => void;
+  handleUpdateStatus: (
+    id: number,
+    currentstatus: boolean,
+    field: string,
+  ) => void;
   setPostToDelete: (id: number) => void;
   setShowModal: (show: boolean) => void;
 }
@@ -65,7 +67,7 @@ export interface PostProps {
   scheduledAt: string;
   createdAt: string;
   updatedAt: string;
-  status: boolean;
+  published: "DRAFT" | "UNACTIVE" | "ACTIVE";
   slide: boolean;
   highlight: boolean;
   categoryId: number;
@@ -99,15 +101,15 @@ export interface PostFiltersProps {
   selectedType: string;
   setSelectedType: (value: string) => void;
   categories: CategoryProps[];
-  currentUser: RoleProps
+  currentUser: RoleProps;
   uniqueAuthors: { id: number; name: string }[];
 }
-
 
 export interface DeleteModalProps {
   postTitle: string | undefined;
   handleDelete: () => void;
   setShowModal: (show: boolean) => void;
+  isDeleting: boolean;
 }
 export interface ModalMessageProps {
   text: string;
@@ -145,7 +147,7 @@ export interface PostStats {
 
 export interface ToastProps {
   message: string;
-  type?: "success" | "error" ;
+  type?: "success" | "error";
   onClose: () => void;
   duration?: number;
 }

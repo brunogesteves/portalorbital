@@ -44,7 +44,7 @@ export const useLogicNewPost = () => {
     const fetchData = async () => {
       try {
         const [cats, images, inUse] = await Promise.all([
-          api.get("/categories"),
+          api.get("/categories/admin"),
           api.get("/images"),
           api.get("/images/in-use"),
         ]);
@@ -87,7 +87,7 @@ export const useLogicNewPost = () => {
       setTimeout(() => router.push(`/post/edit/${postId}`), 1500);
     } catch (error: unknown) {
       const err = error as AxiosError<{ message: string }>;
-      const message = err.response?.data.message
+      const message = err.response?.data.message;
       setShowWarningModal(true);
       setWarningMessage(message ?? "");
     } finally {

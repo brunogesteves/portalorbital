@@ -66,7 +66,7 @@ const MobilePostDetail = ({
               Status
             </p>
             <div className="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
-              {post.status ? (
+              {post.published === "ACTIVE" ? (
                 <span className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 uppercase tracking-wider bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
                   <FiCheckCircle /> No ar
                 </span>
@@ -79,14 +79,18 @@ const MobilePostDetail = ({
               {currentUser === "ADM" && (
                 <button
                   onClick={() =>
-                    handleUpdateStatus(post.id, post.status, "status")
+                    handleUpdateStatus(
+                      post.id,
+                      post.published !== "ACTIVE",
+                      "published",
+                    )
                   }
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.status ? "bg-green-600" : "bg-red-300"
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors flex-shrink-0 ${post.published === "ACTIVE" ? "bg-green-600" : "bg-red-300"
                     }`}
                 >
                   <span
                     className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform shadow 
-                      ${post.status ? "translate-x-[18px]" : "translate-x-[3px]"}
+                      ${post.published === "ACTIVE" ? "translate-x-[18px]" : "translate-x-[3px]"}
                       ${currentUser !== "ADM"
                         ? "opacity-50 cursor-not-allowed"
                         : "cursor-pointer"

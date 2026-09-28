@@ -1,9 +1,11 @@
 import { DeleteModalProps } from "@/Utils/types";
+import { useState } from "react";
 
 const DeleteModal = ({
   postTitle,
   handleDelete,
   setShowModal,
+  isDeleting,
 }: DeleteModalProps) => {
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xl flex items-center justify-center z-[100] p-6 animate-in fade-in duration-300">
@@ -18,9 +20,10 @@ const DeleteModal = ({
         <div className="flex flex-col gap-4">
           <button
             onClick={handleDelete}
-            className="w-full py-5 bg-red-600 text-white rounded-2xl font-black hover:bg-red-700 transition-all shadow-xl shadow-red-900/20 active:scale-95"
+            disabled={isDeleting}
+            className="w-full py-5 bg-red-600 text-white rounded-2xl font-black hover:bg-red-700 transition-all shadow-xl shadow-red-900/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Confirmar Exclusão
+            {isDeleting ? "Excluindo..." : "Confirmar Exclusão"}
           </button>
           <button
             onClick={() => setShowModal(false)}

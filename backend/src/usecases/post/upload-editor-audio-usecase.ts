@@ -1,11 +1,9 @@
-import type { Request } from "express";
-
 export class UploadEditorAudioUseCase {
-  public async execute(req: Request) {
-    if (!req.file) {
+  public async execute(file: Express.Multer.File): Promise<string> {
+    if (!file) {
       throw new Error("Nenhum áudio enviado");
     }
-    const url = `/audio/${req.file.filename}`;
-    return { url };
+    const url = `/audio/${file.filename}`;
+    return url;
   }
 }

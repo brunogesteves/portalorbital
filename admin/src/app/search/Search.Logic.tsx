@@ -13,6 +13,7 @@ export const SearchLogic = (initialQuery: string) => {
   const [mobilePostDetail, setMobilePostDetail] = useState<PostProps | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (initialQuery) {
@@ -38,16 +39,18 @@ export const SearchLogic = (initialQuery: string) => {
     field: string,
   ) => {
     try {
-      await api.patch(`/posts/${id}/changeStatus`, {
-        status: !currentStatus,
+      const status = field === "published" ? currentStatus : !currentStatus;
+      const res = await api.patch(`/posts/${id}/changeStatus`, {
+        status,
         field,
       });
+      const updatedValue = res.data[field] ?? status;
       setPosts(
-        posts.map((p) => (p.id === id ? { ...p, [field]: !currentStatus } : p)),
+        posts.map((p) => (p.id === id ? { ...p, [field]: updatedValue } : p)),
       );
       if (mobilePostDetail?.id === id) {
         setMobilePostDetail((prev) =>
-          prev ? { ...prev, [field]: !currentStatus } : null,
+          prev ? { ...prev, [field]: updatedValue } : null,
         );
       }
     } catch {
@@ -57,6 +60,7 @@ export const SearchLogic = (initialQuery: string) => {
 
   const handleDelete = async () => {
     if (!postToDelete) return;
+    setIsDeleting(true);
     try {
       await api.delete(`/posts/${postToDelete}`);
       setPosts(posts.filter((p) => p.id !== postToDelete));
@@ -64,13 +68,15 @@ export const SearchLogic = (initialQuery: string) => {
       setPostToDelete(null);
     } catch {
       //erro
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   const closeMobileModal = () => setMobilePostDetail(null);
 
   return {
-    data: { posts, loading, term, mobilePostDetail, showModal, postToDelete },
+    data: { posts, loading, term, mobilePostDetail, showModal, postToDelete, isDeleting },
     methods: { fetchResults, setTerm, setMobilePostDetail, closeMobileModal, handleUpdateStatus, setShowModal, setPostToDelete, handleDelete },
   };
 };

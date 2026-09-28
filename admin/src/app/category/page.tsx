@@ -49,8 +49,7 @@ function Categories() {
           <div className="grid grid-cols-1 divide-y divide-gray-100">
             {data.categories.length > 0 ? (
               data.categories.map((cat) => {
-                const postCount = cat._count?.posts || 0;
-                const hasPosts = postCount > 0;
+                const hasPosts = cat.totalPosts > 0;
                 return (
                   <div
                     key={cat.id}
@@ -61,7 +60,7 @@ function Categories() {
                     </span>
                     <div className="flex items-center gap-4">
                       <span className="text-sm text-gray-500">
-                        {postCount} {postCount === 1 ? 'post' : 'posts'}
+                        {cat.totalPosts} {cat.totalPosts === 1 ? 'post' : 'posts'}
                       </span>
                       <button
                         onClick={() => methods.handleDeleteClick(cat)}

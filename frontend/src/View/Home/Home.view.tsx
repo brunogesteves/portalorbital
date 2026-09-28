@@ -28,7 +28,6 @@ export default function Home() {
         </main>
       </div>
       <div className="block md:hidden text-gray-800 min-h-screen bg-white flex flex-col w-full">
-        {/* Content Area */}
         <main
           className="p-4 bg-white overflow-y-auto flex-1"
           style={{ paddingBottom: "80px" }}

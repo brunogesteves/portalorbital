@@ -1,11 +1,11 @@
 "use client";
 import { Suspense } from "react";
 
-import WelcomeSection from "../components/Dashboard/WelcomeSection";
-import StatsGrid from "../components/Dashboard/StatsGrid";
-import PostFilters from "../components/Dashboard/PostFilters";
-import PostTable from "../components/Dashboard/PostTable";
-import DeleteModal from "../components/Dashboard/DeleteModal";
+import WelcomeSection from "@/components/Dashboard/WelcomeSection";
+import StatsGrid from "@/components/Dashboard/StatsGrid";
+import PostFilters from "@/components/Dashboard/PostFilters";
+import PostTable from "@/components/Dashboard/PostTable";
+import DeleteModal from "@/components/Dashboard/DeleteModal";
 import { HomeLogic } from "@/components/Home.Logic";
 import ModalMessage from "@/components/ModalMessage";
 import Loading from "@/components/Loading";
@@ -52,6 +52,7 @@ function Home() {
           goToPage={methods.goToPage}
           setLimit={methods.setLimit}
           fetching={data.fetching}
+          path={"edit"}
         />
       </div>
 
@@ -60,6 +61,7 @@ function Home() {
           postTitle={data.posts.find((p) => p.id === data.postToDelete)?.title}
           handleDelete={methods.handleDelete}
           setShowModal={methods.setShowModal}
+          isDeleting={data.isDeleting}
         />
       )}
       {data.showModalMessage && (

@@ -18,9 +18,8 @@ export function useLogicCategory() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await api.get("/categories");
-
-        setCategories(response.data);
+        const { data } = await api.get("/categories/admin");
+        setCategories(data);
       } catch (error) {
         console.error("Erro ao buscar categorias:", error);
       } finally {
@@ -35,13 +34,13 @@ export function useLogicCategory() {
     e.preventDefault();
     setError("");
     if (!newName.trim()) return;
-    
+
     const regex = /^[a-zA-Z0-9\s-À-ÿ]+$/;
     if (!regex.test(newName)) {
       setError("Caracteres especiais (como ?, !, @, etc.) não são permitidos.");
       return;
     }
-    
+
     const slug = newName
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -94,7 +93,7 @@ export function useLogicCategory() {
       showModalMessage,
       modalWarning,
       showToast,
-      toastMessage
+      toastMessage,
     },
     methods: {
       setNewName,
@@ -106,7 +105,7 @@ export function useLogicCategory() {
       setShowModalMessage,
       setModalWarning,
       setShowToast,
-      setToastMessage
+      setToastMessage,
     },
   };
 }

@@ -24,8 +24,14 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - frontend_next:/app/.next
     env_file:
       - ./frontend/.env
+    environment:
+      NODE_OPTIONS: --max-old-space-size=1536
+    mem_limit: 2g
+    memswap_limit: 2g
+    restart: unless-stopped
 
   admin:
     build:
@@ -35,8 +41,14 @@ services:
     volumes:
       - ./admin:/app
       - /app/node_modules
+      - admin_next:/app/.next
     env_file:
       - ./admin/.env
+    environment:
+      NODE_OPTIONS: --max-old-space-size=3072
+    mem_limit: 4g
+    memswap_limit: 4g
+    restart: unless-stopped
 
   api:
     build:
@@ -48,7 +60,11 @@ services:
       - /app/node_modules
     env_file:
       - ./backend/.env
-
+    environment:
+      NODE_OPTIONS: --max-old-space-size=768
+    mem_limit: 1280m
+    memswap_limit: 1280m
+    restart: unless-stopped
   # streaming:
   #   build:
   #     context: ./../broadcastai/client
@@ -72,3 +88,7 @@ services:
   #     - /app/node_modules
   #   env_file:
   #     - ./../broadcastai/server/.env
+
+volumes:
+  admin_next:
+  frontend_next:

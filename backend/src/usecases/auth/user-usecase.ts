@@ -1,19 +1,18 @@
 import { UserRepository } from "./../../repository/user/user-repository";
-import type { AuthRequest } from "../../types/auth-request";
-import type { UserPresenterPresenter } from "../../controllers/user/presenters/user-presenters";
+import { UserEntity } from "../../entities/user/user-entity";
 
 export class UserSettingsUseCase {
-  public async execute(req: AuthRequest): Promise<UserPresenterPresenter | null> {
-    if (!req.user) {
+  public async execute(user: UserEntity): Promise<UserEntity> {
+    if (!user) {
       throw new Error("Não autenticado");
     }
 
     const userRepository = new UserRepository();
-    const user = await userRepository.getUserById(req.user.id);
+    const userData = await userRepository.getUserById(Number(user.id!));
 
-    if (!user) {
+    if (!userData) {
       throw new Error("Usuário não encontrado");
     }
-    return user;
+    return userData;
   }
 }

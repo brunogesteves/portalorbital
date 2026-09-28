@@ -1,9 +1,12 @@
+import { PostEntity } from "../../entities/post/post-entity";
 import { CategoryRepository } from "../../repository/category/category-repository";
 import { PostRepository } from "../../repository/post/post-repository";
-import type { SearchSlugPresenter } from "../../controllers/search/presenters/search-slug-presenter";
+import { SearchBySlugResult } from "../../types/search-by-slug";
 
-export class SearchSlugCategoryNewsUseCase {
-  public async execute(slug: string): Promise<SearchSlugPresenter> {
+export class SearchBySlugOrCategoryContentUseCase {
+  public async execute(
+    slug: string,
+  ): Promise<SearchBySlugResult<PostEntity | PostEntity[] | null>> {
     const categoryContent = await new CategoryRepository().getCategoryContent(slug);
 
     if (categoryContent) {
