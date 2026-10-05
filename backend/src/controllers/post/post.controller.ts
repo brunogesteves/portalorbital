@@ -16,7 +16,6 @@ import { validateBody } from "../../middlewares/body-validator";
 import { upsertPostSchema } from "./dtos/upsert-post.dto";
 import { SlidesOrHighlightPosts } from "../../entities/post/types/post-slides-or-highlightPosts";
 import { PostField } from "../../entities/post/types/post-field";
-import { UserEntity } from "../../entities/user/user-entity";
 import { PostEntity } from "../../entities/post/post-entity";
 
 const router = Router();
@@ -118,39 +117,11 @@ router.post(
   validateBody(upsertPostSchema),
   async (req: Request, res: Response) => {
     const { user } = req;
-
-    const {
-      id,
-      title,
-      content,
-      categoryId,
-      scheduledAt,
-      thumbnailUrl,
-      slide,
-      highlight,
-      published,
-      action,
-    } = req.body;
-
-    const isSlide = slide === "true" || slide === true;
-    const isHighlight = highlight === "true" || highlight === true;
-    const thumbnail = req.file ? `/images/${req.file.filename}` : thumbnailUrl || null;
-
-    const PostContent = {
-      id,
-      title,
-      content,
-      categoryId,
-      scheduledAt,
-      thumbnail,
-      published,
-      slide: isSlide,
-      highlight: isHighlight,
-      authorId: user!.id!,
-    };
+    const { action, ...rest } = req.body;
+    const postContent = { ...rest, authorId: user!.id } as PostEntity;
 
     const createUpdatePost = new UpsertPostUseCase();
-    const upsertPost = await createUpdatePost.execute(user!, PostContent, action);
+    const upsertPost = await createUpdatePost.execute(user!, postContent, req.file, action);
 
     return res.json(upsertPost);
   },
@@ -160,17 +131,14 @@ router.put(
   "/:id",
   authenticate,
   uploadImage.single("thumbnail"),
-  // validateBody(upsertPostSchema),
+  validateBody(upsertPostSchema),
   async (req: Request, res: Response) => {
     const { user } = req;
-
     const { action, ...rest } = req.body;
-    const postContent = { ...rest } as PostEntity;
-    console.log("postContent controller highlight: ", postContent.highlight);
-    console.log("postContent controller slide: ", postContent.slide);
+    const postContent = { ...rest, id: Number(req.params.id) } as PostEntity;
 
     const createUpdatePost = new UpsertPostUseCase();
-    const upsertPost = await createUpdatePost.execute(user!, postContent, action);
+    const upsertPost = await createUpdatePost.execute(user!, postContent, req.file, action);
 
     return res.json(upsertPost);
   },

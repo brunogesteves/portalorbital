@@ -7,10 +7,7 @@ export const HeaderCategoriesDesktop = () => {
   const { data } = HeaderCategoriesLogic();
 
   return (
-    <nav
-      className="bg-nav-red-strip w-full py-2 flex justify-center items-center"
-      data-purpose="secondary-navigation"
-    >
+    <nav className="bg-nav-red-strip w-full py-2 flex justify-center items-center" data-purpose="secondary-navigation">
       <ul className="bg-nav-blue-pill rounded-full flex items-center px-4 py-1.5 space-x-0">
         <li className="nav-link text-white px-4">
           <a href={`/`} className={`cursor-pointer hover:text-[#e8491a]`}>
@@ -19,10 +16,7 @@ export const HeaderCategoriesDesktop = () => {
         </li>
         {data?.categories?.map((cat: CategoryProps) => (
           <li key={cat.id} className="nav-link text-white px-4">
-            <a
-              href={`/${cat.slug.toLowerCase()}`}
-              className={`cursor-pointer hover:text-[#e8491a]`}
-            >
+            <a href={`/${cat.slug.toLowerCase()}`} className={`cursor-pointer hover:text-[#e8491a]`}>
               {cat.name}
             </a>
           </li>
@@ -51,7 +45,7 @@ export const HeaderCategoriesMobile = ({ slug }: { slug: string }) => {
           <li key={cat.id}>
             <a
               href={`/${cat.slug.toLowerCase()}`}
-              className={`${slug === `/${cat.name}` ? "btn-silver-active" : "btn-blue-glossy"} tracking-tight font-sans capitalize`}
+              className={`${slug.toLowerCase() === cat.slug.toLowerCase() ? "btn-silver-active" : "btn-blue-glossy"} tracking-tight font-sans `}
             >
               {cat.name}
             </a>

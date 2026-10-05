@@ -1,14 +1,17 @@
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect, use } from "react";
+import { AxiosError } from "axios";
 
 import { api } from "@/Utils/api";
 import { CategoryProps } from "@/Utils/types";
 import { PostFormValues, postSchema } from "@/Utils/schemas";
-import { useState, useEffect } from "react";
-import { AxiosError } from "axios";
+import { useUIStore } from "@/store/useUIStore";
 
 export const useLogicNewPost = () => {
+  const { userData, setUserData } = useUIStore();
+
   const router = useRouter();
   const [preview, setPreview] = useState("");
   const [categories, setCategories] = useState<CategoryProps[]>([]);
@@ -74,7 +77,7 @@ export const useLogicNewPost = () => {
     formData.append("content", data.content);
     formData.append("categoryId", data.categoryId);
     formData.append("scheduledAt", data.scheduledAt);
-    if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);
+    if (data.thumbnailUrl) formData.append("thumbnail", data.thumbnailUrl);
     formData.append("slide", String(data.slide));
     formData.append("highlight", String(data.highlight));
     formData.append("action", "createPost");
@@ -84,12 +87,22 @@ export const useLogicNewPost = () => {
       setSuccess(true);
       setShowToast(true);
       const postId = response.data.id;
-      setTimeout(() => router.push(`/post/edit/${postId}`), 1500);
+      if (userData?.role === "ADM") {
+        setTimeout(() => router.push(`/post/edit/${postId}`), 1500);
+      } else {
+        setTimeout(() => router.push(`/`), 1500);
+      }
     } catch (error: unknown) {
-      const err = error as AxiosError<{ message: string }>;
-      const message = err.response?.data.message;
+      const err = error as AxiosError<{
+        message?: string;
+        errors?: Record<string, string[]>;
+      }>;
+      const fieldErrors = err.response?.data?.errors;
+      const message =
+        err.response?.data?.message ??
+        (fieldErrors ? Object.values(fieldErrors).flat().join(" ") : undefined);
       setShowWarningModal(true);
-      setWarningMessage(message ?? "");
+      setWarningMessage(message ?? "Erro ao criar a notícia");
     } finally {
       setLoading(false);
     }

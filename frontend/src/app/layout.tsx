@@ -17,8 +17,6 @@ import Footer from "@/components/Footer";
 //   subsets: ["latin"],
 // });
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +26,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-    // className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <link rel="icon" href="/logo.png" sizes="any" />

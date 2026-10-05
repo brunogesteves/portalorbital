@@ -1,10 +1,5 @@
-
-
 import { HeaderTopDesktop, HeaderTopMobile } from "./Top/HeaderTop";
-import {
-  HeaderCategoriesDesktop,
-  HeaderCategoriesMobile,
-} from "./Categories/HeaderCategories";
+import { HeaderCategoriesDesktop, HeaderCategoriesMobile } from "./Categories/HeaderCategories";
 
 export default function Header({ slug }: { slug: string }) {
   return (
@@ -22,8 +17,7 @@ export default function Header({ slug }: { slug: string }) {
         <header
           className="bg-header-gradient relative overflow-hidden pb-1 pt-4"
           style={{
-            background:
-              "linear-gradient(rgb(254, 254, 254) 70%, rgb(181, 190, 197) 100%)",
+            background: "linear-gradient(rgb(254, 254, 254) 70%, rgb(181, 190, 197) 100%)",
           }}
         >
           <HeaderTopMobile />

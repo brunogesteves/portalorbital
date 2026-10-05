@@ -21,23 +21,20 @@ export default function Home() {
               {methods.highlightDesktop()}
               {methods.moreHighlightDesktop()}
               {data.content.map((info, i) => {
-                return methods.contentModelDesktop(info, i)
+                return methods.contentModelDesktop(info, i);
               })}
             </div>
           </section>
         </main>
       </div>
       <div className="block md:hidden text-gray-800 min-h-screen bg-white flex flex-col w-full">
-        <main
-          className="p-4 bg-white overflow-y-auto flex-1"
-          style={{ paddingBottom: "80px" }}
-        >
+        <main className="p-4 bg-white overflow-y-auto flex-1" style={{ paddingBottom: "80px" }}>
           <Slider device="mobile" />
 
           {methods.highlightMobile()}
 
           {data.content.map((info, i) => {
-            return methods.contentModelMobile(info, i)
+            return methods.contentModelMobile(info, i);
           })}
         </main>
       </div>

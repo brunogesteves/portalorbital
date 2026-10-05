@@ -2,101 +2,60 @@ import { FiLayers } from "react-icons/fi";
 import { FaRegNewspaper } from "react-icons/fa6";
 import { BiSolidSlideshow } from "react-icons/bi";
 import { IoWarning } from "react-icons/io5";
+import { CategoryProps, PostStats } from "@/Utils/types";
 
-import { StatsGridProps, PostProps, CategoryProps } from "@/Utils/types";
-
-interface ExtendedStatsGridProps extends StatsGridProps {
-  posts?: PostProps[];
-  categories?: CategoryProps[];
+interface StatsGridProps {
+  statistics: PostStats;
 }
 
-const StatsGrid = ({
-  lenghtSlides,
-  lenghtActivePosts,
-  lenghtHighliht,
-  posts = [],
-  categories = [],
-}: ExtendedStatsGridProps) => {
+const StatsGrid = ({ statistics }: StatsGridProps) => {
   const stats = [
     {
       label: "Total de Destaques",
-      value: lenghtHighliht,
+      value: statistics.totalHighlights,
       icon: FaRegNewspaper,
       color: "from-red-600 to-red-800",
     },
     {
       label: "Posts Ativos",
-      value: lenghtActivePosts,
+      value: statistics.totalActivePosts,
       icon: FiLayers,
       color: "from-slate-800 to-slate-900",
     },
     {
       label: "Total de Slide",
-      value: lenghtSlides,
+      value: statistics.totalSlides,
       icon: BiSolidSlideshow,
       color: "from-blue-600 to-blue-800",
     },
   ];
 
-  // Sistema de verificações inteligentes - apenas posts ativos
   const warnings: string[] = [];
 
-  // Filtrar apenas posts ativos para todas as verificações
-  const activePosts = posts.filter(p => p.published === "ACTIVE");
-
-  // 1. Verificar se slide tem menos de 1 post ativo
-  if (lenghtSlides < 1) {
+  if (statistics.totalSlides < 1) {
     warnings.push("O slide precisa ter no mínimo 1 post ativos");
   }
 
-  if (lenghtHighliht < 8) {
-    warnings.push("O destaque precisa ter no mínimo 8 post ativos");
-  }
-
-  // 2. Verificar se algum post ativo está tanto no slide quanto no highlight
-  const slideAndHighlightPosts = activePosts.filter(p => p.slide && p.highlight);
-  if (slideAndHighlightPosts.length > 0) {
+  if (statistics.totalHighlights < 8) {
     warnings.push(
-      `${slideAndHighlightPosts.length} post(s) ativo(s) está(ão) no slide e destaque ao mesmo tempo`
+      `O destaque tem ${statistics.totalHighlights} posts ativos e precisa ter no mínimo 8`,
     );
   }
 
+  if ((statistics.slideAndHighlightPostsAtTheSameTime ?? 0) > 0) {
+    warnings.push(
+      `${statistics.slideAndHighlightPostsAtTheSameTime} post(s) ativo(s) está(ão) no slide e destaque ao mesmo tempo`,
+    );
+  }
 
-  // 3. Verificar se categorias têm múltiplos de 4 posts ativos
-  categories.forEach(category => {
-    const activePostsInCategory = activePosts.filter(p => p.categoryId === category.id);
-    if (activePostsInCategory.length > 0 && activePostsInCategory.length % 4 !== 0) {
+  statistics.getPostsCategorized?.forEach((category) => {
+    const activePostsInCategory = category.totalPosts;
+    if (activePostsInCategory > 0 && activePostsInCategory % 4 !== 0) {
       warnings.push(
-        `Categoria "${category.name}" tem ${activePostsInCategory.length} posts ativos (deve ser múltiplo de 4)`
+        `Categoria "${category.name}" tem ${activePostsInCategory} posts ativos (deve ser múltiplo de 4)`,
       );
     }
   });
-
-  // 4. Posts ativos sem thumbnail (afeta visualização no frontend)
-  const activePostsWithoutThumbnail = activePosts.filter(p => !p.thumbnail);
-  if (activePostsWithoutThumbnail.length > 0) {
-    warnings.push(
-      `${activePostsWithoutThumbnail.length} post(s) ativo(s) sem imagem de capa`
-    );
-  }
-
-  // 5. Categorias sem nenhum post ativo
-  const emptyCategories = categories.filter(category => {
-    const activePostsInCategory = activePosts.filter(p => p.categoryId === category.id);
-    return activePostsInCategory.length === 0;
-  });
-  if (emptyCategories.length > 0) {
-    warnings.push(
-      `${emptyCategories.length} categoria(s) sem posts ativos: ${emptyCategories.map(c => c.name).join(", ")}`
-    );
-  }
-
-  // 6. Slide com muitos posts ativos (>10, pode sobrecarregar o frontend)
-  if (lenghtSlides > 10) {
-    warnings.push(
-      `Slide com ${lenghtSlides} posts ativos (recomendado: máximo 10)`
-    );
-  }
 
   return (
     <>
@@ -126,9 +85,7 @@ const StatsGrid = ({
             </div>
           </div>
         ))}
-        <div
-          className="bg-white p-6 md:p-10 md:h-52 rounded-2xl md:rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group hover:-translate-y-2 transition-all duration-500"
-        >
+        <div className="bg-white p-6 md:p-10 md:h-52 rounded-2xl md:rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group hover:-translate-y-2 transition-all duration-500">
           <div
             className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br  opacity-[0.03] rounded-bl-full`}
           ></div>
@@ -157,7 +114,10 @@ const StatsGrid = ({
           </div>
           <ul className="space-y-2">
             {warnings.map((msg, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-red-600">
+              <li
+                key={i}
+                className="flex items-start gap-2 text-sm text-red-600"
+              >
                 <span className="text-red-400 mt-0.5">•</span>
                 {msg}
               </li>

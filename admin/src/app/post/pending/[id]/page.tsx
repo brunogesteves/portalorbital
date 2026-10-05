@@ -136,16 +136,15 @@ function EditPost() {
                 <button
                   type="button"
                   onClick={() =>
-                    data.post &&
-                    methods.setPost({ ...data.post, slide: !data.post.slide })
+                    methods.setValue("slide", !methods.watch("slide"))
                   }
                   className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
-                    data?.post?.slide ? "bg-red-600" : "bg-gray-300"
+                    methods.watch("slide") ? "bg-red-600" : "bg-gray-300"
                   }`}
                 >
                   <span
                     className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${
-                      data?.post?.slide ? "translate-x-6" : "translate-x-1"
+                      methods.watch("slide") ? "translate-x-6" : "translate-x-1"
                     }`}
                   />
                 </button>
@@ -157,19 +156,17 @@ function EditPost() {
                 <button
                   type="button"
                   onClick={() =>
-                    data.post &&
-                    methods.setPost({
-                      ...data.post,
-                      highlight: !data.post.highlight,
-                    })
+                    methods.setValue("highlight", !methods.watch("highlight"))
                   }
                   className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
-                    data?.post?.highlight ? "bg-green-600" : "bg-gray-300"
+                    methods.watch("highlight") ? "bg-green-600" : "bg-gray-300"
                   }`}
                 >
                   <span
                     className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow ${
-                      data?.post?.highlight ? "translate-x-6" : "translate-x-1"
+                      methods.watch("highlight")
+                        ? "translate-x-6"
+                        : "translate-x-1"
                     }`}
                   />
                 </button>

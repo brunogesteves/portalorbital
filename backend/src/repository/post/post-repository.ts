@@ -18,20 +18,63 @@ import { SlidesOrHighlightPosts } from "../../entities/post/types/post-slides-or
 export class PostRepository {
   private prisma = prisma;
 
-  public totalPosts(whereClause: any) {
-    return this.prisma.post.count({ where: whereClause });
+  public async getPostsCategorized() {
+    const posts = await this.prisma.category.findMany({
+      where: {
+        posts: {
+          some: {
+            published: PostPublished.ACTIVE,
+          },
+        },
+      },
+      select: {
+        name: true,
+        _count: {
+          select: {
+            posts: {
+              where: {
+                published: PostPublished.ACTIVE,
+              },
+            },
+          },
+        },
+      },
+    });
+    return posts.map((category) => ({
+      name: category.name,
+      totalPosts: category._count.posts,
+    }));
   }
 
-  public totalHighlights(whereClause: any) {
-    return this.prisma.post.count({ where: { ...whereClause, highlight: true } });
+  public getPostsAtTheSameTime(authorId?: number) {
+    return this.prisma.post.count({
+      where: {
+        published: PostPublished.ACTIVE,
+        slide: true,
+        highlight: true,
+        // authorId: authorId ? authorId : {},
+      },
+    });
   }
 
-  public totalActivePosts(whereClause: any) {
-    return this.prisma.post.count({ where: { ...whereClause, published: PostPublished.ACTIVE } });
+  public totalHighlights(authorId?: number) {
+    return this.prisma.post.count({
+      where: authorId ? { authorId, highlight: true } : { highlight: true },
+    });
   }
 
-  public totalSlides(whereClause: any) {
-    return this.prisma.post.count({ where: { ...whereClause, slide: true } });
+  public totalActivePosts(authorId: number | undefined) {
+    return this.prisma.post.count({
+      where: authorId
+        ? { authorId, published: PostPublished.ACTIVE }
+        : { published: PostPublished.ACTIVE },
+    });
+  }
+
+  public totalSlides(authorId: number | undefined) {
+    return this.prisma.post.count({
+      where: authorId ? { authorId, slide: true } : { slide: true },
+    });
   }
 
   public async getPostsPagination(
@@ -112,23 +155,21 @@ export class PostRepository {
   }
 
   public getPostById(id: number): Promise<PostEntity | null> {
-    console.log("get post by id repository:", id);
     return this.prisma.post.findUnique({
       where: { id },
     });
   }
 
-  public findTitle(action: string, id: number, title: string) {
+  public findTitle(title: string, excludeId?: number) {
     return this.prisma.post.findFirst({
       where: {
         title,
-        ...(action === "editPost" && id ? { id: { not: Number(id) } } : {}),
+        ...(excludeId ? { id: { not: excludeId } } : {}),
       },
     });
   }
 
-  public upsertPost(postSettings: PostEntity) {
-    console.log("upsert post repository:", postSettings);
+  public upsertPost(data: PostEntity) {
     const {
       id,
       title,
@@ -141,36 +182,43 @@ export class PostRepository {
       slide,
       highlight,
       authorId,
-    } = postSettings;
+      createdAt,
+      updatedAt,
+    } = data;
     return this.prisma.post.upsert({
       where: { id: id ? id : 0 },
       update: {
         title,
         slug,
         content,
-        ...(thumbnail && { thumbnail }),
-        categoryId: Number(categoryId),
-        published,
+        categoryId,
         scheduledAt,
-        ...(slide !== undefined && { slide: slide === true }),
-        ...(highlight !== undefined && { highlight: highlight === true }),
+        ...(published !== undefined && { published }),
+        ...(thumbnail && { thumbnail }),
+        slide,
+        highlight,
+        ...(Number.isFinite(authorId) && { authorId }),
+        createdAt,
+        updatedAt,
       },
       create: {
-        title: postSettings.title!,
-        slug: postSettings.slug!,
-        content: postSettings.content!,
-        categoryId: Number(postSettings.categoryId),
-        thumbnail: postSettings.thumbnail!,
-        scheduledAt: postSettings.scheduledAt!,
-        authorId,
-        slide: slide === true,
-        highlight: highlight === true,
+        title: title!,
+        slug: slug!,
+        content: content!,
+        categoryId: categoryId!,
+        scheduledAt: scheduledAt!,
+        published: published!,
+        thumbnail: thumbnail!,
+        slide: slide!,
+        highlight: highlight!,
+        authorId: authorId!,
+        createdAt,
+        updatedAt,
       },
     });
   }
 
   public updatePostStatus(id: number, field: PostField, status: boolean) {
-    console.log("status repo: ", status);
     return this.prisma.post.update({
       where: { id: Number(id) },
       data: {

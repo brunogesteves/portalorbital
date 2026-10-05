@@ -6,7 +6,6 @@ export interface SlugProps {
   params: Promise<{ slug: string }>;
 }
 
-
 export interface CategoryProps {
   id: string;
   name: string;
@@ -22,22 +21,23 @@ export interface CategoryDataProps {
   data: PostProps[];
 }
 export interface AuthorProps {
-  name: string, email: string, role: string
+  name: string;
+  email: string;
+  role: string;
 }
 
 export interface AllContentProps {
   id: string;
   name: string;
   slug: string;
-  posts: PostProps[]
+  posts: PostProps[];
 }
 
 export interface SliderHighlightsProps {
-  id: number,
-  thumbnail: string,
-  slug: string,
-  title: string
-
+  id: number;
+  thumbnail: string;
+  slug: string;
+  title: string;
 }
 
 export interface PostProps {
@@ -45,18 +45,16 @@ export interface PostProps {
   authorId: number;
   categoryId: number;
   content: string;
-  slug: string
-  thumbnail: string
-  title: string
-  author: AuthorProps
-  createdAt: number
-
+  slug: string;
+  thumbnail: string;
+  title: string;
+  author: AuthorProps;
+  createdAt: number;
 }
 
 export interface NewsDataProps {
   data: PostProps;
 }
-
 
 export interface MobileSearchProps {
   searchTerm: string;
@@ -69,7 +67,6 @@ export interface SlugProps {
     slug: string;
   }>;
 }
-
 
 export interface ButtonBlueProps {
   text: string;

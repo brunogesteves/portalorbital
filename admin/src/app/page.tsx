@@ -11,7 +11,6 @@ import ModalMessage from "@/components/ModalMessage";
 import Loading from "@/components/Loading";
 import Toast from "@/components/Toast";
 
-
 function Home() {
   const { data, methods } = HomeLogic();
 
@@ -19,13 +18,7 @@ function Home() {
     <div className="space-y-6 md:space-y-12 pb-12 md:pb-20 px-2 md:px-0 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <WelcomeSection />
 
-      <StatsGrid
-        lenghtHighliht={data.stats.totalHighlights}
-        lenghtActivePosts={data.stats.totalActivePosts}
-        lenghtSlides={data.stats.totalSlides}
-        posts={data.posts}
-        categories={data.categories}
-      />
+      <StatsGrid statistics={data.stats} />
 
       <div className="bg-white rounded-2xl md:rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
         <PostFilters
@@ -65,7 +58,10 @@ function Home() {
         />
       )}
       {data.showModalMessage && (
-        <ModalMessage text={data.modalWarning} setShowModal={(e: boolean) => methods.setShowModalMessage(e)} />
+        <ModalMessage
+          text={data.modalWarning}
+          setShowModal={(e: boolean) => methods.setShowModalMessage(e)}
+        />
       )}
       {data.showToast && (
         <Toast
@@ -78,7 +74,6 @@ function Home() {
 }
 
 export default function HomePage() {
-
   return (
     <Suspense fallback={<Loading />}>
       <Home />

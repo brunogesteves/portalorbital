@@ -139,6 +139,11 @@ export interface Pagination {
 }
 
 export interface PostStats {
+  getPostsCategorized: {
+    name: string;
+    totalPosts: number;
+  }[];
+  slideAndHighlightPostsAtTheSameTime: number;
   totalPosts: number;
   totalHighlights: number;
   totalActivePosts: number;

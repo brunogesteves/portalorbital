@@ -1,14 +1,13 @@
 import { PostPublished } from "@prisma/client";
 
 export type PostBody = {
-  id: number;
   title: string;
   content: string;
-  categoryId: number;
-  scheduledAt: Date;
-  published: PostPublished;
+  categoryId: string;
+  scheduledAt: string;
   thumbnail: string;
-  slide: boolean;
-  highlight: boolean;
-  authorId: number;
+  slide: string;
+  highlight: string;
+  published: string;
+  action: string;
 };

@@ -30,6 +30,8 @@ export const HomeLogic = () => {
     totalPages: 0,
   });
   const [stats, setStats] = useState<PostStats>({
+    getPostsCategorized: [{ name: "", totalPosts: 0 }],
+    slideAndHighlightPostsAtTheSameTime: 0,
     totalPosts: 0,
     totalHighlights: 0,
     totalActivePosts: 0,
@@ -191,6 +193,7 @@ export const HomeLogic = () => {
             ),
           );
         });
+      fetchStats();
     } catch {
       setShowModalMessage(true);
       setModalWarning("Erro ao atualizar slide");

@@ -17,7 +17,7 @@ export function SlugLogic(slug: string) {
         const res = await api.get(`/search/slug/${slug}`);
         setType(res.data.item);
         if (res.data.item == "category") {
-          setCategoryContent({ name: res.data.name, posts: res.data.content });
+          setCategoryContent({ name: slug, posts: res.data.content });
         } else {
           setPostContent(res.data.content);
         }

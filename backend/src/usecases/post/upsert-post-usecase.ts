@@ -7,64 +7,64 @@ import { PostPublished } from "@prisma/client";
 export class UpsertPostUseCase {
   public async execute(
     user: UserEntity,
-    postContent: PostEntity,
-    action: string,
+    data: PostEntity,
+    file: Express.Multer.File | undefined,
+    action: "createPost" | "editPost",
   ): Promise<PostEntity> {
     if (!user) {
       throw new Error("Não autenticado");
     }
-    const {
-      slide,
-      highlight,
-      published,
-      scheduledAt,
-      content,
-      id,
-      title,
-      authorId,
-      categoryId,
-      thumbnail,
-      updatedAt,
-      createdAt,
-    } = postContent;
-    // console.log("postContent highlight: ", typeof postContent.highlight);
-    // console.log("postContent slide: ", postContent.slide);
-    const oi = "true";
-    const isSlide = oi === "true" ? true : false;
 
     const postRepository = new PostRepository();
-    if (action === "createPost") {
-      const existingTitle = await postRepository.findTitle(
-        action,
-        Number(postContent.id),
-        postContent.title as string,
-      );
 
-      if (existingTitle) {
-        throw new Error("Já existe uma notícia com este título");
-      }
+    const id = Number(data.id);
+    const currentPost = action === "editPost" && id ? await postRepository.getPostById(id) : null;
+
+    if (action === "editPost" && !currentPost) {
+      throw new Error("Notícia não encontrada");
     }
-    const postSettings = new PostEntity({
-      id: Number(id),
+
+    const title = data.title?.trim() ? data.title : (currentPost?.title ?? "");
+
+    if (!title) {
+      throw new Error("O título é obrigatório");
+    }
+
+    const existingTitle = await postRepository.findTitle(
       title,
-      slug: slugify(title!),
-      thumbnail,
-      content,
-      scheduledAt: new Date(scheduledAt!),
-      createdAt: createdAt!,
-      updatedAt: new Date(updatedAt!),
+      action === "editPost" ? id : undefined,
+    );
+
+    if (existingTitle) {
+      throw new Error("Já existe uma notícia com este título");
+    }
+
+    const postSettings = new PostEntity({
+      id: action === "editPost" ? id : Number(data.id),
+      title,
+      slug: slugify(title),
+      thumbnail: file ? `/images/${file.filename}` : data.thumbnail || currentPost?.thumbnail || null,
+      content: data.content,
+      scheduledAt: new Date(data.scheduledAt!),
+      createdAt: currentPost?.createdAt ?? new Date(),
+      updatedAt: new Date(),
       published:
         action === "editPost"
-          ? published === "ACTIVE"
-            ? PostPublished.ACTIVE
-            : PostPublished.UNACTIVE
+          ? data.published === undefined
+            ? undefined
+            : data.published === "ACTIVE"
+              ? PostPublished.ACTIVE
+              : PostPublished.UNACTIVE
           : PostPublished.DRAFT,
-      slide: Boolean(slide),
-      highlight: Boolean(highlight),
-      categoryId: Number(categoryId),
-      authorId: Number(authorId),
+      slide: Boolean(data.slide),
+      highlight: Boolean(data.highlight),
+      categoryId: Number(data.categoryId),
+      authorId: Number.isFinite(Number(data.authorId))
+        ? Number(data.authorId)
+        : (currentPost?.authorId ?? user.id!),
     });
     const result = await postRepository.upsertPost(postSettings);
+
     if (!result) {
       throw new Error(action === "editPost" ? "Erro ao atualizar o post" : "Erro ao criar o post");
     }

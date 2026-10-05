@@ -8,22 +8,30 @@ export class GetPostStatsUseCase {
     if (!user) {
       throw new Error("Não autenticado");
     }
-    const whereClause: any = {};
+    let authorId: number | undefined = undefined;
 
     if (user.role === UserRole.PBR) {
-      whereClause.authorId = user.id;
+      authorId = user.id;
     }
 
     const postRepository = new PostRepository();
-    const [totalPosts, totalHighlights, totalActivePosts, totalSlides] = await Promise.all([
-      postRepository.totalPosts(whereClause),
-      postRepository.totalHighlights(whereClause),
-      postRepository.totalActivePosts(whereClause),
-      postRepository.totalSlides(whereClause),
+    const [
+      getPostsCategorized,
+      slideAndHighlightPostsAtTheSameTime,
+      totalHighlights,
+      totalActivePosts,
+      totalSlides,
+    ] = await Promise.all([
+      postRepository.getPostsCategorized(),
+      postRepository.getPostsAtTheSameTime(),
+      postRepository.totalHighlights(authorId),
+      postRepository.totalActivePosts(authorId),
+      postRepository.totalSlides(authorId),
     ]);
 
     const result = {
-      totalPosts,
+      getPostsCategorized,
+      slideAndHighlightPostsAtTheSameTime,
       totalHighlights,
       totalActivePosts,
       totalSlides,

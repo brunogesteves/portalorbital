@@ -39,7 +39,7 @@ export const useLogicPost = () => {
       title: "",
       content: "",
       categoryId: "",
-      scheduledAt: "",      
+      scheduledAt: "",
       thumbnailUrl: "",
       slide: false,
       highlight: false,
@@ -92,7 +92,7 @@ export const useLogicPost = () => {
     formData.append("content", data.content);
     formData.append("categoryId", data.categoryId);
     formData.append("scheduledAt", data.scheduledAt);
-    if (data.thumbnailUrl) formData.append("thumbnailUrl", data.thumbnailUrl);    
+    if (data.thumbnailUrl) formData.append("thumbnail", data.thumbnailUrl);
     formData.append("slide", String(data.slide));
     formData.append("highlight", String(data.highlight));
     formData.append("action", "editPost");
@@ -102,10 +102,16 @@ export const useLogicPost = () => {
       setSuccess(true);
       setShowToast(true);
     } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      const message = err.response?.data.message;
+      const err = error as AxiosError<{
+        message?: string;
+        errors?: Record<string, string[]>;
+      }>;
+      const fieldErrors = err.response?.data?.errors;
+      const message =
+        err.response?.data?.message ??
+        (fieldErrors ? Object.values(fieldErrors).flat().join(" ") : undefined);
       setShowWarningModal(true);
-      setWarningMessage(message ?? "");
+      setWarningMessage(message ?? "Erro ao salvar as alterações");
     } finally {
       setLoading(false);
     }

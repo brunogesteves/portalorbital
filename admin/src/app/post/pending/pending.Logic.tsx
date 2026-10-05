@@ -3,7 +3,7 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 
 import { api } from "@/Utils/api";
-import { PostProps, CategoryProps, Pagination, PostStats } from "@/Utils/types";
+import { PostProps, CategoryProps, Pagination } from "@/Utils/types";
 import { useUIStore } from "@/store/useUIStore";
 
 export const PendingLogic = () => {

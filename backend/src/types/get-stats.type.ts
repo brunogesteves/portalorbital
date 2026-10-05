@@ -1,5 +1,5 @@
 export interface GetStatsProps {
-  totalPosts: number;
+  slideAndHighlightPostsAtTheSameTime: number;
   totalHighlights: number;
   totalActivePosts: number;
   totalSlides: number;
