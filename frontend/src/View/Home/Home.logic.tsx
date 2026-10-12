@@ -112,7 +112,7 @@ export function HomeLogic() {
             if (i <= 3) {
               return (
                 <CardPostsMobile
-                  key={post.id}
+                  key={i}
                   title={post.title}
                   thumbnail={post.thumbnail}
                   slug={post.slug}
