@@ -18,6 +18,8 @@ app.use(
       "https://orbitalportalpoliticoadmin.vercel.app",
       "https://orbitalportalpolitico.vercel.app",
       "http://api",
+      process.env.FRONTEND_URL!,
+      process.env.ADMIN_URL!,
     ],
     credentials: true,
   }),
