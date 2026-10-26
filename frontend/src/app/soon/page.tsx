@@ -60,7 +60,7 @@ export default function SoonPage() {
           <div className="mb-8 flex justify-center items-center gap-2 md:gap-4">
             <Image
               alt="Orbital Channel Logo"
-              src="https://portalorbital.vercel.app/logo.png"
+              src="/logo.png"
               width={40}
               height={40}
               loading="eager"
@@ -68,7 +68,7 @@ export default function SoonPage() {
             />
             <Image
               alt="Orbital Logo"
-              src="https://portalorbital.vercel.app/orbitaWritten.png"
+              src="/orbitaWritten.png"
               width={160}
               height={40}
               loading="eager"
