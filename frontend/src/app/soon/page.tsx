@@ -4,53 +4,53 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-}
+// interface TimeLeft {
+//   days: number;
+//   hours: number;
+//   minutes: number;
+//   seconds: number;
+// }
 
-function getTimeRemaining(): TimeLeft {
-  const now = new Date();
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(0, 0, 0, 0);
+// function getTimeRemaining(): TimeLeft {
+//   const now = new Date();
+//   const tomorrow = new Date(now);
+//   tomorrow.setDate(tomorrow.getDate() + 1);
+//   tomorrow.setHours(0, 0, 0, 0);
 
-  const diff = tomorrow.getTime() - now.getTime();
+//   const diff = tomorrow.getTime() - now.getTime();
 
-  return {
-    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((diff / (1000 * 60)) % 60),
-    seconds: Math.floor((diff / 1000) % 60),
-  };
-}
+//   return {
+//     days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+//     hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+//     minutes: Math.floor((diff / (1000 * 60)) % 60),
+//     seconds: Math.floor((diff / 1000) % 60),
+//   };
+// }
 
-const EMPTY_TIME: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+// const EMPTY_TIME: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
 export default function SoonPage() {
   const router = useRouter();
-  const [time, setTime] = useState<TimeLeft>(EMPTY_TIME);
+  // const [time, setTime] = useState<TimeLeft>(EMPTY_TIME);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
 
-    const tick = () => {
-      const remaining = getTimeRemaining();
-      setTime(remaining);
+    // const tick = () => {
+    // const remaining = getTimeRemaining();
+    // setTime(remaining);
 
-      const total = remaining.days * 86400 + remaining.hours * 3600 + remaining.minutes * 60 + remaining.seconds;
+    // const total = remaining.days * 86400 + remaining.hours * 3600 + remaining.minutes * 60 + remaining.seconds;
 
-      if (total <= 0) {
-        router.push("/");
-      }
-    };
+    // if (total <= 0) {
+    router.push("/");
+    // }
+    // };
 
-    tick();
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
+    // tick();
+    // const interval = setInterval(tick, 1000);
+    // return () => clearInterval(interval);
   }, [router]);
 
   if (!mounted) {
@@ -113,19 +113,19 @@ export default function SoonPage() {
         </div>
 
         {/* Ícone de engrenagem animado */}
-        <div className="mb-8 flex justify-center">
+        {/* <div className="mb-8 flex justify-center">
           <div className="relative">
             <div className="w-24 h-24 border-4 border-red-500/20 rounded-full animate-spin-slow" />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
             </div>
           </div>
-        </div>
+        </div> */}
 
         <h2 className="text-2xl md:text-9xl text-red-400 mb-8 font-semibold leading-relaxed">Em breve!</h2>
 
         {/* Countdown */}
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <p className="text-zinc-500 text-sm mb-4">Estamos quase lá! Lance em:</p>
           <div className="flex justify-center gap-4 md:gap-8">
             {[
@@ -144,15 +144,15 @@ export default function SoonPage() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Contato */}
-        <div className="text-zinc-500 text-sm">
+        {/* <div className="text-zinc-500 text-sm">
           <p>Dúvidas? Entre em contato:</p>
           <a href="mailto:contato@orbitaltv.net" className="text-red-400 hover:text-red-300 transition-colors">
             contato@orbitaltv.net
           </a>
-        </div>
+        </div> */}
 
         {/* Redes sociais */}
         <div className="mt-8 flex justify-center gap-4">
