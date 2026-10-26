@@ -32,6 +32,16 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "portalorbital.vercel.app",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "orbitaltv.net",
+        pathname: "/**",
+      },
       // {
       //   protocol: "http",
       //   hostname: "api.localhost",

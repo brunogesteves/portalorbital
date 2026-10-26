@@ -1,9 +1,6 @@
-import { AllContentProps } from "@/utils/types";
 import Link from "next/link";
 import Image from "next/image";
 import { imageUrl } from "@/utils/api";
-import { FaXTwitter } from "react-icons/fa6";
-import { FaFacebookF } from "react-icons/fa";
 
 interface CardPostsProps {
   title: string;
